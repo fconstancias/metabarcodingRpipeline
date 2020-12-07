@@ -1,9 +1,13 @@
+#MACOS
+.DS_Store
+
 # History files
 .Rhistory
 .Rapp.history
 
 # Session Data files
 .RData
+.Rds
 
 # User-specific files
 .Ruserdata
@@ -30,6 +34,10 @@ vignettes/*.pdf
 # knitr and R markdown default cache directories
 *_cache/
 /cache/
+
+# raw fastq.files
+fastq.gz
+fasta
 
 # Temporary files created by R markdown
 *.utf8.md
