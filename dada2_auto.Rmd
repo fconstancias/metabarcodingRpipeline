@@ -49,7 +49,7 @@ require(phangorn); packageVersion("phangorn")
 source("scripts/functions.R")
 ```
 
-```{r, message = FALSE, warning = FALSE, results = FALSE}
+```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
 run_atropos(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
             atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
             PRIMER_F = "CCTACGGGNGGCWGCAG",
@@ -82,7 +82,7 @@ run_dada_DECIPHER_taxonomy(raw_files_path = "/Users/fconstan/Documents/GitHub/me
                                         )
 ```
 
-```{r, message = TRUE, warning = FALSE, results = TRUE}
+```{r, message = TRUE, warning = TRUE, results = TRUE}
 run_DECIPHER_phangorn_phylogeny(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
                                             method = "R",
                                             phylo_dir = "05_phylo",
@@ -91,6 +91,20 @@ run_DECIPHER_phangorn_phylogeny(raw_files_path = "/Users/fconstan/Documents/GitH
 ```
 
 
-```{r, message = TRUE, warning = FALSE, results = TRUE}
+```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
 phylo
 ```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+run_merge_phyloseq_simple(tax_tsv = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/04_dada2_taxonomy/silva_nr_v138_train_set_table.tsv",
+                          metadata = "none", # sample_name
+                          phylo_tree = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/05_phylo/unrooted_tree.rds",
+                          output_physeq = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/physeq")-> physeq
+
+physeq
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+sessionInfo()
+```
+
