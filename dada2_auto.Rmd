@@ -104,6 +104,31 @@ run_merge_phyloseq_simple(tax_tsv = "/Users/fconstan/Documents/GitHub/metabarcod
 physeq
 ```
 
+
+```{r setup, include=FALSE}
+rm(list = ls())
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+run_fbt_lab_16S_pipe(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                                atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
+                                V = "V4",
+                                method = "dada",
+                                db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
+                                db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz")
+```
+
+
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+run_merge_phyloseq_simple(tax_tsv = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/04_dada2_taxonomy/silva_nr_v138_train_set_table.tsv",
+                          metadata = "none", # sample_name
+                          phylo_tree = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/05_phylo/unrooted_tree.rds",
+                          output_physeq = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/physeq")-> physeq
+
+physeq
+```
+
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
 sessionInfo()
 ```

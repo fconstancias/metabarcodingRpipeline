@@ -1275,3 +1275,73 @@ run_merge_phyloseq_simple <- function(tax_tsv = "/Users/fconstan/Documents/GitHu
 #   
 #   return(physeq)
 # }
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+
+run_fbt_lab_16S_pipe <- function(raw_files_path,
+                                 atropos,
+                                 V = "V4",
+                                 method = "dada",
+                                 db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
+                                 db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz"){
+  if(V == "V4") {
+    
+    PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
+    PRIMER_R = "GGACTACHVGGGTWTCTAAT"
+    trim_length = c(230,270)
+    trunclen =  c(170,160)
+    maxee = c(3,4)
+    minLen = 100
+    minover = 40
+  } 
+  if(V == "V3V4"){
+    
+    PRIMER_F = "CCTAYGGGRBGCASCAG"
+    PRIMER_R = "GGACTACNNGGGTATCTAAT"
+    trim_length = c(240,400)
+    trunclen =  c(260,250)
+    maxee = c(4,5)
+    minLen = 160
+    minover = 10
+    
+  }
+  run_atropos(raw_files_path = raw_files_path,
+              atropos = atropos,
+              PRIMER_F = PRIMER_F,
+              PRIMER_R = PRIMER_R)   
+  
+  run_dada2_qplot(raw_files_path = raw_files_path)
+  
+  run_dada2_filter_denoise_merge_reads(raw_files_path = raw_files_path)
+  
+  run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = raw_files_path)
+  
+  run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
+                             method = method, # "DECIPHER" or "dada" 
+                             threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
+                             tryRC = FALSE,
+                             collapseNoMis = TRUE,
+                             db = db, # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
+                             db_species = db_species # only for dada2 method
+  )
+  
+  run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
+                                  method = "R") -> phylo
+  
+}
