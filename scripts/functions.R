@@ -20,9 +20,8 @@ run_atropos <- function(raw_files_path,
                         atropos,
                         cut_dir = "00_atropos_primer_removed",
                         output = "dada2",
-                        marker = "V4",
-                        PRIMER_F = "GTGCCAGCMGCCGCGGTAA",
-                        PRIMER_R = "GGACTACHVGGGTWTCTAAT",
+                        PRIMER_F,
+                        PRIMER_R,
                         NSLOTS = 2,
                         raw_file_pattern = c("*_R1_*.gz","*_R2_*.gz"),
                         cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
@@ -113,7 +112,7 @@ run_atropos <- function(raw_files_path,
 #'
 
 
-run_dada2_qplot <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+run_dada2_qplot <- function(raw_files_path,
                             prop.sample = 20,
                             aggregate = TRUE,
                             cut_dir = "00_atropos_primer_removed",
@@ -253,15 +252,15 @@ run_dada2_qplot <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/m
 #'
 #'
 
-run_dada2_filter_denoise_merge_reads <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
-                                                 trunclen =  c(228,225),
-                                                 maxee = c(3,4),
-                                                 truncQ = 10,
-                                                 minLen = 180,
+run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
+                                                 trunclen,
+                                                 maxee,
+                                                 truncQ = 6,
+                                                 minLen,
                                                  nthreads = 8,
                                                  nbases = 20000000,
                                                  pool = "pseudo",
-                                                 minover = 20,
+                                                 minover,
                                                  cut_dir = "00_atropos_primer_removed",
                                                  filt_dir = "02_dada2_filtered_denoised_merged",
                                                  output = "dada2",
@@ -534,7 +533,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path = "/Users/fconst
 #'
 #'
 
-run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
                                                    merged_run_dir = "03_dada2_merged_runs_chimera_removed",
                                                    chimera_method = "consensus",
                                                    trim_length = c(390,460),
@@ -735,14 +734,14 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path = "/Users/fcon
 
 
 
-run_dada_DECIPHER_taxonomy <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+run_dada_DECIPHER_taxonomy <- function(raw_files_path,
                                        taxa_dir = "04_dada2_taxonomy",
                                        method = "dada", # method = "DECIPHER" or "dada" 
                                        threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
                                        tryRC = FALSE,
                                        collapseNoMis = TRUE,
-                                       db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
-                                       db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz", # db_species = NULL
+                                       db,
+                                       db_species,
                                        outputBootstraps = TRUE, #3 only for dada2 method# outputBootstraps <- TRUE 
                                        allowMultiple = TRUE,
                                        merged_run_dir = "03_dada2_merged_runs_chimera_removed",
@@ -999,7 +998,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path = "/Users/fconstan/Documen
 #'
 #'
 
-run_DECIPHER_phangorn_phylogeny <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
                                             method = "R",
                                             output = "dada2",
                                             phylo_dir = "05_phylo",
@@ -1111,10 +1110,10 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path = "/Users/fconstan/Do
 #'
 #'
 
-run_merge_phyloseq_simple <- function(tax_tsv = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/04_dada2_taxonomy/silva_nr_v138_train_set_table.tsv",
+run_merge_phyloseq_simple <- function(tax_tsv,
                                       metadata = "none", # sample_name
-                                      phylo_tree = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/05_phylo/unrooted_tree.rds",
-                                      output_physeq = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/physeq"){
+                                      phylo_tree,
+                                      output_physeq){
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2); require(phyloseq)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
@@ -1188,8 +1187,8 @@ run_merge_phyloseq_simple <- function(tax_tsv = "/Users/fconstan/Documents/GitHu
     full_track[!rownames(full_track) %in% sample_names(physeq),] %>%
       rownames_to_column("sample_name") %>%
       write_tsv(path  = paste0(output_physeq,"missing_samples.tsv"))
-
-}
+    
+  }
   
   saveRDS(physeq, 
           paste0(output_physeq,".RDS"))
@@ -1321,16 +1320,31 @@ run_fbt_lab_16S_pipe <- function(raw_files_path,
     minover = 10
     
   }
+  cat(paste0('\n##',"running run_atropos() '\n\n'"))
+  
   run_atropos(raw_files_path = raw_files_path,
               atropos = atropos,
               PRIMER_F = PRIMER_F,
               PRIMER_R = PRIMER_R)   
   
+  cat(paste0('\n##',"running run_dada2_qplot() '\n\n'"))
+  
   run_dada2_qplot(raw_files_path = raw_files_path)
   
-  run_dada2_filter_denoise_merge_reads(raw_files_path = raw_files_path)
+  cat(paste0('\n##',"running run_dada2_filter_denoise_merge_reads() '\n\n'"))
   
-  run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = raw_files_path)
+  run_dada2_filter_denoise_merge_reads(raw_files_path = raw_files_path,
+                                       trunclen = trunclen,
+                                       maxee = maxee,
+                                       minLen = minLen,
+                                       minover = minover)
+  
+  cat(paste0('\n##',"running run_dada2_mergeRuns_removeBimeraDenovo() '\n\n'"))
+  
+  run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = raw_files_path,
+                                         trim_length = trim_length)
+  
+  cat(paste0('\n##',"running run_dada_DECIPHER_taxonomy() '\n\n'"))
   
   run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
                              method = method, # "DECIPHER" or "dada" 
@@ -1340,6 +1354,8 @@ run_fbt_lab_16S_pipe <- function(raw_files_path,
                              db = db, # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
                              db_species = db_species # only for dada2 method
   )
+  
+  cat(paste0('\n##',"running run_DECIPHER_phangorn_phylogeny() '\n\n'"))
   
   run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
                                   method = "R") -> phylo

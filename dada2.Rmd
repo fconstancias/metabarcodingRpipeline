@@ -1,0 +1,111 @@
+---
+title: "dada2 auto `r Sys.Date()`"
+author: "Florentin CONSTANCIAS"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 4
+---
+
+
+```{r setup, include=FALSE}
+rm(list = ls())
+
+knitr::opts_chunk$set(echo = TRUE)
+DT::datatable(matrix())
+
+
+```
+
+```{r install, include=TRUE}
+# install.packages("devtools")
+# 
+# devtools::install_github("KlausVigo/phangorn")
+# 
+# devtools::install_github("benjjneb/dada2", ref="v1.16") # change the ref argument to get other versions
+# 
+# devtools::install_github("tidyverse/tidyverse")
+# 
+# 
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+# 
+# BiocManager::install("ShortRead")
+# 
+# BiocManager::install("DECIPHER")
+
+```
+
+```{r packages, results=FALSE, warning=FALSE, include=FALSE}
+require(tidyverse); packageVersion("tidyverse")
+require(dada2); packageVersion('dada2')
+require(ShortRead); packageVersion('ShortRead')
+require(Biostrings); packageVersion('Biostrings')
+require(phyloseq); packageVersion("phyloseq")
+require(DECIPHER); packageVersion("DECIPHER")
+require(phangorn); packageVersion("phangorn")
+
+source("scripts/functions.R")
+```
+
+```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
+run_atropos(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+            atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
+            PRIMER_F = "CCTACGGGNGGCWGCAG",
+            PRIMER_R = "GACTACHVGGGTATCTAATCC")
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = FALSE}
+run_dada2_qplot(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/")
+```
+
+```{r, message = FALSE, warning = FALSE, results = FALSE}
+run_dada2_filter_denoise_merge_reads(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/")
+```
+
+```{r, message = FALSE, warning = FALSE, results = FALSE}
+run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/")
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+run_dada_DECIPHER_taxonomy(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                                        taxa_dir = "04_dada2_taxonomy",
+                                        method = "dada", # "DECIPHER" or "dada" 
+                                        threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
+                                        tryRC = FALSE,
+                                        collapseNoMis = TRUE,
+                                        output = "dada2",
+                                        db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
+                                        db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz" # only for dada2 method
+                                        )
+```
+
+```{r, message = TRUE, warning = TRUE, results = TRUE}
+run_DECIPHER_phangorn_phylogeny(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                                            method = "R",
+                                            phylo_dir = "05_phylo",
+                                            merged_run_dir = "03_dada2_merged_runs_chimera_removed",
+                                            collapseNoMis = TRUE) -> phylo
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
+phylo
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+run_merge_phyloseq_simple(tax_tsv = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/04_dada2_taxonomy/silva_nr_v138_train_set_table.tsv",
+                          metadata = "none", # sample_name
+                          phylo_tree = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/05_phylo/unrooted_tree.rds",
+                          output_physeq = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/physeq")-> physeq
+
+physeq
+```
+
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+sessionInfo()
+```
+
