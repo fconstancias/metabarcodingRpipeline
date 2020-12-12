@@ -116,7 +116,7 @@ run_dada2_qplot <- function(raw_files_path,
                             prop.sample = 20,
                             aggregate = TRUE,
                             cut_dir = "00_atropos_primer_removed",
-                            qplot_dir = "01_dada2-quality-profiles",
+                            qplot_dir = "01_dada2_quality_profiles",
                             output = "dada2",
                             cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
                             seed_value = 123){
@@ -536,7 +536,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
 run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
                                                    merged_run_dir = "03_dada2_merged_runs_chimera_removed",
                                                    chimera_method = "consensus",
-                                                   trim_length = c(390,460),
+                                                   trim_length,
                                                    collapseNoMis = TRUE,
                                                    minOverlap = 20, # https://github.com/benjjneb/dada2/issues/518
                                                    filt_dir = "02_dada2_filtered_denoised_merged",
@@ -950,7 +950,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
       
       if(!file.exists(db_species))
       {
-        if(str_extract(basename(db), "[^.]+")=="hitdb_v1")
+        if(str_extract(basename(db), "[^.]+") == "hitdb_v1")
         {  
           taxa$tax %>% mutate(Kingdom = "Bacteria")
           colnames(taxa$tax) = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
@@ -1083,10 +1083,10 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
   
   ## ------------------------------------------------------------------------
   saveRDS(fitGTR$tree, paste0(phylo_path,"/unrooted_tree.rds"))
-  saveRDS(ape::multi2di(fitGTR$tree), paste0(phylo_path,"/rooted_tree.rds"))
+  saveRDS(phangorn::midpoint(fitGTR$tree), paste0(phylo_path,"/rooted_tree.rds"))
   
   return(list("unrooted_tree" = fitGTR$tree,
-              "rooted_tree" = ape::multi2di(fitGTR$tree))) #https://github.com/joey711/phyloseq/issues/936
+              "rooted_tree" = phangorn::midpoint(fitGTR$tree))) #https://github.com/joey711/phyloseq/issues/936
   
   
 }
@@ -1110,10 +1110,17 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
 #'
 #'
 
-run_merge_phyloseq_simple <- function(tax_tsv,
-                                      metadata = "none", # sample_name
-                                      phylo_tree,
-                                      output_physeq){
+
+run_merge_phyloseq <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                               metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx",
+                               taxa_dir = "04_dada2_taxonomy",
+                               phylo_dir = "05_phylo",
+                               merged_run_dir = "03_dada2_merged_runs_chimera_removed",
+                               rooted_tree = TRUE,
+                               output = "dada2",
+                               collapseNoMis = TRUE,
+                               clean = FALSE)
+{
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2); require(phyloseq)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
@@ -1123,17 +1130,22 @@ run_merge_phyloseq_simple <- function(tax_tsv,
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
-  read_tsv(tax_tsv, n_max = Inf) -> tmp 
+  setwd(raw_files_path)
+  setwd("./..")
+  
+  list.files(file.path(output, taxa_dir),
+             pattern = glob2rx("*.tsv"),
+             full.names = TRUE,
+             recursive = TRUE) %>% read_tsv() -> tmp
   
   tmp %>%
     column_to_rownames("ASV") %>%
-    select_if(is.numeric) %>% 
-    select(-contains("_boot")) %>% 
+    select_if(is.numeric) %>%
+    select(-contains("_boot")) %>%
     as.matrix() -> table2
   
-  
   tmp %>%
-    select(Kingdom:Species, ASV) %>% 
+    select(Kingdom:Species, ASV) %>%
     mutate(Species = str_replace_all(Species, "[/]", replacement = NA_character_)) %>%
     mutate_all(funs(str_replace_all(., c("unclassified|unidentified|Ambiguous_taxa"), replacement = NA_character_))) %>% # not shure this is working but that's the idea
     mutate_all(funs(str_replace_all(., c("metagenome|unidentified|uncultured"), replacement = "uncultured"))) %>%
@@ -1155,125 +1167,60 @@ run_merge_phyloseq_simple <- function(tax_tsv,
   physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq)) # https://github.com/benjjneb/dada2/issues/613
   
   ## ------------------------------------------------------------------------
-  ## ------------------------------------------------------------------------
-  ## add the tree and change ASV names
-  if(file.exists(phylo_tree)) {
-    tree <- readRDS(phylo_tree)
-    tree$tip.label
-    
-    # taxa_names(physeq) <- paste0("asv",c(1:ntaxa(physeq)), ";size=", rowSums(otu_table(physeq)))
-    
-    physeq@phy_tree <- tree %>% phy_tree()
+  
+  if(rooted_tree == TRUE){
+    list.files(file.path(output, phylo_dir),
+               pattern = glob2rx("rooted_tree.rds"),
+               full.names = TRUE,
+               recursive = TRUE) %>% readRDS() -> tree
+    physeq@phy_tree = tree
   }
+  if(rooted_tree == FALSE){
+    list.files(file.path(output, phylo_dir),
+               pattern = glob2rx("*unrooted_tree.rds"),
+               full.names = TRUE,
+               recursive = TRUE) %>% readRDS() -> tree
+    physeq@phy_tree = tree
+  }
+  # physeq <- merge_phyloseq(physeq,
+  #                          tree)
   
-  taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)), 
-                                              nchar(ntaxa(physeq)), 
+  
+  taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
+                                              nchar(ntaxa(physeq)),
                                               pad = "0"))
-  ## ------------------------------------------------------------------------
   
-  if(file.exists(metadata)) {
-    read_tsv(metadata,
-             comment = "",
-             quote = "",
-             na = c("NA", "NaN", "")) %>%
-      column_to_rownames("sample_name") -> metadata
+  # ifelse(collapseNoMis == TRUE, track_file = "*track_analysis.tsv", track_file = "uncollapsed_track_analysis.tsv")
+  
+  list.files(file.path(output, merged_run_dir),
+             pattern = glob2rx("track_analysis.tsv"),
+             full.names = TRUE,
+             recursive = TRUE) %>% read_tsv() -> track
+  
+  if(file.exists(metadata))
+  {
+    full_join(track,
+              readxl::read_xlsx(metadata),
+              by = c("sample" = "sample_name")) %>%
+      column_to_rownames("sample") -> meta
     
     physeq <- merge_phyloseq(physeq,
-                             metadata %>% sample_data())
-    
-    ## ------------------------------------------------------------------------
-    ## export missing samples
-    
-    full_track[!rownames(full_track) %in% sample_names(physeq),] %>%
-      rownames_to_column("sample_name") %>%
-      write_tsv(path  = paste0(output_physeq,"missing_samples.tsv"))
-    
+                             meta %>% sample_data())
   }
   
+  if(!file.exists(metadata))
+  {
+    
+    physeq <- merge_phyloseq(physeq,
+                             track %>% column_to_rownames("sample_name") %>% sample_data())
+  }
+  
+  
   saveRDS(physeq, 
-          paste0(output_physeq,".RDS"))
+          paste0(output,"physeq.RDS"))
   
   return(physeq)
 }
-# 
-# 
-# run_merge_phyloseq <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
-#                                metadata = "metadata.txt",
-#                                taxa_dir = "04_dada2_taxonomy",
-#                                phylo_dir = "05_phylo",
-#                                rooted_tree = FALSE,
-#                                output = "dada2",
-#                                collapseNoMis = TRUE,
-#                                clean = FALSE)
-# {
-#   ## ------------------------------------------------------------------------
-#   require(tidyverse); require(dada2); require(phyloseq)
-#   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
-#   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
-#   cat(paste0('\n##',"You are using phyloseq version ", packageVersion('phyloseq'),'\n\n'))
-#   
-#   cat('################################\n\n')
-#   
-#   ## ------------------------------------------------------------------------
-#   setwd(raw_files_path)
-#   setwd("./..")
-#   
-#   list.files(file.path(output, taxa_dir),
-#              pattern = glob2rx("*.tsv"),
-#              full.names = TRUE,
-#              recursive = TRUE) %>% read_tsv() -> tmp
-#   
-#   tmp %>%
-#     column_to_rownames("ASV") %>%
-#     select_if(is.numeric) %>% 
-#     select(-contains("_boot")) %>% 
-#     as.matrix() -> table2
-#   
-#   tmp %>%
-#     select(Kingdom:Species, ASV) %>% 
-#     mutate(Species = str_replace_all(Species, "[/]", replacement = NA_character_)) %>%
-#     mutate_all(funs(str_replace_all(., c("unclassified|unidentified|Ambiguous_taxa"), replacement = NA_character_))) %>% # not shure this is working but that's the idea
-#     mutate_all(funs(str_replace_all(., c("metagenome|unidentified|uncultured"), replacement = "uncultured"))) %>%
-#     replace(is.na(.), "unknown") %>%
-#     column_to_rownames("ASV") %>%
-#     as.matrix() -> tax_table
-#   # fo increase genericity need to ignore case for taxonomy and ignore if rank is not present.
-#   
-#   phyloseq(tax_table(tax_table),
-#            otu_table(table2,
-#                      taxa_are_rows = TRUE))  %>%
-#     filter_taxa(function(x) sum(x > 0) > 0, TRUE) -> physeq
-#   
-#   prune_samples(sample_sums(physeq) > 0, physeq) -> physeq
-#   
-#   ## ------------------------------------------------------------------------
-#   ## add ASV as refseq part of the phyloseq object
-#   
-#   physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq)) # https://github.com/benjjneb/dada2/issues/613
-#   
-#   ## ------------------------------------------------------------------------
-#   
-#   if(rooted_tree == TRUE){
-#     list.files(file.path(output, phylo_dir),
-#                pattern = glob2rx("*rooted_tree.rds"),
-#                full.names = TRUE,
-#                recursive = TRUE) %>% readRDS() -> tree
-#   }
-#   if(rooted_tree == FALSE){
-#     list.files(file.path(output, phylo_dir),
-#                pattern = glob2rx("*unrooted_tree.rds"),
-#                full.names = TRUE,
-#                recursive = TRUE) %>% readRDS() -> tree  
-#   }
-#   physeq <- merge_phyloseq(physeq,
-#                            tree)
-#   
-#   taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)), 
-#                                               nchar(ntaxa(physeq)), 
-#                                               pad = "0"))
-#   
-#   return(physeq)
-# }
 
 #' @title ...
 #' @param .
@@ -1293,12 +1240,13 @@ run_merge_phyloseq_simple <- function(tax_tsv,
 #'
 #'
 
-run_fbt_lab_16S_pipe <- function(raw_files_path,
-                                 atropos,
-                                 V = "V4",
-                                 method = "dada",
-                                 db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
-                                 db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz"){
+run_16S_pipe <- function(raw_files_path,
+                         atropos,
+                         V = "V4",
+                         tax_method = "dada",
+                         metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx",
+                         db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
+                         db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz"){
   if(V == "V4") {
     
     PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
@@ -1347,7 +1295,7 @@ run_fbt_lab_16S_pipe <- function(raw_files_path,
   cat(paste0('\n##',"running run_dada_DECIPHER_taxonomy() '\n\n'"))
   
   run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
-                             method = method, # "DECIPHER" or "dada" 
+                             method = tax_method, # "DECIPHER" or "dada" 
                              threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
                              tryRC = FALSE,
                              collapseNoMis = TRUE,
@@ -1359,5 +1307,9 @@ run_fbt_lab_16S_pipe <- function(raw_files_path,
   
   run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
                                   method = "R") -> phylo
+  
+  
+  run_merge_phyloseq(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                     metadata = metadata)
   
 }
