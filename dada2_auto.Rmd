@@ -46,94 +46,12 @@ require(phyloseq); packageVersion("phyloseq")
 require(DECIPHER); packageVersion("DECIPHER")
 require(phangorn); packageVersion("phangorn")
 
+
 source("scripts/functions.R")
 ```
 
 
-
-```{r, message = TRUE, warning = FALSE, results = TRUE}
-raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/"
-atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos"
-V = "V4"
-method = "dada"
-db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz"
-db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz"
-
-if(V == "V4") {
-    
-    PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
-    PRIMER_R = "GGACTACHVGGGTWTCTAAT"
-    trim_length = c(230,270)
-    trunclen =  c(170,160)
-    maxee = c(3,4)
-    minLen = 100
-    minover = 40
-  } 
-  if(V == "V3V4"){
-    
-    PRIMER_F = "CCTAYGGGRBGCASCAG"
-    PRIMER_R = "GGACTACNNGGGTATCTAAT"
-    trim_length = c(240,400)
-    trunclen =  c(260,250)
-    maxee = c(4,5)
-    minLen = 160
-    minover = 10
-    
-  }
-  cat(paste0('\n##',"running run_atropos() '\n\n'"))
-  
-  run_atropos(raw_files_path = raw_files_path,
-              atropos = atropos,
-              PRIMER_F = PRIMER_F,
-              PRIMER_R = PRIMER_R)   
-  
-  cat(paste0('\n##',"running run_dada2_qplot() '\n\n'"))
-  
-  run_dada2_qplot(raw_files_path = raw_files_path)
-  
-  cat(paste0('\n##',"running run_dada2_filter_denoise_merge_reads() '\n\n'"))
-  
-  run_dada2_filter_denoise_merge_reads(raw_files_path = raw_files_path,
-                                      trunclen = trunclen,
-                                      maxee = maxee,
-                                      minLen = minLen,
-                                      minover = minover)
-  
-  cat(paste0('\n##',"running run_dada2_mergeRuns_removeBimeraDenovo() '\n\n'"))
-  
-  run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = raw_files_path,
-                                         trim_length = trim_length)
-  
-  cat(paste0('\n##',"running run_dada_DECIPHER_taxonomy() '\n\n'"))
-  
-  run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
-                             method = method, # "DECIPHER" or "dada" 
-                             threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
-                             tryRC = FALSE,
-                             collapseNoMis = TRUE,
-                             db = db, # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
-                             db_species = db_species # only for dada2 method
-  )
-  
-  cat(paste0('\n##',"running run_DECIPHER_phangorn_phylogeny() '\n\n'"))
-  
-  run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
-                                  method = "R") -> phylo
-  
-}
-
-```
-
-```{r, message = TRUE, warning = FALSE, results = TRUE}
-run_merge_phyloseq_simple(tax_tsv = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/04_dada2_taxonomy/silva_nr_v138_train_set_table.tsv",
-                          metadata = "none", # sample_name
-                          phylo_tree = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/05_phylo/unrooted_tree.rds",
-                          output_physeq = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/physeq")-> physeq
-
-physeq
-```
-
-```{r, message = TRUE, warning = FALSE, results = TRUE}
+```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
 run_16S_pipe(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
                                 atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
                                 V = "V4",
@@ -141,12 +59,20 @@ run_16S_pipe(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpi
                                 db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
                                 db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz") -> phyloseq
 
-phyloseq
-
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
 phyloseq
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+source("https://raw.githubusercontent.com/fconstancias/DivComAnalyses/master/R/phyloseq_normalisation.R")
+
+phyloseq %>%
+  phyloseq_check_lib_size(data_color = "varA",
+                        data_facet = "varB",
+                        nreads_display = 100,
+                        first_n = 5)
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}

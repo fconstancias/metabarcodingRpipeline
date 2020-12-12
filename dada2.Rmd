@@ -1,5 +1,5 @@
 ---
-title: "dada2 auto `r Sys.Date()`"
+title: "dada2 functions `r Sys.Date()`"
 author: "Florentin CONSTANCIAS"
 date: "`r Sys.Date()`"
 output: 
