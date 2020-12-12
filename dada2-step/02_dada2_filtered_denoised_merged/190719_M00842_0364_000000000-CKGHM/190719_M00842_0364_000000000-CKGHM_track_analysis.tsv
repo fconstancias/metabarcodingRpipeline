@@ -1,4 +1,0 @@
-sample	input	filtered	denoisedF	denoisedR	merged	tabled	filtered_pc	denoisedF_pc	denoisedR_pc	merged_pc	filtered_merged_pc	input_merged_pc
-Y2A15-2M-06-S78	8145	2210	2134	2130	2073	2073	0.271	0.966	0.964	0.971	0.938	0.255
-Y2A15-2M-12-S77	7000	3081	2990	3015	2863	2863	0.44	0.97	0.979	0.958	0.929	0.409
-Y3-R1F4-S136	36	6	2	2	1	1	0.167	0.333	0.333	0.5	0.167	0.028
