@@ -7,7 +7,7 @@ cat('################################\n\n')
 ## ------------------------------------------------------------------------
 
 require("optparse")
-source("/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/scripts/functions.R")
+source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/master/scripts/functions.R")
 
 ## ------------------------------------------------------------------------
 suppressPackageStartupMessages(library("optparse"))
