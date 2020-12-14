@@ -21,20 +21,27 @@ DT::datatable(matrix())
 ```{r install, include=TRUE}
 # install.packages("devtools")
 # 
-# devtools::install_github("KlausVigo/phangorn")
-# 
-# devtools::install_github("benjjneb/dada2", ref="v1.16") # change the ref argument to get other versions
-# 
+# install.packages("optparse")
+#
 # devtools::install_github("tidyverse/tidyverse")
-# 
-# 
+#
+#
 # if (!requireNamespace("BiocManager", quietly = TRUE))
 #     install.packages("BiocManager")
 # 
 # BiocManager::install("ShortRead")
 # 
 # BiocManager::install("DECIPHER")
-
+#
+# BiocManager::install("phyloseq")
+#
+#
+# devtools::install_github("KlausVigo/phangorn")
+# 
+# devtools::install_github("benjjneb/dada2", ref="v1.18") # change the ref argument to get other versions
+# 
+#
+# 
 ```
 
 ```{r packages, results=FALSE, warning=FALSE, include=FALSE}

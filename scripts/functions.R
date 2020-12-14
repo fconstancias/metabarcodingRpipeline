@@ -1111,9 +1111,10 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
 #'
 
 
-run_merge_phyloseq <- function(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
-                               metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx",
+run_merge_phyloseq <- function(raw_files_path,
+                               metadata,
                                taxa_dir = "04_dada2_taxonomy",
+                               phylo = FALSE,
                                phylo_dir = "05_phylo",
                                merged_run_dir = "03_dada2_merged_runs_chimera_removed",
                                rooted_tree = TRUE,
@@ -1167,24 +1168,24 @@ run_merge_phyloseq <- function(raw_files_path = "/Users/fconstan/Documents/GitHu
   physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq)) # https://github.com/benjjneb/dada2/issues/613
   
   ## ------------------------------------------------------------------------
-  
-  if(rooted_tree == TRUE){
-    list.files(file.path(output, phylo_dir),
-               pattern = glob2rx("rooted_tree.rds"),
-               full.names = TRUE,
-               recursive = TRUE) %>% readRDS() -> tree
-    physeq@phy_tree = tree
+  if(phylo == TRUE){
+    if(rooted_tree == TRUE){
+      list.files(file.path(output, phylo_dir),
+                 pattern = glob2rx("rooted_tree.rds"),
+                 full.names = TRUE,
+                 recursive = TRUE) %>% readRDS() -> tree
+      physeq@phy_tree = tree
+    }
+    if(rooted_tree == FALSE){
+      list.files(file.path(output, phylo_dir),
+                 pattern = glob2rx("*unrooted_tree.rds"),
+                 full.names = TRUE,
+                 recursive = TRUE) %>% readRDS() -> tree
+      physeq@phy_tree = tree
+    }
+    # physeq <- merge_phyloseq(physeq,
+    #                          tree)
   }
-  if(rooted_tree == FALSE){
-    list.files(file.path(output, phylo_dir),
-               pattern = glob2rx("*unrooted_tree.rds"),
-               full.names = TRUE,
-               recursive = TRUE) %>% readRDS() -> tree
-    physeq@phy_tree = tree
-  }
-  # physeq <- merge_phyloseq(physeq,
-  #                          tree)
-  
   
   taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
                                               nchar(ntaxa(physeq)),
@@ -1242,11 +1243,21 @@ run_merge_phyloseq <- function(raw_files_path = "/Users/fconstan/Documents/GitHu
 
 run_16S_pipe <- function(raw_files_path,
                          atropos,
+                         out_dir = "dada2",
                          V = "V4",
+                         PRIMER_F,
+                         PRIMER_R,
+                         trim_length = c(240,400),
+                         trunclen = c(260,250),
+                         maxee = c(3,4),
+                         minLen = 100,
+                         minover = 15,
+                         phylo = FALSE,
                          tax_method = "dada",
                          metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx",
                          db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
-                         db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz"){
+                         db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
+                         SLOTS = 6){
   if(V == "V4") {
     
     PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
@@ -1273,11 +1284,14 @@ run_16S_pipe <- function(raw_files_path,
   run_atropos(raw_files_path = raw_files_path,
               atropos = atropos,
               PRIMER_F = PRIMER_F,
-              PRIMER_R = PRIMER_R)   
+              PRIMER_R = PRIMER_R,
+              output = out_dir,
+              NSLOTS = SLOTS)   
   
   cat(paste0('\n##',"running run_dada2_qplot() '\n\n'"))
   
-  run_dada2_qplot(raw_files_path = raw_files_path)
+  run_dada2_qplot(raw_files_path = raw_files_path,
+                  output = out_dir)
   
   cat(paste0('\n##',"running run_dada2_filter_denoise_merge_reads() '\n\n'"))
   
@@ -1285,12 +1299,14 @@ run_16S_pipe <- function(raw_files_path,
                                        trunclen = trunclen,
                                        maxee = maxee,
                                        minLen = minLen,
-                                       minover = minover)
+                                       minover = minover,
+                                       output = out_dir)
   
   cat(paste0('\n##',"running run_dada2_mergeRuns_removeBimeraDenovo() '\n\n'"))
   
   run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = raw_files_path,
-                                         trim_length = trim_length)
+                                         trim_length = trim_length,
+                                         output = out_dir)
   
   cat(paste0('\n##',"running run_dada_DECIPHER_taxonomy() '\n\n'"))
   
@@ -1300,16 +1316,27 @@ run_16S_pipe <- function(raw_files_path,
                              tryRC = FALSE,
                              collapseNoMis = TRUE,
                              db = db, # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
-                             db_species = db_species # only for dada2 method
+                             db_species = db_species, # only for dada2 method
+                             output = out_dir
   )
   
-  cat(paste0('\n##',"running run_DECIPHER_phangorn_phylogeny() '\n\n'"))
+  if(phylo == TRUE) {
+    cat(paste0('\n##',"running run_DECIPHER_phangorn_phylogeny() '\n\n'"))
+    
+    run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
+                                    method = "R",
+                                    output = out_dir) -> phylo
+    
+    run_merge_phyloseq(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                       metadata = metadata,
+                       phylo = TRUE,
+                       output = out_dir)
+  }
   
-  run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
-                                  method = "R") -> phylo
-  
-  
-  run_merge_phyloseq(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
-                     metadata = metadata)
-  
+  if(phylo == FALSE) {
+    run_merge_phyloseq(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                       metadata = metadata,
+                       phylo = FALSE,
+                       output = out_dir)
+  }
 }

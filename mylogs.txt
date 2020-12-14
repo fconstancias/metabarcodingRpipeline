@@ -1,0 +1,1658 @@
+################################
+
+Le chargement a nécessité le package : optparse
+
+# Input directory: /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data.
+
+# Tax_method: dada.
+
+# database: ~/db/DADA2/silva_nr_v138_train_set.fa.gz.
+
+# database_for_species_assignments: ~/db/DADA2/silva_species_assignment_v138.fa.gz.
+
+##running run_atropos() '
+
+'Loading required package: tidyverse
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.4     ✔ dplyr   1.0.2
+✔ tidyr   1.1.2     ✔ stringr 1.4.0
+✔ readr   1.4.0     ✔ forcats 0.5.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+Loading required package: dada2
+Loading required package: Rcpp
+Loading required package: ShortRead
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:dplyr’:
+
+    combine, intersect, setdiff, union
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, append,
+    as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
+    lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
+    pmin.int, rank, rbind, rownames, sapply, setdiff, sort, table,
+    tapply, union, unique, unsplit, which.max, which.min
+
+Loading required package: BiocParallel
+Loading required package: Biostrings
+Loading required package: S4Vectors
+Loading required package: stats4
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:dplyr’:
+
+    first, rename
+
+The following object is masked from ‘package:tidyr’:
+
+    expand
+
+The following object is masked from ‘package:base’:
+
+    expand.grid
+
+Loading required package: IRanges
+
+Attaching package: ‘IRanges’
+
+The following objects are masked from ‘package:dplyr’:
+
+    collapse, desc, slice
+
+The following object is masked from ‘package:purrr’:
+
+    reduce
+
+Loading required package: XVector
+
+Attaching package: ‘XVector’
+
+The following object is masked from ‘package:purrr’:
+
+    compact
+
+
+Attaching package: ‘Biostrings’
+
+The following object is masked from ‘package:base’:
+
+    strsplit
+
+Loading required package: Rsamtools
+Loading required package: GenomeInfoDb
+Loading required package: GenomicRanges
+Loading required package: GenomicAlignments
+Loading required package: SummarizedExperiment
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+
+Attaching package: ‘matrixStats’
+
+The following object is masked from ‘package:dplyr’:
+
+    count
+
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+
+Attaching package: ‘GenomicAlignments’
+
+The following object is masked from ‘package:dplyr’:
+
+    last
+
+
+Attaching package: ‘ShortRead’
+
+The following object is masked from ‘package:dplyr’:
+
+    id
+
+The following object is masked from ‘package:purrr’:
+
+    compose
+
+The following object is masked from ‘package:tibble’:
+
+    view
+
+
+##You are using DADA2 version 1.18.0
+
+##You are using tidyverse version 1.3.0.9000
+
+
+##You are using ShortRead version 1.48.0
+
+
+##You are using Biostrings version 2.58.0
+
+
+##You are using atropo version 1.1.29
+################################
+
+
+# output dir :  dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT
+
+# sample names list starts with : 
+2020-12-14 18:10:04,708 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-14 18:10:04,714 INFO: Trimming 4 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-14 18:10:04,748 INFO: Starting 1 worker processes
+2020-12-14 18:10:04,875 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -a ATTAGATACCCNNGTAGTCC -G GGACTACNNGGGTATCTAAT -A CTGSTGCVYCCCRTAGG -n 4 -O 12 -o dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F1-S66_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F1-S66_primersout_R2_.fastq.gz -pe1 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F1-S66_L001_R1_001.fastq.gz -pe2 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F1-S66_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: R1F1-S66_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F1-S66_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F1-S66_L001_R2_001.fastq.gz
+
+Start time: 2020-12-14T18:10:04.712153
+Wallclock time: 0.16 s (7 us/read; 8.14 M reads/minute)
+CPU time (main process): 0.13 s
+
+--------
+Trimming
+--------
+
+Pairs                                  records   fraction
+----------------------------------- ---------- ----------
+Total read pairs processed:             22,151
+  Read 1 with adapter:                  10,189      46.0%
+  Read 2 with adapter:                  20,514      92.6%
+Pairs that were too short:               5,202      23.5%
+Pairs with too many n:                      20       0.1%
+Pairs written (passing filters):         5,865      26.5%
+
+Base pairs                                  bp   fraction
+----------------------------------- ---------- ----------
+Total bp processed:                 10,632,200
+  Read 1:                            5,318,545
+  Read 2:                            5,313,655
+Total bp written (filtered):         3,216,396      30.3%
+  Read 1:                            1,613,366      30.3%
+  Read 2:                            1,603,030      30.2%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+ATTAGATACCCNNGTAGTCC regular 3'     20       4,432
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Bases preceding removed adapters:
+  A           0.2%
+  C           0.3%
+  G          99.2%
+  T           0.3%
+  none/other  0.0%
+WARNING:
+  The adapter is preceded by "G" extremely often. The provided adapter
+  sequence may be incomplete. To fix the problem, add "G" to the
+  beginning of the adapter sequence.
+
+Overview of removed sequences:
+length count expect max.err error counts 
+                            0    1    2  
+------ ----- ------ ------- -------------
+    13     1    0.0       1 1            
+    15     2    0.0       1 1    1       
+    18    17    0.0       1 16   1       
+    19     1    0.0       1 1            
+    20     1    0.0       2 0    1       
+    21     3    0.0       2 1    2       
+    22    12    0.0       2 7    4    1  
+    23 4,237    0.0       2 1004 3000 233
+    24     7    0.0       2 1    5    1  
+    45     1    0.0       2 0    0    1  
+    51     1    0.0       2 0    0    1  
+   100     1    0.0       2 0    1       
+   130     1    0.0       2 1            
+   142     1    0.0       2 0    1       
+   148     1    0.0       2 0    1       
+   150     1    0.0       2 0    1       
+   167     1    0.0       2 0    1       
+   248     1    0.0       2 0    1       
+   269     1    0.0       2 0    0    1  
+   272     2    0.0       2 2            
+   273    14    0.0       2 1    7    6  
+   274     1    0.0       2 0    1       
+   275     3    0.0       2 1    2       
+   276    19    0.0       2 2    8    9  
+   277     1    0.0       2 0    1       
+   278     4    0.0       2 1    2    1  
+   279    53    0.0       2 9    38   6  
+   282     3    0.0       2 0    1    2  
+   286     1    0.0       2 0    1       
+   287     2    0.0       2 2            
+   288     4    0.0       2 0    4       
+   289    15    0.0       2 1    12   2  
+   290     6    0.0       2 0    5    1  
+   291    11    0.0       2 2    8    1  
+   292     2    0.0       2 0    2       
+
+---------------------
+First read: Adapter 2
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       6,667
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0    1      
+------ ----- ------ ------- ------------
+    16     1    0.0       1 0    1      
+    17     2    0.0       1 0    2      
+    18     3    0.0       1 0    3      
+    19     3    0.0       1 0    3      
+    20    28    0.0       1 4    24     
+    21 6,627    0.0       1 1136 5491   
+    22     3    0.0       1 0    3      
+
+----------------------
+Second read: Adapter 3
+----------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CTGSTGCVYCCCRTAGG regular 3'     17         930
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0   1       
+------ ----- ------ ------- ------------
+    14     1    0.0       1 0   1       
+    16     4    0.0       1 0   4       
+    17     1    0.0       1 0   1       
+    19     1    0.0       1 0   1       
+    21   907    0.0       1 184 723     
+    40     1    0.0       1 0   1       
+    91     1    0.0       1 1           
+   140     1    0.0       1 0   1       
+   276     1    0.0       1 1           
+   277    11    0.0       1 0   11      
+   288     1    0.0       1 0   1       
+
+----------------------
+Second read: Adapter 4
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20      20,487
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length  count expect max.err error counts  
+                             0    1     2  
+------ ------ ------ ------- --------------
+    12      2    0.0       1 1    1        
+    13      4    0.0       1 4             
+    15      1    0.0       1 1             
+    16      5    0.0       1 2    3        
+    17      3    0.0       1 1    2        
+    18      4    0.0       1 1    3        
+    19      4    0.0       1 2    2        
+    20      2    0.0       2 1    1        
+    21     25    0.0       2 5    15    5  
+    22     72    0.0       2 15   45    12 
+    23 20,336    0.0       2 4948 15092 296
+    24     29    0.0       2 7    21    1  
+
+WARNING:
+  One or more of your adapter sequences may be incomplete. Please see
+  the detailed output above.
+2020-12-14 18:10:11,073 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-14 18:10:11,080 INFO: Trimming 4 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-14 18:10:11,107 INFO: Starting 1 worker processes
+2020-12-14 18:10:11,208 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -a ATTAGATACCCNNGTAGTCC -G GGACTACNNGGGTATCTAAT -A CTGSTGCVYCCCRTAGG -n 4 -O 12 -o dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F2-S300_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F2-S300_primersout_R2_.fastq.gz -pe1 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F2-S300_L001_R1_001.fastq.gz -pe2 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F2-S300_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: R1F2-S300_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F2-S300_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F2-S300_L001_R2_001.fastq.gz
+
+Start time: 2020-12-14T18:10:11.076842
+Wallclock time: 0.13 s (7 us/read; 9.10 M reads/minute)
+CPU time (main process): 0.11 s
+
+--------
+Trimming
+--------
+
+Pairs                                 records  fraction
+----------------------------------- --------- ---------
+Total read pairs processed:            19,924
+  Read 1 with adapter:                  9,542     47.9%
+  Read 2 with adapter:                 17,898     89.8%
+Pairs that were too short:              5,995     30.1%
+Pairs with too many n:                      8      0.0%
+Pairs written (passing filters):        4,909     24.6%
+
+Base pairs                                 bp  fraction
+----------------------------------- --------- ---------
+Total bp processed:                 8,889,671
+  Read 1:                           4,445,703
+  Read 2:                           4,443,968
+Total bp written (filtered):        2,691,055     30.3%
+  Read 1:                           1,349,677     30.4%
+  Read 2:                           1,341,378     30.2%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+ATTAGATACCCNNGTAGTCC regular 3'     20       4,740
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Bases preceding removed adapters:
+  A           0.2%
+  C           0.1%
+  G          99.4%
+  T           0.3%
+  none/other  0.0%
+WARNING:
+  The adapter is preceded by "G" extremely often. The provided adapter
+  sequence may be incomplete. To fix the problem, add "G" to the
+  beginning of the adapter sequence.
+
+Overview of removed sequences:
+length count expect max.err error counts 
+                            0    1    2  
+------ ----- ------ ------- -------------
+    14     2    0.0       1 0    2       
+    17     1    0.0       1 1            
+    18    13    0.0       1 10   3       
+    19     3    0.0       1 2    1       
+    20     4    0.0       2 2    2       
+    21     9    0.0       2 3    5    1  
+    22    17    0.0       2 1    13   3  
+    23 4,538    0.0       2 1001 3277 260
+    24     8    0.0       2 2    6       
+   117     1    0.0       2 0    0    1  
+   138     1    0.0       2 1            
+   144     1    0.0       2 0    1       
+   248     1    0.0       2 1            
+   249     1    0.0       2 0    1       
+   271     1    0.0       2 0    1       
+   273    17    0.0       2 4    11   2  
+   274     3    0.0       2 0    2    1  
+   275     2    0.0       2 0    0    2  
+   276    26    0.0       2 7    15   4  
+   277     3    0.0       2 1    2       
+   278     5    0.0       2 0    5       
+   279    33    0.0       2 3    28   2  
+   281     1    0.0       2 0    1       
+   282     1    0.0       2 0    0    1  
+   286     1    0.0       2 0    1       
+   287     2    0.0       2 0    2       
+   288     3    0.0       2 0    3       
+   289    16    0.0       2 4    12      
+   290     6    0.0       2 2    4       
+   291    20    0.0       2 4    11   5  
+
+---------------------
+First read: Adapter 2
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       5,687
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0   1       
+------ ----- ------ ------- ------------
+    19     4    0.0       1 1   3       
+    20    17    0.0       1 1   16      
+    21 5,662    0.0       1 951 4711    
+    22     3    0.0       1 0   3       
+    30     1    0.0       1 0   1       
+
+----------------------
+Second read: Adapter 3
+----------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CTGSTGCVYCCCRTAGG regular 3'     17         908
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0   1       
+------ ----- ------ ------- ------------
+    15     1    0.0       1 0   1       
+    16     2    0.0       1 0   2       
+    18     2    0.0       1 0   2       
+    19     1    0.0       1 0   1       
+    20     2    0.0       1 0   2       
+    21   882    0.0       1 199 683     
+    22     1    0.0       1 0   1       
+    98     1    0.0       1 0   1       
+   101     1    0.0       1 0   1       
+   271     1    0.0       1 0   1       
+   275     2    0.0       1 0   2       
+   277    12    0.0       1 3   9       
+
+----------------------
+Second read: Adapter 4
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20      17,862
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length  count expect max.err error counts  
+                             0    1     2  
+------ ------ ------ ------- --------------
+    12      2    0.0       1 0    2        
+    13      2    0.0       1 2             
+    14      2    0.0       1 1    1        
+    15      3    0.0       1 0    3        
+    16      1    0.0       1 1             
+    17      5    0.0       1 3    2        
+    19      4    0.0       1 1    3        
+    20      8    0.0       2 1    5     2  
+    21     10    0.0       2 5    5        
+    22     65    0.0       2 18   37    10 
+    23 17,733    0.0       2 4260 13240 233
+    24     27    0.0       2 10   16    1  
+
+WARNING:
+  One or more of your adapter sequences may be incomplete. Please see
+  the detailed output above.
+2020-12-14 18:10:17,273 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-14 18:10:17,281 INFO: Trimming 4 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-14 18:10:17,307 INFO: Starting 1 worker processes
+2020-12-14 18:10:17,499 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -a ATTAGATACCCNNGTAGTCC -G GGACTACNNGGGTATCTAAT -A CTGSTGCVYCCCRTAGG -n 4 -O 12 -o dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F3-S90_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F3-S90_primersout_R2_.fastq.gz -pe1 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F3-S90_L001_R1_001.fastq.gz -pe2 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F3-S90_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: R1F3-S90_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F3-S90_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F3-S90_L001_R2_001.fastq.gz
+
+Start time: 2020-12-14T18:10:17.276981
+Wallclock time: 0.22 s (7 us/read; 8.54 M reads/minute)
+CPU time (main process): 0.18 s
+
+--------
+Trimming
+--------
+
+Pairs                                  records   fraction
+----------------------------------- ---------- ----------
+Total read pairs processed:             31,619
+  Read 1 with adapter:                  14,382      45.5%
+  Read 2 with adapter:                  28,307      89.5%
+Pairs that were too short:               4,789      15.1%
+Pairs with too many n:                      21       0.1%
+Pairs written (passing filters):        10,289      32.5%
+
+Base pairs                                  bp   fraction
+----------------------------------- ---------- ----------
+Total bp processed:                 15,941,504
+  Read 1:                            7,964,968
+  Read 2:                            7,976,536
+Total bp written (filtered):         5,249,570      32.9%
+  Read 1:                            2,626,864      33.0%
+  Read 2:                            2,622,706      32.9%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+ATTAGATACCCNNGTAGTCC regular 3'     20       6,000
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Bases preceding removed adapters:
+  A           1.4%
+  C           2.4%
+  G          95.2%
+  T           1.0%
+  none/other  0.0%
+WARNING:
+  The adapter is preceded by "G" extremely often. The provided adapter
+  sequence may be incomplete. To fix the problem, add "G" to the
+  beginning of the adapter sequence.
+
+Overview of removed sequences:
+length count expect max.err error counts 
+                            0    1    2  
+------ ----- ------ ------- -------------
+    12     1    0.0       1 1            
+    13     1    0.0       1 1            
+    14     3    0.0       1 3            
+    16     9    0.0       1 5    4       
+    17     6    0.0       1 6            
+    18    32    0.0       1 24   8       
+    19     8    0.0       1 7    1       
+    20    10    0.0       2 0    8    2  
+    21    13    0.0       2 2    10   1  
+    22    29    0.0       2 7    18   4  
+    23 5,695    0.0       2 1250 3897 548
+    24     6    0.0       2 2    4       
+    31     1    0.0       2 0    1       
+    43     3    0.0       2 2    0    1  
+    48     1    0.0       2 1            
+    49     1    0.0       2 0    1       
+    55     1    0.0       2 0    1       
+    59     1    0.0       2 0    0    1  
+    60     1    0.0       2 0    0    1  
+    62     1    0.0       2 0    1       
+    68     1    0.0       2 0    0    1  
+    72     1    0.0       2 0    1       
+    78     2    0.0       2 0    2       
+    79     1    0.0       2 0    1       
+    90     1    0.0       2 0    0    1  
+    95     1    0.0       2 0    1       
+   102     1    0.0       2 0    1       
+   106     1    0.0       2 1            
+   123     1    0.0       2 0    0    1  
+   125     1    0.0       2 0    1       
+   127     1    0.0       2 0    1       
+   142     3    0.0       2 1    2       
+   149     1    0.0       2 0    1       
+   150     1    0.0       2 0    1       
+   157     1    0.0       2 0    0    1  
+   159     2    0.0       2 1    1       
+   160     1    0.0       2 0    0    1  
+   161    22    0.0       2 4    16   2  
+   169     1    0.0       2 0    0    1  
+   195     1    0.0       2 0    1       
+   211     1    0.0       2 0    0    1  
+   233     1    0.0       2 0    1       
+   239     1    0.0       2 1            
+   240     1    0.0       2 0    1       
+   247     1    0.0       2 0    1       
+   264     1    0.0       2 0    1       
+   266     1    0.0       2 0    0    1  
+   271     1    0.0       2 1            
+   273    12    0.0       2 3    7    2  
+   274     2    0.0       2 0    1    1  
+   275     2    0.0       2 0    1    1  
+   276    18    0.0       2 3    14   1  
+   277     1    0.0       2 0    1       
+   278     5    0.0       2 1    3    1  
+   279    40    0.0       2 8    26   6  
+   280     4    0.0       2 2    2       
+   282     2    0.0       2 0    2       
+   286     2    0.0       2 1    1       
+   288     3    0.0       2 2    1       
+   289    21    0.0       2 2    17   2  
+   290     3    0.0       2 1    2       
+   291     8    0.0       2 2    6       
+   295     1    0.0       2 0    1       
+
+---------------------
+First read: Adapter 2
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       9,303
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0    1      
+------ ----- ------ ------- ------------
+    14     1    0.0       1 1           
+    15     1    0.0       1 0    1      
+    16     2    0.0       1 0    2      
+    17     1    0.0       1 0    1      
+    18     6    0.0       1 1    5      
+    19     7    0.0       1 0    7      
+    20    43    0.0       1 5    38     
+    21 9,234    0.0       1 1578 7656   
+    22     6    0.0       1 1    5      
+    32     1    0.0       1 0    1      
+   260     1    0.0       1 1           
+
+----------------------
+Second read: Adapter 3
+----------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CTGSTGCVYCCCRTAGG regular 3'     17       1,043
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0   1       
+------ ----- ------ ------- ------------
+    16     7    0.0       1 2   5       
+    17     2    0.0       1 0   2       
+    18     2    0.0       1 0   2       
+    19     1    0.0       1 0   1       
+    20     3    0.0       1 0   3       
+    21   989    0.0       1 203 786     
+    22     2    0.0       1 0   2       
+    27     1    0.0       1 0   1       
+    28     1    0.0       1 0   1       
+    37     2    0.0       1 1   1       
+    38     2    0.0       1 0   2       
+    39     1    0.0       1 0   1       
+    42     1    0.0       1 1           
+    47     1    0.0       1 0   1       
+    48     1    0.0       1 0   1       
+    50     3    0.0       1 1   2       
+    52     1    0.0       1 0   1       
+    53     1    0.0       1 0   1       
+    79     1    0.0       1 0   1       
+    90     1    0.0       1 0   1       
+    95     2    0.0       1 0   2       
+   107     1    0.0       1 0   1       
+   108     1    0.0       1 0   1       
+   128     1    0.0       1 0   1       
+   143     1    0.0       1 0   1       
+   169     1    0.0       1 0   1       
+   197     1    0.0       1 0   1       
+   275     1    0.0       1 0   1       
+   277    10    0.0       1 1   9       
+   278     1    0.0       1 1           
+
+----------------------
+Second read: Adapter 4
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20      28,163
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length  count expect max.err error counts  
+                             0    1     2  
+------ ------ ------ ------- --------------
+    13      6    0.0       1 3    3        
+    16      5    0.0       1 4    1        
+    17      1    0.0       1 0    1        
+    18      5    0.0       1 4    1        
+    19      6    0.0       1 3    3        
+    20     14    0.0       2 3    10    1  
+    21     22    0.0       2 5    12    5  
+    22    112    0.0       2 23   61    28 
+    23 27,948    0.0       2 6532 20650 766
+    24     43    0.0       2 16   25    2  
+    25      1    0.0       2 1             
+
+WARNING:
+  One or more of your adapter sequences may be incomplete. Please see
+  the detailed output above.
+
+# output dir :  dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM
+
+# sample names list starts with : 
+2020-12-14 18:10:24,392 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-14 18:10:24,397 INFO: Trimming 4 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-14 18:10:24,446 INFO: Starting 1 worker processes
+2020-12-14 18:10:24,534 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -a ATTAGATACCCNNGTAGTCC -G GGACTACNNGGGTATCTAAT -A CTGSTGCVYCCCRTAGG -n 4 -O 12 -o dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_primersout_R2_.fastq.gz -pe1 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_L001_R1_001.fastq.gz -pe2 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: Y2A15-2M-06-S78_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_L001_R2_001.fastq.gz
+
+Start time: 2020-12-14T18:10:24.395438
+Wallclock time: 0.14 s (9 us/read; 6.93 M reads/minute)
+CPU time (main process): 0.10 s
+
+--------
+Trimming
+--------
+
+Pairs                                 records  fraction
+----------------------------------- --------- ---------
+Total read pairs processed:            16,057
+  Read 1 with adapter:                  8,059     50.2%
+  Read 2 with adapter:                  9,027     56.2%
+Pairs that were too short:                877      5.5%
+Pairs with too many n:                     31      0.2%
+Pairs written (passing filters):        7,040     43.8%
+
+Base pairs                                 bp  fraction
+----------------------------------- --------- ---------
+Total bp processed:                 9,666,314
+  Read 1:                           4,833,157
+  Read 2:                           4,833,157
+Total bp written (filtered):        3,919,537     40.5%
+  Read 1:                           1,965,439     40.7%
+  Read 2:                           1,954,098     40.4%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+ATTAGATACCCNNGTAGTCC regular 3'     20         959
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Bases preceding removed adapters:
+  A           0.9%
+  C           0.6%
+  G          87.3%
+  T          10.1%
+  none/other  1.0%
+WARNING:
+  The adapter is preceded by "G" extremely often. The provided adapter
+  sequence may be incomplete. To fix the problem, add "G" to the
+  beginning of the adapter sequence.
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0   1   2   
+------ ----- ------ ------- ------------
+    16     3    0.0       1 3           
+    29     1    0.0       2 0   0   1   
+    38     2    0.0       2 0   0   2   
+    42     2    0.0       2 1   1       
+    45    13    0.0       2 4   9       
+    46     1    0.0       2 0   1       
+    47     1    0.0       2 1           
+    50     1    0.0       2 0   1       
+    51     1    0.0       2 0   1       
+    54     1    0.0       2 0   1       
+    57     1    0.0       2 0   1       
+    58     2    0.0       2 0   0   2   
+    59     2    0.0       2 0   2       
+    72     1    0.0       2 0   0   1   
+    73     1    0.0       2 0   0   1   
+    76     1    0.0       2 0   0   1   
+    88     1    0.0       2 0   0   1   
+    90     1    0.0       2 0   1       
+    92     1    0.0       2 0   1       
+    98     3    0.0       2 0   2   1   
+   100     1    0.0       2 0   1       
+   111     9    0.0       2 3   5   1   
+   117     1    0.0       2 1           
+   123     1    0.0       2 0   0   1   
+   124     1    0.0       2 1           
+   125     1    0.0       2 0   0   1   
+   130     1    0.0       2 0   0   1   
+   133     1    0.0       2 0   0   1   
+   135     1    0.0       2 0   1       
+   145     1    0.0       2 0   1       
+   146     3    0.0       2 0   2   1   
+   147     3    0.0       2 2   1       
+   148     1    0.0       2 0   1       
+   150     2    0.0       2 0   1   1   
+   152     1    0.0       2 0   1       
+   153     2    0.0       2 0   2       
+   166     1    0.0       2 0   1       
+   169     1    0.0       2 0   0   1   
+   174     1    0.0       2 0   1       
+   176     1    0.0       2 0   0   1   
+   178     1    0.0       2 0   1       
+   181     1    0.0       2 1           
+   186     1    0.0       2 0   1       
+   195     1    0.0       2 0   0   1   
+   197     1    0.0       2 0   1       
+   198     2    0.0       2 2           
+   200     1    0.0       2 1           
+   201     3    0.0       2 0   0   3   
+   202     1    0.0       2 0   1       
+   204     1    0.0       2 1           
+   205     3    0.0       2 2   1       
+   210     1    0.0       2 0   0   1   
+   217     2    0.0       2 0   1   1   
+   221     1    0.0       2 0   0   1   
+   224     2    0.0       2 1   0   1   
+   226     1    0.0       2 1           
+   232     4    0.0       2 3   1       
+   233     4    0.0       2 3   1       
+   239     2    0.0       2 1   1       
+   240     1    0.0       2 0   1       
+   241     1    0.0       2 0   1       
+   244     1    0.0       2 0   1       
+   245     9    0.0       2 3   6       
+   246     7    0.0       2 3   3   1   
+   247    35    0.0       2 18  17      
+   248     5    0.0       2 5           
+   249     1    0.0       2 1           
+   250    85    0.0       2 55  28  2   
+   251    20    0.0       2 10  10      
+   252     1    0.0       2 1           
+   256     2    0.0       2 1   1       
+   258     2    0.0       2 1   1       
+   259     5    0.0       2 2   2   1   
+   260    10    0.0       2 4   5   1   
+   261     2    0.0       2 1   1       
+   263    28    0.0       2 15  8   5   
+   264    45    0.0       2 20  21  4   
+   265    12    0.0       2 8   4       
+   266    10    0.0       2 3   5   2   
+   267     1    0.0       2 0   1       
+   268     2    0.0       2 1   1       
+   271     1    0.0       2 0   1       
+   272     1    0.0       2 0   1       
+   273     1    0.0       2 1           
+   274     8    0.0       2 1   6   1   
+   279     9    0.0       2 3   6       
+   282     2    0.0       2 1   1       
+   288     2    0.0       2 1   1       
+   289    45    0.0       2 17  26  2   
+   290     5    0.0       2 3   2       
+   291   478    0.0       2 202 263 13  
+   293     4    0.0       2 0   4       
+   300     1    0.0       2 1           
+   301    10    0.0       2 6   4       
+
+---------------------
+First read: Adapter 2
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       7,157
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0    1      
+------ ----- ------ ------- ------------
+    17     1    0.0       1 1           
+    18     1    0.0       1 0    1      
+    19     1    0.0       1 1           
+    20    11    0.0       1 4    7      
+    21 7,133    0.0       1 3483 3650   
+    22     9    0.0       1 4    5      
+    73     1    0.0       1 0    1      
+
+----------------------
+Second read: Adapter 3
+----------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CTGSTGCVYCCCRTAGG regular 3'     17          66
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0 1         
+------ ----- ------ ------- ------------
+    14     2    0.0       1 1 1         
+    16     1    0.0       1 0 1         
+    23     1    0.0       1 0 1         
+    27     1    0.0       1 0 1         
+    43     9    0.0       1 3 6         
+    44     1    0.0       1 1           
+    46     1    0.0       1 1           
+    47     1    0.0       1 0 1         
+    51     1    0.0       1 0 1         
+    59     1    0.0       1 0 1         
+    66     3    0.0       1 0 3         
+    71     1    0.0       1 0 1         
+    73     1    0.0       1 0 1         
+    86     1    0.0       1 0 1         
+    88     1    0.0       1 0 1         
+    92     1    0.0       1 0 1         
+    96     1    0.0       1 0 1         
+   108     1    0.0       1 0 1         
+   109     8    0.0       1 8           
+   129     1    0.0       1 0 1         
+   133     1    0.0       1 0 1         
+   137     1    0.0       1 0 1         
+   141     1    0.0       1 0 1         
+   147     1    0.0       1 0 1         
+   156     1    0.0       1 0 1         
+   193     1    0.0       1 0 1         
+   219     1    0.0       1 0 1         
+   222     1    0.0       1 0 1         
+   250     1    0.0       1 1           
+   253     1    0.0       1 0 1         
+   256     1    0.0       1 0 1         
+   257     2    0.0       1 0 2         
+   272     7    0.0       1 0 7         
+   277     8    0.0       1 2 6         
+
+----------------------
+Second read: Adapter 4
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20       9,008
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length count expect max.err error counts 
+                            0    1    2  
+------ ----- ------ ------- -------------
+    16     1    0.0       1 1            
+    18     1    0.0       1 1            
+    19     1    0.0       1 0    1       
+    21     3    0.0       2 0    2    1  
+    22    20    0.0       2 6    10   4  
+    23 8,963    0.0       2 3956 4833 174
+    24    17    0.0       2 8    8    1  
+    58     1    0.0       2 0    0    1  
+    82     1    0.0       2 1            
+
+WARNING:
+  One or more of your adapter sequences may be incomplete. Please see
+  the detailed output above.
+2020-12-14 18:10:30,931 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-14 18:10:30,940 INFO: Trimming 4 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-14 18:10:30,971 INFO: Starting 1 worker processes
+2020-12-14 18:10:31,086 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -a ATTAGATACCCNNGTAGTCC -G GGACTACNNGGGTATCTAAT -A CTGSTGCVYCCCRTAGG -n 4 -O 12 -o dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_primersout_R2_.fastq.gz -pe1 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_L001_R1_001.fastq.gz -pe2 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: Y2A15-2M-12-S77_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_L001_R2_001.fastq.gz
+
+Start time: 2020-12-14T18:10:30.934737
+Wallclock time: 0.15 s (7 us/read; 8.26 M reads/minute)
+CPU time (main process): 0.12 s
+
+--------
+Trimming
+--------
+
+Pairs                                  records   fraction
+----------------------------------- ---------- ----------
+Total read pairs processed:             20,864
+  Read 1 with adapter:                   7,427      35.6%
+  Read 2 with adapter:                   8,269      39.6%
+Pairs that were too short:               1,225       5.9%
+Pairs with too many n:                      51       0.2%
+Pairs written (passing filters):         6,069      29.1%
+
+Base pairs                                  bp   fraction
+----------------------------------- ---------- ----------
+Total bp processed:                 12,560,128
+  Read 1:                            6,280,064
+  Read 2:                            6,280,064
+Total bp written (filtered):         3,380,017      26.9%
+  Read 1:                            1,694,761      27.0%
+  Read 2:                            1,685,256      26.8%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+ATTAGATACCCNNGTAGTCC regular 3'     20       1,292
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Bases preceding removed adapters:
+  A           1.0%
+  C           0.2%
+  G          90.3%
+  T           6.5%
+  none/other  1.9%
+WARNING:
+  The adapter is preceded by "G" extremely often. The provided adapter
+  sequence may be incomplete. To fix the problem, add "G" to the
+  beginning of the adapter sequence.
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0   1   2   
+------ ----- ------ ------- ------------
+    12     2    0.0       1 1   1       
+    16     1    0.0       1 1           
+    17     3    0.0       1 2   1       
+    18     7    0.0       1 6   1       
+    21     2    0.0       2 1   1       
+    25     1    0.0       2 0   0   1   
+    38     2    0.0       2 0   0   2   
+    39     1    0.0       2 0   1       
+    43     1    0.0       2 0   1       
+    44     4    0.0       2 2   2       
+    53     1    0.0       2 0   1       
+    59     8    0.0       2 0   5   3   
+    87     1    0.0       2 1           
+    90     1    0.0       2 1           
+    99     2    0.0       2 1   1       
+   101     1    0.0       2 0   1       
+   102     1    0.0       2 0   1       
+   107     2    0.0       2 1   0   1   
+   110     1    0.0       2 0   0   1   
+   118     1    0.0       2 0   1       
+   126     1    0.0       2 0   0   1   
+   128     1    0.0       2 0   1       
+   132     1    0.0       2 0   0   1   
+   135     1    0.0       2 1           
+   136     1    0.0       2 1           
+   137     1    0.0       2 1           
+   140     1    0.0       2 1           
+   144     2    0.0       2 0   0   2   
+   145     3    0.0       2 2   1       
+   150     2    0.0       2 0   2       
+   151     1    0.0       2 1           
+   158     1    0.0       2 0   0   1   
+   161     1    0.0       2 1           
+   166     2    0.0       2 0   2       
+   168     4    0.0       2 2   0   2   
+   174     2    0.0       2 1   1       
+   192     1    0.0       2 0   1       
+   193     2    0.0       2 0   2       
+   198     7    0.0       2 5   1   1   
+   201     4    0.0       2 3   1       
+   203     2    0.0       2 1   1       
+   204     8    0.0       2 5   2   1   
+   206     1    0.0       2 1           
+   222     1    0.0       2 0   1       
+   231     1    0.0       2 0   1       
+   232     1    0.0       2 1           
+   234     2    0.0       2 1   1       
+   235     2    0.0       2 2           
+   238     2    0.0       2 1   1       
+   240     1    0.0       2 0   0   1   
+   243     4    0.0       2 2   2       
+   245     5    0.0       2 4   1       
+   246    10    0.0       2 5   5       
+   247    21    0.0       2 10  10  1   
+   248     2    0.0       2 1   1       
+   249     2    0.0       2 0   2       
+   250    60    0.0       2 35  25      
+   252     1    0.0       2 0   1       
+   253     1    0.0       2 0   1       
+   254     1    0.0       2 1           
+   255     1    0.0       2 0   1       
+   256     3    0.0       2 1   1   1   
+   258     5    0.0       2 2   1   2   
+   259     2    0.0       2 1   1       
+   260    11    0.0       2 8   3       
+   261     3    0.0       2 1   2       
+   262     4    0.0       2 1   2   1   
+   263    22    0.0       2 8   12  2   
+   264    28    0.0       2 12  13  3   
+   265     7    0.0       2 5   2       
+   266     5    0.0       2 1   3   1   
+   267     3    0.0       2 2   1       
+   271     3    0.0       2 3           
+   272     1    0.0       2 0   1       
+   273     3    0.0       2 0   3       
+   274    42    0.0       2 17  22  3   
+   275     3    0.0       2 0   2   1   
+   276     7    0.0       2 1   6       
+   277     1    0.0       2 0   1       
+   279    31    0.0       2 12  19      
+   280     2    0.0       2 0   2       
+   281     1    0.0       2 1           
+   285     4    0.0       2 4           
+   287     1    0.0       2 1           
+   288     7    0.0       2 3   4       
+   289    98    0.0       2 36  59  3   
+   290    12    0.0       2 6   6       
+   291   736    0.0       2 321 404 11  
+   292     2    0.0       2 0   2       
+   293     4    0.0       2 3   1       
+   296     2    0.0       2 1   1       
+   300     3    0.0       2 2   1       
+   301    25    0.0       2 5   16  4   
+
+---------------------
+First read: Adapter 2
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       6,217
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0    1      
+------ ----- ------ ------- ------------
+    17     1    0.0       1 1           
+    18     1    0.0       1 0    1      
+    19     2    0.0       1 2           
+    20     8    0.0       1 3    5      
+    21 6,203    0.0       1 2993 3210   
+    22     1    0.0       1 1           
+    85     1    0.0       1 1           
+
+----------------------
+Second read: Adapter 3
+----------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CTGSTGCVYCCCRTAGG regular 3'     17          93
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0  1        
+------ ----- ------ ------- ------------
+    16     6    0.0       1 2  4        
+    38     1    0.0       1 1           
+    56     1    0.0       1 1           
+    73     1    0.0       1 1           
+    77     1    0.0       1 1           
+    93     1    0.0       1 1           
+   105     1    0.0       1 0  1        
+   121     1    0.0       1 0  1        
+   124     1    0.0       1 0  1        
+   155     1    0.0       1 0  1        
+   158     1    0.0       1 0  1        
+   159     1    0.0       1 0  1        
+   168     1    0.0       1 0  1        
+   180     1    0.0       1 0  1        
+   187     1    0.0       1 0  1        
+   190     1    0.0       1 0  1        
+   194     1    0.0       1 0  1        
+   197     1    0.0       1 0  1        
+   202     1    0.0       1 1           
+   205     1    0.0       1 0  1        
+   220     1    0.0       1 0  1        
+   235     1    0.0       1 0  1        
+   240     1    0.0       1 0  1        
+   247     1    0.0       1 1           
+   248     1    0.0       1 0  1        
+   250     5    0.0       1 2  3        
+   252     1    0.0       1 0  1        
+   254     1    0.0       1 0  1        
+   256     2    0.0       1 0  2        
+   271     1    0.0       1 0  1        
+   272    22    0.0       1 1  21       
+   273     1    0.0       1 0  1        
+   274     5    0.0       1 0  5        
+   277    25    0.0       1 12 13       
+
+----------------------
+Second read: Adapter 4
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20       8,254
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length count expect max.err error counts 
+                            0    1    2  
+------ ----- ------ ------- -------------
+    12     1    0.0       1 1            
+    19     1    0.0       1 1            
+    20     2    0.0       2 2            
+    21     2    0.0       2 0    1    1  
+    22    19    0.0       2 8    11      
+    23 8,209    0.0       2 3680 4367 162
+    24     9    0.0       2 3    6       
+    48     1    0.0       2 0    1       
+    59     9    0.0       2 2    4    3  
+    82     1    0.0       2 1            
+
+WARNING:
+  One or more of your adapter sequences may be incomplete. Please see
+  the detailed output above.
+2020-12-14 18:10:37,287 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-14 18:10:37,296 INFO: Trimming 4 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-14 18:10:37,320 INFO: Starting 1 worker processes
+2020-12-14 18:10:37,324 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -a ATTAGATACCCNNGTAGTCC -G GGACTACNNGGGTATCTAAT -A CTGSTGCVYCCCRTAGG -n 4 -O 12 -o dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_primersout_R2_.fastq.gz -pe1 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_L001_R1_001.fastq.gz -pe2 /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: Y3-R1F4-S136_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_L001_R2_001.fastq.gz
+
+Start time: 2020-12-14T18:10:37.290968
+Wallclock time: 0.03 s (714 us/read; 0.08 M reads/minute)
+CPU time (main process): 0.01 s
+
+--------
+Trimming
+--------
+
+Pairs                               records fraction
+----------------------------------- ------- --------
+Total read pairs processed:             46
+  Read 1 with adapter:                  28  60.9%
+  Read 2 with adapter:                  38  82.6%
+Pairs that were too short:               2   4.3%
+Pairs with too many n:                   0      0
+Pairs written (passing filters):        25  54.3%
+
+Base pairs                              bp fraction
+----------------------------------- ------ --------
+Total bp processed:                 26,359
+  Read 1:                           13,175
+  Read 2:                           13,184
+Total bp written (filtered):        13,437  51.0%
+  Read 1:                            6,742  51.2%
+  Read 2:                            6,695  50.8%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+ATTAGATACCCNNGTAGTCC regular 3'     20           3
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Bases preceding removed adapters:
+  A           0.0%
+  C           0.0%
+  G          100.0%
+  T           0.0%
+  none/other  0.0%
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0 1         
+------ ----- ------ ------- ------------
+    23     3    0.0       2 2 1         
+
+---------------------
+First read: Adapter 2
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17          28
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0 1         
+------ ----- ------ ------- ------------
+    21    28    0.0       1 8 20        
+
+----------------------
+Second read: Adapter 3
+----------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CTGSTGCVYCCCRTAGG regular 3'     17           3
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Bases preceding removed adapters:
+  A          66.7%
+  C          33.3%
+  G           0.0%
+  T           0.0%
+  none/other  0.0%
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0 1         
+------ ----- ------ ------- ------------
+    21     3    0.0       1 1 2         
+
+----------------------
+Second read: Adapter 4
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20          38
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0  1  2     
+------ ----- ------ ------- ------------
+    23    38    0.0       2 11 26 1     
+
+
+##running run_dada2_qplot() '
+
+'
+##You are using DADA2 version 1.18.0
+
+##You are using tidyverse version 1.3.0.9000
+
+################################
+
+
+# output dir :  dada2/01_dada2_quality_profiles/180914_M00842_0310_000000000-C3GBT
+
+# sample names list starts with : 
+
+# output dir :  dada2/01_dada2_quality_profiles/190719_M00842_0364_000000000-CKGHM
+
+# sample names list starts with : 
+
+##running run_dada2_filter_denoise_merge_reads() '
+
+'
+##You are using DADA2 version 1.18.0
+
+##You are using tidyverse version 1.3.0.9000
+
+################################
+
+
+# output dir :  dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT
+
+# sample names list starts with : 
+
+# filterAndTrim 
+
+# Filtering and trimming done with the following parameters:
+# Forward pair: trimming at 260 nts and max expected error 4
+# Reverse pair: trimming at 250 nts and max expected error 5
+
+
+# Filtered fastq files were generated in : "dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT" 
+
+# derepFastq 
+
+# Dereplication done
+
+# learnErrors  
+4620200 total bases in 17770 reads from 3 samples will be used for learning the error rates.
+4442500 total bases in 17770 reads from 3 samples will be used for learning the error rates.
+
+# plotErrors  
+
+# Errors learnt and ploted 
+
+# dada 
+Sample 1 - 5388 reads in 1821 unique sequences.
+Sample 2 - 4498 reads in 1221 unique sequences.
+Sample 3 - 7884 reads in 2331 unique sequences.
+
+   selfConsist step 2Sample 1 - 5388 reads in 2672 unique sequences.
+Sample 2 - 4498 reads in 2174 unique sequences.
+Sample 3 - 7884 reads in 3648 unique sequences.
+
+   selfConsist step 2
+# DADA2 algorithm performed 
+
+# mergePairs with defined 10 nt overlap 
+# Pairs were merged
+# Number of samples: 3
+# Number of detected variants (ASVs): 213# The variants (ASVs) have the following length distribution:
+# saving seqtab as dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT/180914_M00842_0310_000000000-C3GBT_seqtab.rds
+
+# Plotting Sequences/ASV distribution to dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT/seq_distrib_180914_M00842_0310_000000000-C3GBT.pdf
+
+
+# Generating summary 
+
+# The distribution of merged kept is the following:
+
+# output dir :  dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM
+
+# sample names list starts with : 
+
+# filterAndTrim 
+
+# Filtering and trimming done with the following parameters:
+# Forward pair: trimming at 260 nts and max expected error 4
+# Reverse pair: trimming at 250 nts and max expected error 5
+
+
+# Filtered fastq files were generated in : "dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM" 
+
+# derepFastq 
+
+# Dereplication done
+
+# learnErrors  
+3239080 total bases in 12458 reads from 3 samples will be used for learning the error rates.
+3114500 total bases in 12458 reads from 3 samples will be used for learning the error rates.
+
+# plotErrors  
+
+# Errors learnt and ploted 
+
+# dada 
+Sample 1 - 6579 reads in 2396 unique sequences.
+Sample 2 - 5859 reads in 1654 unique sequences.
+Sample 3 - 20 reads in 15 unique sequences.
+
+   selfConsist step 2Sample 1 - 6579 reads in 2391 unique sequences.
+Sample 2 - 5859 reads in 2200 unique sequences.
+Sample 3 - 20 reads in 18 unique sequences.
+
+   selfConsist step 2
+# DADA2 algorithm performed 
+
+# mergePairs with defined 10 nt overlap 
+# Pairs were merged
+# Number of samples: 3
+# Number of detected variants (ASVs): 216# The variants (ASVs) have the following length distribution:
+# saving seqtab as dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/190719_M00842_0364_000000000-CKGHM_seqtab.rds
+
+# Plotting Sequences/ASV distribution to dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/seq_distrib_190719_M00842_0364_000000000-CKGHM.pdf
+
+
+# Generating summary 
+
+# The distribution of merged kept is the following:
+
+##running run_dada2_mergeRuns_removeBimeraDenovo() '
+
+'
+##You are using DADA2 version 1.18.0
+
+##You are using tidyverse version 1.3.0.9000
+
+################################
+
+
+# output dir :  dada2/03_dada2_merged_runs_chimera_removed
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  sample = col_character(),
+  input = col_double(),
+  filtered = col_double(),
+  denoisedF = col_double(),
+  denoisedR = col_double(),
+  merged = col_double(),
+  tabled = col_double(),
+  filtered_pc = col_double(),
+  denoisedF_pc = col_double(),
+  denoisedR_pc = col_double(),
+  merged_pc = col_double(),
+  filtered_merged_pc = col_double(),
+  input_merged_pc = col_double()
+)
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  sample = col_character(),
+  input = col_double(),
+  filtered = col_double(),
+  denoisedF = col_double(),
+  denoisedR = col_double(),
+  merged = col_double(),
+  tabled = col_double(),
+  filtered_pc = col_double(),
+  denoisedF_pc = col_double(),
+  denoisedR_pc = col_double(),
+  merged_pc = col_double(),
+  filtered_merged_pc = col_double(),
+  input_merged_pc = col_double()
+)
+
+
+# removeBimeraDenovo running on dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT/180914_M00842_0310_000000000-C3GBT_seqtab.rds file  
+# removeBimeraDenovo running on dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/190719_M00842_0364_000000000-CKGHM_seqtab.rds file 
+# mergeSequenceTables done
+
+# removeBimeraDenovo start
+
+# removeBimeraDenovo done
+# 71 chimera were found and removed
+# These represent 18.16% of total ASVs and 8.09% of total reads
+
+# The variants (ASVs) have the following length distribution:
+
+# Reads shorter than 240bp and longer than 400bp were removed.
+
+# The variants (ASVs) after length filtering have the following length distribution:
+Error in base::colSums(x, na.rm = na.rm, dims = dims, ...) : 
+  'x' must be an array of at least two dimensions
+Calls: run_16S_pipe ... run_dada2_mergeRuns_removeBimeraDenovo -> cat -> paste0 -> colSums -> colSums -> <Anonymous>
+De plus : There were 22 warnings (use warnings() to see them)
+Exécution arrêtée
