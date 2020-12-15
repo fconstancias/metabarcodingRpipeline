@@ -1242,7 +1242,7 @@ run_merge_phyloseq <- function(raw_files_path,
 #'
 
 run_16S_pipe <- function(raw_files_path,
-                         atropos = "atropos",
+                         atropos_bin = "atropos",
                          out_dir = "dada2",
                          V = "V4",
                          PRIMER_F,
@@ -1254,6 +1254,7 @@ run_16S_pipe <- function(raw_files_path,
                          minLen = 100,
                          minover = 15,
                          phylo = FALSE,
+                         tryRC = FALSE,
                          tax_method = "dada",
                          metadata = NULL,
                          db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
@@ -1283,7 +1284,7 @@ run_16S_pipe <- function(raw_files_path,
   cat(paste0('\n##',"running run_atropos() '\n\n'"))
   
   run_atropos(raw_files_path = raw_files_path,
-              atropos = atropos,
+              atropos = atropos_bin,
               PRIMER_F = PRIMER_F,
               PRIMER_R = PRIMER_R,
               output = out_dir,
@@ -1314,7 +1315,7 @@ run_16S_pipe <- function(raw_files_path,
   run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
                              method = tax_method, # "DECIPHER" or "dada" 
                              threshold = tax_threshold,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
-                             tryRC = FALSE,
+                             tryRC = tryRC,
                              collapseNoMis = TRUE,
                              db = db, # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
                              db_species = db_species, # only for dada2 method
