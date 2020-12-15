@@ -94,7 +94,8 @@ run_16S_pipe(raw_files_path = opt$input_directory,
              trim_length = opt$trim_length,
              maxee = opt$maxee,
              minLen = opt$minLen,
-             SLOTS = opt$slots)
+             SLOTS = opt$slots,
+             out_dir = opt$output_directory)
 
 ## ------------------------------------------------------------------------
 

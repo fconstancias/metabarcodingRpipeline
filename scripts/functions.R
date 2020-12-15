@@ -848,7 +848,10 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
                            multithread = TRUE,
                            verbose = TRUE,
                            minBoot = threshold,
-                           tryRC = as.logical(tryRC))
+                           tryRC = as.logical(tryRC),
+                           taxLevels = c("Kingdom", "Phylum", "Class",
+                                         "Order", "Family", "Genus", "Species"),
+                           multithread = TRUE)
     
     if(outputBootstraps==FALSE)
     {
@@ -1242,7 +1245,7 @@ run_merge_phyloseq <- function(raw_files_path,
 
 run_16S_pipe <- function(raw_files_path,
                      atropos_bin = "atropos",
-                     out_dir = "dada2",
+                     out_dir,
                      V = "V4",
                      PRIMER_F,
                      PRIMER_R,
@@ -1255,7 +1258,7 @@ run_16S_pipe <- function(raw_files_path,
                      phylo = FALSE,
                      tryRC = FALSE,
                      tax_method = "dada",
-                     metadata = NULL,
+                     metadata,
                      db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
                      db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
                      SLOTS = 6){
