@@ -1,4 +1,0 @@
-sample	input	filtered	denoisedF	denoisedR	merged	tabled	filtered_pc	denoisedF_pc	denoisedR_pc	merged_pc	filtered_merged_pc	input_merged_pc
-R1F1-S66	5613	5370	4797	4793	4099	4099	0.957	0.893	0.893	0.854	0.763	0.73
-R1F2-S300	4678	4475	4233	4140	3671	3671	0.957	0.946	0.925	0.867	0.82	0.785
-R1F3-S90	8117	7754	7331	7420	6624	6624	0.955	0.945	0.957	0.904	0.854	0.816

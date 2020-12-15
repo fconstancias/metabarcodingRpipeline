@@ -1,5 +1,8 @@
-#MACOS
+# MACOS
 .DS_Store
+
+# atropos
+.adapters
 
 # History files
 .Rhistory
