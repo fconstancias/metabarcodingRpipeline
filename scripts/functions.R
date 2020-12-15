@@ -1240,7 +1240,7 @@ run_merge_phyloseq <- function(raw_files_path,
 #'
 #'
 
-run_pipe <- function(raw_files_path,
+run_16S_pipe <- function(raw_files_path,
                      atropos_bin = "atropos",
                      out_dir = "dada2",
                      V = "V4",
