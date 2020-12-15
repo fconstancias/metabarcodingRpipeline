@@ -129,3 +129,8 @@ Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: 
 		--database_for_species_assignments ~/db/silva_species_assignment_v138.fa.gz > mylogs.txt 2>&1
 		
 The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
+
+## TO DO:
+
+- add phylogenetic tree to a phyloseq object
+- replace taxonomic assignments of a phyloseq object
