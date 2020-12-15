@@ -4,23 +4,23 @@
 
 Change the directory where you would like to clone the repository.
 
-	cd my_directory
+	$ cd my_directory
 
 Use ``git clone`` to clone on your computer the repository including the functions and test data.
 
-	git clone https://github.com/fconstancias/metabarcodingRpipeline.git
+	$ git clone https://github.com/fconstancias/metabarcodingRpipeline.git
 
 
 ## Install the proper conda envirionment
 ### Create conda environment:
-	conda create -n metabarcodingRpipeline -y
+	$ conda create -n metabarcodingRpipeline -y
 ### Activate conda environment:
-	conda activate metabarcodingRpipeline
+	$ conda activate metabarcodingRpipeline
 ### install R and atropos:
-	(metabarcodingRpipeline) conda install -c bioconda atropos -y
-	(metabarcodingRpipeline) conda install -c conda-forge r-base -y
+	(metabarcodingRpipeline)$ conda install -c bioconda atropos -y
+	(metabarcodingRpipeline)$ conda install -c conda-forge r-base -y
 ### start R:
-	(metabarcodingRpipeline) R
+	(metabarcodingRpipeline)$ R
 ### install necessary R packages:
 	install.packages("devtools")
 	install.packages("optparse")
@@ -37,17 +37,19 @@ Use ``git clone`` to clone on your computer the repository including the functio
 	
 Change the script to executable mode:
 
-	cd metabarcodingRpipeline/
-	chmod +x scripts/dada2_metabarcoding_pipeline.R
+	$ cd metabarcodingRpipeline/
+	$ chmod +x scripts/dada2_metabarcoding_pipeline.R
 
 ## Usage:
 
 
+activate the dedicated conda environment:
 
+	$ conda activate metabarcodingRpipeline
 
 print help:
-
-	Rscript scripts/dada2_metabarcoding_pipeline.R --help
+	
+	(metabarcodingRpipeline)$ Rscript scripts/dada2_metabarcoding_pipeline.R --help
 
 
 	Usage: scripts/dada2_metabarcoding_pipeline.R [options]
@@ -113,18 +115,17 @@ print help:
 
 activate the dedicated conda environment:
 
-	conda activate metabarcodingRpipeline
+	$ conda activate metabarcodingRpipeline
 
 
 Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: *databases*
 
-	Rscript scripts/dada2_metabarcoding_pipeline.R \
+	(metabarcodingRpipeline)$ Rscript scripts/dada2_metabarcoding_pipeline.R \
 		-i test-data \
-		-a atropos \
 		-o dada2 \
 		-V V3V4 \
 		--metadata test-data/metadata.xlsx \
-		--database /Users/localadmin/ENGINEs/NEWPIPE/db/silva_nr99_v138_train_set.fa.gz \
-		--database_for_species_assignments /Users/localadmin/ENGINEs/NEWPIPE/db/silva_species_assignment_v138.fa.gz > mylogs.txt 2>&1
+		--database ~/db/silva_nr99_v138_train_set.fa.gz \
+		--database_for_species_assignments ~/db/silva_species_assignment_v138.fa.gz > mylogs.txt 2>&1
 		
 The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
