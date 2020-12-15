@@ -32,9 +32,6 @@ Use ``git clone`` to clone on your computer the repository including the functio
 ### quit R:
 	q()
 	
-Change the script to executable mode:
-
-	$ chmod +x metabarcodingRpipeline/scripts/dada2_metabarcoding_pipeline.R
 
 ## Usage:
 
