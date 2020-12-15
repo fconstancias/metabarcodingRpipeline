@@ -141,4 +141,5 @@ By default, based on <https://f1000research.com/articles/5-1492>.
 ## TO DO:
 
 - <s>add phylogenetic tree to a phyloseq object</s>
-- replace taxonomic assignments of a phyloseq object
+- add possibility to skip primer removal skipping run_atropos or changing atropos parameter?
+- replace taxonomic assignments of a phyloseq object using alternative approach/ database
