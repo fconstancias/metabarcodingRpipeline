@@ -25,7 +25,6 @@ DT::datatable(matrix())
 #
 # devtools::install_github("tidyverse/tidyverse")
 #
-#
 # if (!requireNamespace("BiocManager", quietly = TRUE))
 #     install.packages("BiocManager")
 # 
@@ -35,12 +34,9 @@ DT::datatable(matrix())
 #
 # BiocManager::install("phyloseq")
 #
-#
 # devtools::install_github("KlausVigo/phangorn")
 # 
 # devtools::install_github("benjjneb/dada2", ref="v1.18") # change the ref argument to get other versions
-# 
-#
 # 
 ```
 

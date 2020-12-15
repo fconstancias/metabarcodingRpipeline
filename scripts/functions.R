@@ -1272,7 +1272,7 @@ run_16S_pipe <- function(raw_files_path,
     
     PRIMER_F = "CCTAYGGGRBGCASCAG"
     PRIMER_R = "GGACTACNNGGGTATCTAAT"
-    trim_length = c(240,400)
+    trim_length = c(240,500)
     trunclen =  c(260,250)
     maxee = c(4,5)
     minLen = 160
