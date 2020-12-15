@@ -850,8 +850,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
                            minBoot = threshold,
                            tryRC = as.logical(tryRC),
                            taxLevels = c("Kingdom", "Phylum", "Class",
-                                         "Order", "Family", "Genus", "Species"),
-                           multithread = TRUE)
+                                         "Order", "Family", "Genus", "Species"))
     
     if(outputBootstraps==FALSE)
     {
