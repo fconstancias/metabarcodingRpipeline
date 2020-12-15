@@ -1011,7 +1011,7 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
   cat(paste0('\n##',"You are using DECIPHER version ", packageVersion('DECIPHER'),'\n\n'))
   cat(paste0('\n##',"You are using phangorn version ", packageVersion('phangorn'),'\n\n'))
-
+  
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
@@ -1241,24 +1241,24 @@ run_merge_phyloseq <- function(raw_files_path,
 #'
 
 run_pipe <- function(raw_files_path,
-                         atropos_bin = "atropos",
-                         out_dir = "dada2",
-                         V = "V4",
-                         PRIMER_F,
-                         PRIMER_R,
-                         tax_threshold = 60,
-                         trim_length = c(240,400),
-                         trunclen = c(260,250),
-                         maxee = c(3,4),
-                         minLen = 100,
-                         minover = 15,
-                         phylo = FALSE,
-                         tryRC = FALSE,
-                         tax_method = "dada",
-                         metadata = NULL,
-                         db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
-                         db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
-                         SLOTS = 6){
+                     atropos_bin = "atropos",
+                     out_dir = "dada2",
+                     V = "V4",
+                     PRIMER_F,
+                     PRIMER_R,
+                     tax_threshold = 60,
+                     trim_length = c(240,400),
+                     trunclen = c(260,250),
+                     maxee = c(3,4),
+                     minLen = 100,
+                     minover = 15,
+                     phylo = FALSE,
+                     tryRC = FALSE,
+                     tax_method = "dada",
+                     metadata = NULL,
+                     db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
+                     db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
+                     SLOTS = 6){
   if(V == "V4") {
     
     PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
@@ -1372,7 +1372,7 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
   cat(paste0('\n##',"You are using DECIPHER version ", packageVersion('DECIPHER'),'\n\n'))
   cat(paste0('\n##',"You are using phangorn version ", packageVersion('phangorn'),'\n\n'))
-
+  
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
