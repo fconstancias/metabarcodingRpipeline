@@ -37,8 +37,7 @@ Use ``git clone`` to clone on your computer the repository including the functio
 	
 Change the script to executable mode:
 
-	$ cd metabarcodingRpipeline/
-	$ chmod +x scripts/dada2_metabarcoding_pipeline.R
+	$ chmod +x metabarcodingRpipeline/scripts/dada2_metabarcoding_pipeline.R
 
 ## Usage:
 
