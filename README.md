@@ -11,19 +11,24 @@ Use ``git clone`` to clone on your computer the repository including the functio
 	$ git clone https://github.com/fconstancias/metabarcodingRpipeline.git
 
 
-## Install the proper conda envirionment:
-### Create a dedicated conda environment:
+## Install the proper conda envirionment
+### Create conda environment:
 	$ conda create -n metabarcodingRpipeline -y
-### Activate the conda environment:
+### Activate conda environment:
 	$ conda activate metabarcodingRpipeline
-### Install R and atropos:
-	(metabarcodingRpipeline)$ conda install -c bioconda atropos -y; conda install -c conda-forge r-base -y
-### run R:
+### install R and atropos:
+	(metabarcodingRpipeline)$ conda install -c bioconda atropos -y
+	(metabarcodingRpipeline)$ conda install -c conda-forge r-base -y
+### start R:
 	(metabarcodingRpipeline)$ R
+<<<<<<< HEAD
 ### install necessary R packages - from the R session:
 
 Running the following commands will take a bit of time.
 
+=======
+### install necessary R packages:
+>>>>>>> parent of 604cf96... update install README
 	install.packages("devtools");install.packages("optparse");devtools::install_github("tidyverse/tidyverse");devtools::install_github("KlausVigo/phangorn");devtools::install_github("benjjneb/dada2")
 	
 	if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -34,6 +39,7 @@ Running the following commands will take a bit of time.
 ### quit R:
 	quit(save = "no")
 	
+<<<<<<< HEAD
 
 ## Running the pipeline:
 
@@ -73,6 +79,13 @@ OTU/ASV sequences must be stored in the @refseq dataset of the corresponding phy
 - replace taxonomic assignments of a phyloseq object using alternative method/ database
 
 ## Help:
+=======
+Change the script to executable mode:
+
+	$ chmod +x metabarcodingRpipeline/scripts/dada2_metabarcoding_pipeline.R
+
+## Usage:
+>>>>>>> parent of 604cf96... update install README
 
 
 activate the dedicated conda environment:
@@ -89,6 +102,7 @@ print help:
 
 	Options:
 	
+<<<<<<< HEAD
 	-i CHARACTER, --input_directory=CHARACTER
 	Path of the input directory containing raw _R1_ and _R2_ raw reads in their respective run sub-directories 
  
@@ -150,3 +164,40 @@ print help:
 	-h, --help
 		Show this help message and exit
 
+=======
+		--maxee=NUMERIC
+			Maximum expected error for Fwd and Rev reads [if using -V V3 or V3V4, this parameter is already set]
+	
+		--minLen=NUMERIC
+			Minimul read length [if using -V V3 or V3V4, this parameter is already set]
+	
+		-T NUMERIC, --slots=NUMERIC
+			Number of threads to perform the analyses
+	
+		-h, --help
+			Show this help message and exit
+
+## Run the pipeline:
+
+activate the dedicated conda environment:
+
+	$ conda activate metabarcodingRpipeline
+
+
+Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: *databases*
+
+	(metabarcodingRpipeline)$ Rscript scripts/dada2_metabarcoding_pipeline.R \
+		-i test-data \
+		-o dada2 \
+		-V V3V4 \
+		--metadata test-data/metadata.xlsx \
+		--database ~/db/silva_nr99_v138_train_set.fa.gz \
+		--database_for_species_assignments ~/db/silva_species_assignment_v138.fa.gz > mylogs.txt 2>&1
+		
+The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
+
+## TO DO:
+
+- <s>add phylogenetic tree to a phyloseq object</s>
+- replace taxonomic assignments of a phyloseq object
+>>>>>>> parent of 604cf96... update install README
