@@ -1242,11 +1242,12 @@ run_merge_phyloseq <- function(raw_files_path,
 #'
 
 run_16S_pipe <- function(raw_files_path,
-                         atropos = atropos,
+                         atropos = "atropos",
                          out_dir = "dada2",
                          V = "V4",
                          PRIMER_F,
                          PRIMER_R,
+                         tax_threshold = 60,
                          trim_length = c(240,400),
                          trunclen = c(260,250),
                          maxee = c(3,4),
@@ -1312,7 +1313,7 @@ run_16S_pipe <- function(raw_files_path,
   
   run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
                              method = tax_method, # "DECIPHER" or "dada" 
-                             threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
+                             threshold = tax_threshold,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
                              tryRC = FALSE,
                              collapseNoMis = TRUE,
                              db = db, # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
@@ -1327,14 +1328,14 @@ run_16S_pipe <- function(raw_files_path,
                                     method = "R",
                                     output = out_dir) -> phylo
     
-    run_merge_phyloseq(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+    run_merge_phyloseq(raw_files_path = raw_files_path,
                        metadata = metadata,
                        phylo = TRUE,
                        output = out_dir)
   }
   
   if(phylo == FALSE) {
-    run_merge_phyloseq(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+    run_merge_phyloseq(raw_files_path = raw_files_path,
                        metadata = metadata,
                        phylo = FALSE,
                        output = out_dir)
