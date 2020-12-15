@@ -16,7 +16,10 @@ suppressPackageStartupMessages(library("optparse"))
 
 option_list = list(
   make_option(c("-i", "--input_directory"), type="character", default=NULL, 
-              help="Path of the input directory containing raw _R1_ and _R2_ raw reads in their respective run sub-directories e.g., -i raw [contains raw/run1 and raw/run2]", metavar="character"),
+              help="Path of the input directory containing raw _R1_ and _R2_ raw reads in their respective run sub-directories \n
+              e.g., -i raw [contains raw/run1 and raw/run2]\n
+              N.B.: sample name is extracted from .fastq.gz samples  before the first '_' e.g., XXX-XX \n
+              sample names must be unambigious and unique e.g., sample-1 = sample-11, sample-01 != sample-10", metavar="character"),
   make_option(c("-a", "--atropos_binary"), type="character", default = "atropos", 
               help="Path of atropos program [used for primer removal]", metavar="character"),
   make_option(c("-o", "--output_directory"), type="character", default= "dada2", 
