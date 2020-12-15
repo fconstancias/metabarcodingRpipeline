@@ -11,17 +11,16 @@ Use ``git clone`` to clone on your computer the repository including the functio
 	$ git clone https://github.com/fconstancias/metabarcodingRpipeline.git
 
 
-## Install the proper conda envirionment
-### Create conda environment:
+## Install the proper conda envirionment:
+### Create a dedicated conda environment:
 	$ conda create -n metabarcodingRpipeline -y
-### Activate conda environment:
+### Activate the conda environment:
 	$ conda activate metabarcodingRpipeline
-### install R and atropos:
-	(metabarcodingRpipeline)$ conda install -c bioconda atropos -y
-	(metabarcodingRpipeline)$ conda install -c conda-forge r-base -y
-### start R:
+### Install R and atropos:
+	(metabarcodingRpipeline)$ conda install -c bioconda atropos -y; conda install -c conda-forge r-base -y
+### run R:
 	(metabarcodingRpipeline)$ R
-### install necessary R packages:
+### install necessary R packages - from the R session:
 	install.packages("devtools");install.packages("optparse");devtools::install_github("tidyverse/tidyverse");devtools::install_github("KlausVigo/phangorn");devtools::install_github("benjjneb/dada2")
 	
 	if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -34,9 +33,43 @@ Use ``git clone`` to clone on your computer the repository including the functio
 	
 Change the script to executable mode:
 
-	$ chmod +x metabarcodingRpipeline/scripts/dada2_metabarcoding_pipeline.R
+	(metabarcodingRpipeline)$ chmod +x metabarcodingRpipeline/scripts/dada2_metabarcoding_pipeline.R
 
-## Usage:
+
+## Running the pipeline:
+
+Activate the dedicated conda environment:
+
+	$ conda activate metabarcodingRpipeline
+
+
+Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: *databases*
+
+	(metabarcodingRpipeline)$ Rscript scripts/dada2_metabarcoding_pipeline.R \
+		-i test-data \
+		-o dada2 \
+		-V V3V4 \
+		--metadata test-data/metadata.xlsx \
+		--database ~/db/silva_nr99_v138_train_set.fa.gz \
+		--phylo FALSE \
+		--database_for_species_assignments ~/db/silva_species_assignment_v138.fa.gz > mylogs.txt 2>&1
+		
+The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
+
+## Constructing and adding a phylogenetic tree from a phyloseq object:
+default using <https://f1000research.com/articles/5-1492>
+
+	(metabarcodingRpipeline)$ Rscript scripts/add_phylogeny_phyloseq.R \
+			-p test-data \
+			-o phyloq_phylo_tree
+
+
+## TO DO:
+
+- <s>add phylogenetic tree to a phyloseq object</s>
+- replace taxonomic assignments of a phyloseq object
+
+## Help:
 
 
 activate the dedicated conda environment:
@@ -99,34 +132,10 @@ print help:
 			Maximum expected error for Fwd and Rev reads [if using -V V3 or V3V4, this parameter is already set]
 	
 		--minLen=NUMERIC
-			Minimul read length [if using -V V3 or V3V4, this parameter is already set]
+			Minimul read length [if using -V V4 or V3V4, this parameter is already set]
 	
 		-T NUMERIC, --slots=NUMERIC
 			Number of threads to perform the analyses
 	
 		-h, --help
 			Show this help message and exit
-
-## Run the pipeline:
-
-activate the dedicated conda environment:
-
-	$ conda activate metabarcodingRpipeline
-
-
-Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: *databases*
-
-	(metabarcodingRpipeline)$ Rscript scripts/dada2_metabarcoding_pipeline.R \
-		-i test-data \
-		-o dada2 \
-		-V V3V4 \
-		--metadata test-data/metadata.xlsx \
-		--database ~/db/silva_nr99_v138_train_set.fa.gz \
-		--database_for_species_assignments ~/db/silva_species_assignment_v138.fa.gz > mylogs.txt 2>&1
-		
-The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
-
-## TO DO:
-
-- <s>add phylogenetic tree to a phyloseq object</s>
-- replace taxonomic assignments of a phyloseq object
