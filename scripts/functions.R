@@ -1242,7 +1242,7 @@ run_merge_phyloseq <- function(raw_files_path,
 #'
 
 run_16S_pipe <- function(raw_files_path,
-                         atropos,
+                         atropos = atropos,
                          out_dir = "dada2",
                          V = "V4",
                          PRIMER_F,
@@ -1254,7 +1254,7 @@ run_16S_pipe <- function(raw_files_path,
                          minover = 15,
                          phylo = FALSE,
                          tax_method = "dada",
-                         metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx",
+                         metadata = NULL,
                          db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
                          db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
                          SLOTS = 6){

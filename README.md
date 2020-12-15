@@ -34,6 +34,10 @@ q()
 ## Usage:
 cd metabarcodingRpipeline/
 
+chmod +x scripts/dada2_metabarcoding_pipeline.R
+
+
+
 print help:
 
 Rscript scripts/dada2_metabarcoding_pipeline.R --help
