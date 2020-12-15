@@ -80,6 +80,7 @@ cat(paste0('\n# database_for_species_assignments: ',opt$database_for_species_ass
 
 run_16S_pipe(raw_files_path = opt$input_directory,
              atropos = opt$atropos_binary,
+             out_dir = opt$output_directory,
              V = opt$pipeline,
              tax_method = opt$tax_method,
              metadata = opt$metadata,
@@ -94,8 +95,7 @@ run_16S_pipe(raw_files_path = opt$input_directory,
              trim_length = opt$trim_length,
              maxee = opt$maxee,
              minLen = opt$minLen,
-             SLOTS = opt$slots,
-             out_dir = opt$output_directory)
+             SLOTS = opt$slots)
 
 ## ------------------------------------------------------------------------
 
