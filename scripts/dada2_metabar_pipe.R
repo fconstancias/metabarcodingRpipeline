@@ -16,7 +16,9 @@ suppressPackageStartupMessages(library("optparse"))
 
 option_list = list(
   make_option(c("-i", "--input_directory"), type="character", default=NULL, 
-              help="Path of the input directory containing raw _R1_ and _R2_ raw reads in their respective run sub-directories e.g., -i raw [contains raw/run1 and raw/run2]", metavar="character"),
+              help="Path of the input directory containing raw _R1_ and _R2_ raw reads in their respective run sub-directories \n 
+              e.g., -i raw [contains raw/run1 and raw/run2 \n
+              sample names are taken from .fastq.gz files names after the first '_' ]", metavar="character"),
   make_option(c("-a", "--atropos_binary"), type="character", default = "atropos", 
               help="Path of atropos program [used for primer removal]", metavar="character"),
   make_option(c("-o", "--output_directory"), type="character", default= "dada2", 
@@ -36,19 +38,19 @@ option_list = list(
   make_option(c("--phylo"), type="logical", default = FALSE, 
               help="Compute phylogenetic tree from the ASV sequence ?", metavar="character"),
   make_option(c("--PRIMER_F"), type="character", default = NULL, 
-              help="Sequence of the gene specific Fwd primer to be removed with atropos [if using -V V3 or V3V4, this parameter is already set]", metavar="character"),
+              help="Sequence of the gene specific Fwd primer to be removed with atropos [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
   make_option(c("--PRIMER_R"), type="character", default = NULL, 
-              help="Sequence of the gene specific Rev primer to be removed with atropos [if using -V V3 or V3V4, this parameter is already set]", metavar="character"),
+              help="Sequence of the gene specific Rev primer to be removed with atropos [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
   make_option(c("--minover"), type="numeric", default = 15, 
               help="Minimum overlap for merginf R1 and R2 reads [if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("--trunclen"), type="numeric", default=c(260,250), 
-              help="Nucleotide position to truncate the Fwd and Rev reads at [if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
+              help="Nucleotide position to truncate the Fwd and Rev reads at [if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("--trim_length"), type="numeric", default = c(240,400), 
-              help="ASV of length outside the range will be discarded [i.e., insilco size exclusion of ASV - if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
+              help="ASV of length outside the range will be discarded [i.e., insilco size exclusion of ASV - if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("--maxee"), type="numeric", default = c(3,4), 
-              help="Maximum expected error for Fwd and Rev reads [if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
+              help="Maximum expected error for Fwd and Rev reads [if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("--minLen"), type="numeric", default = 100, 
-              help="Minimul read length [if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
+              help="Minimul read length [if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("-T", "--slots"), type="numeric", default = 2, 
               help="Number of threads to perform the analyses", metavar="numeric")
   
@@ -78,7 +80,7 @@ cat(paste0('\n# database: ',opt$database,'.\n'))
 cat(paste0('\n# database_for_species_assignments: ',opt$database_for_species_assignments,'.\n'))
 ## ------------------------------------------------------------------------
 
-run_16S_pipe(raw_files_path = opt$input_directory,
+run_pipe(raw_files_path = opt$input_directory,
              atropos = opt$atropos_binary,
              V = opt$pipeline,
              tax_method = opt$tax_method,

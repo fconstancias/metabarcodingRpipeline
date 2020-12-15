@@ -1,0 +1,1122 @@
+
+############################################################
+Starting 
+############################################################
+
+Le chargement a nécessité le package : optparse
+
+# Input directory: test-data.
+
+# Tax_method: dada.
+
+# database: /Users/fconstan/db/DADA2/silva_nr99_v138_train_set.fa.gz.
+
+# database_for_species_assignments: /Users/fconstan/db/DADA2/silva_species_assignment_v138.fa.gz.
+
+##running run_atropos() '
+
+'Loading required package: tidyverse
+── Attaching packages ────────────────────────────────── tidyverse 1.3.0.9000 ──
+✔ ggplot2 3.3.2     ✔ purrr   0.3.4
+✔ tibble  3.0.4     ✔ dplyr   1.0.2
+✔ tidyr   1.1.2     ✔ stringr 1.4.0
+✔ readr   1.4.0     ✔ forcats 0.5.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+Loading required package: dada2
+Loading required package: Rcpp
+Loading required package: ShortRead
+Loading required package: BiocGenerics
+Loading required package: parallel
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:parallel’:
+
+    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
+    clusterExport, clusterMap, parApply, parCapply, parLapply,
+    parLapplyLB, parRapply, parSapply, parSapplyLB
+
+The following objects are masked from ‘package:dplyr’:
+
+    combine, intersect, setdiff, union
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    Filter, Find, Map, Position, Reduce, anyDuplicated, append,
+    as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
+    lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
+    pmin.int, rank, rbind, rownames, sapply, setdiff, sort, table,
+    tapply, union, unique, unsplit, which.max, which.min
+
+Loading required package: BiocParallel
+Loading required package: Biostrings
+Loading required package: S4Vectors
+Loading required package: stats4
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:dplyr’:
+
+    first, rename
+
+The following object is masked from ‘package:tidyr’:
+
+    expand
+
+The following object is masked from ‘package:base’:
+
+    expand.grid
+
+Loading required package: IRanges
+
+Attaching package: ‘IRanges’
+
+The following objects are masked from ‘package:dplyr’:
+
+    collapse, desc, slice
+
+The following object is masked from ‘package:purrr’:
+
+    reduce
+
+Loading required package: XVector
+
+Attaching package: ‘XVector’
+
+The following object is masked from ‘package:purrr’:
+
+    compact
+
+
+Attaching package: ‘Biostrings’
+
+The following object is masked from ‘package:base’:
+
+    strsplit
+
+Loading required package: Rsamtools
+Loading required package: GenomeInfoDb
+Loading required package: GenomicRanges
+Loading required package: GenomicAlignments
+Loading required package: SummarizedExperiment
+Loading required package: MatrixGenerics
+Loading required package: matrixStats
+
+Attaching package: ‘matrixStats’
+
+The following object is masked from ‘package:dplyr’:
+
+    count
+
+
+Attaching package: ‘MatrixGenerics’
+
+The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+Loading required package: Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+
+Attaching package: ‘Biobase’
+
+The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+
+Attaching package: ‘GenomicAlignments’
+
+The following object is masked from ‘package:dplyr’:
+
+    last
+
+
+Attaching package: ‘ShortRead’
+
+The following object is masked from ‘package:dplyr’:
+
+    id
+
+The following object is masked from ‘package:purrr’:
+
+    compose
+
+The following object is masked from ‘package:tibble’:
+
+    view
+
+
+##You are using DADA2 version 1.19.1
+
+##You are using tidyverse version 1.3.0.9000
+
+
+##You are using ShortRead version 1.48.0
+
+
+##You are using Biostrings version 2.58.0
+
+
+##You are using atropo version 1.1.29
+################################
+
+
+# output dir :  dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT
+
+# sample names list starts with : 
+2020-12-15 16:14:53,211 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-15 16:14:53,220 INFO: Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-15 16:14:53,266 INFO: Starting 1 worker processes
+2020-12-15 16:14:53,384 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -G GGACTACNNGGGTATCTAAT -n 2 -O 12 -o dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F1-S66_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F1-S66_primersout_R2_.fastq.gz -pe1 test-data/180914_M00842_0310_000000000-C3GBT/R1F1-S66_L001_R1_001.fastq.gz -pe2 test-data/180914_M00842_0310_000000000-C3GBT/R1F1-S66_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: R1F1-S66_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F1-S66_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F1-S66_L001_R2_001.fastq.gz
+
+Start time: 2020-12-15T16:14:53.215605
+Wallclock time: 0.17 s (8 us/read; 7.88 M reads/minute)
+CPU time (main process): 0.13 s
+
+--------
+Trimming
+--------
+
+Pairs                                  records   fraction
+----------------------------------- ---------- ----------
+Total read pairs processed:             22,151
+  Read 1 with adapter:                   6,667      30.1%
+  Read 2 with adapter:                  20,487      92.5%
+Pairs that were too short:               5,169      23.3%
+Pairs with too many n:                      20       0.1%
+Pairs written (passing filters):         5,613      25.3%
+
+Base pairs                                  bp   fraction
+----------------------------------- ---------- ----------
+Total bp processed:                 10,632,200
+  Read 1:                            5,318,545
+  Read 2:                            5,313,655
+Total bp written (filtered):         3,129,381      29.4%
+  Read 1:                            1,570,132      29.5%
+  Read 2:                            1,559,249      29.3%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       6,667
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0    1      
+------ ----- ------ ------- ------------
+    16     1    0.0       1 0    1      
+    17     2    0.0       1 0    2      
+    18     3    0.0       1 0    3      
+    19     3    0.0       1 0    3      
+    20    28    0.0       1 4    24     
+    21 6,627    0.0       1 1136 5491   
+    22     3    0.0       1 0    3      
+
+----------------------
+Second read: Adapter 2
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20      20,487
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length  count expect max.err error counts  
+                             0    1     2  
+------ ------ ------ ------- --------------
+    12      2    0.0       1 1    1        
+    13      4    0.0       1 4             
+    15      1    0.0       1 1             
+    16      5    0.0       1 2    3        
+    17      3    0.0       1 1    2        
+    18      4    0.0       1 1    3        
+    19      4    0.0       1 2    2        
+    20      2    0.0       2 1    1        
+    21     25    0.0       2 5    15    5  
+    22     72    0.0       2 15   45    12 
+    23 20,336    0.0       2 4948 15092 296
+    24     29    0.0       2 7    21    1  
+
+2020-12-15 16:14:59,304 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-15 16:14:59,311 INFO: Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-15 16:14:59,348 INFO: Starting 1 worker processes
+2020-12-15 16:14:59,454 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -G GGACTACNNGGGTATCTAAT -n 2 -O 12 -o dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F2-S300_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F2-S300_primersout_R2_.fastq.gz -pe1 test-data/180914_M00842_0310_000000000-C3GBT/R1F2-S300_L001_R1_001.fastq.gz -pe2 test-data/180914_M00842_0310_000000000-C3GBT/R1F2-S300_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: R1F2-S300_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F2-S300_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F2-S300_L001_R2_001.fastq.gz
+
+Start time: 2020-12-15T16:14:59.308501
+Wallclock time: 0.15 s (7 us/read; 8.17 M reads/minute)
+CPU time (main process): 0.12 s
+
+--------
+Trimming
+--------
+
+Pairs                                 records  fraction
+----------------------------------- --------- ---------
+Total read pairs processed:            19,924
+  Read 1 with adapter:                  5,687     28.5%
+  Read 2 with adapter:                 17,862     89.7%
+Pairs that were too short:              5,956     29.9%
+Pairs with too many n:                      8      0.0%
+Pairs written (passing filters):        4,678     23.5%
+
+Base pairs                                 bp  fraction
+----------------------------------- --------- ---------
+Total bp processed:                 8,889,671
+  Read 1:                           4,445,703
+  Read 2:                           4,443,968
+Total bp written (filtered):        2,607,996     29.3%
+  Read 1:                           1,308,620     29.4%
+  Read 2:                           1,299,376     29.2%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       5,687
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0   1       
+------ ----- ------ ------- ------------
+    19     4    0.0       1 1   3       
+    20    17    0.0       1 1   16      
+    21 5,662    0.0       1 951 4711    
+    22     3    0.0       1 0   3       
+    30     1    0.0       1 0   1       
+
+----------------------
+Second read: Adapter 2
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20      17,862
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length  count expect max.err error counts  
+                             0    1     2  
+------ ------ ------ ------- --------------
+    12      2    0.0       1 0    2        
+    13      2    0.0       1 2             
+    14      2    0.0       1 1    1        
+    15      3    0.0       1 0    3        
+    16      1    0.0       1 1             
+    17      5    0.0       1 3    2        
+    19      4    0.0       1 1    3        
+    20      8    0.0       2 1    5     2  
+    21     10    0.0       2 5    5        
+    22     65    0.0       2 18   37    10 
+    23 17,733    0.0       2 4260 13240 233
+    24     27    0.0       2 10   16    1  
+
+2020-12-15 16:15:05,279 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-15 16:15:05,286 INFO: Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-15 16:15:05,326 INFO: Starting 1 worker processes
+2020-12-15 16:15:05,510 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -G GGACTACNNGGGTATCTAAT -n 2 -O 12 -o dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F3-S90_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/180914_M00842_0310_000000000-C3GBT/R1F3-S90_primersout_R2_.fastq.gz -pe1 test-data/180914_M00842_0310_000000000-C3GBT/R1F3-S90_L001_R1_001.fastq.gz -pe2 test-data/180914_M00842_0310_000000000-C3GBT/R1F3-S90_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: R1F3-S90_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F3-S90_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/180914_M00842_0310_000000000-C3GBT/R1F3-S90_L001_R2_001.fastq.gz
+
+Start time: 2020-12-15T16:15:05.283306
+Wallclock time: 0.23 s (7 us/read; 8.35 M reads/minute)
+CPU time (main process): 0.19 s
+
+--------
+Trimming
+--------
+
+Pairs                                  records   fraction
+----------------------------------- ---------- ----------
+Total read pairs processed:             31,619
+  Read 1 with adapter:                   9,303      29.4%
+  Read 2 with adapter:                  28,162      89.1%
+Pairs that were too short:               4,742      15.0%
+Pairs with too many n:                      21       0.1%
+Pairs written (passing filters):         8,117      25.7%
+
+Base pairs                                  bp   fraction
+----------------------------------- ---------- ----------
+Total bp processed:                 15,941,504
+  Read 1:                            7,964,968
+  Read 2:                            7,976,536
+Total bp written (filtered):         4,507,833      28.3%
+  Read 1:                            2,261,386      28.4%
+  Read 2:                            2,246,447      28.2%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       9,303
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0    1      
+------ ----- ------ ------- ------------
+    14     1    0.0       1 1           
+    15     1    0.0       1 0    1      
+    16     2    0.0       1 0    2      
+    17     1    0.0       1 0    1      
+    18     6    0.0       1 1    5      
+    19     7    0.0       1 0    7      
+    20    43    0.0       1 5    38     
+    21 9,234    0.0       1 1578 7656   
+    22     6    0.0       1 1    5      
+    32     1    0.0       1 0    1      
+   260     1    0.0       1 1           
+
+----------------------
+Second read: Adapter 2
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20      28,163
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length  count expect max.err error counts  
+                             0    1     2  
+------ ------ ------ ------- --------------
+    13      6    0.0       1 3    3        
+    16      5    0.0       1 4    1        
+    17      1    0.0       1 0    1        
+    18      5    0.0       1 4    1        
+    19      6    0.0       1 3    3        
+    20     14    0.0       2 3    10    1  
+    21     22    0.0       2 5    12    5  
+    22    112    0.0       2 23   61    28 
+    23 27,948    0.0       2 6532 20650 766
+    24     43    0.0       2 16   25    2  
+    25      1    0.0       2 1             
+
+
+# output dir :  dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM
+
+# sample names list starts with : 
+2020-12-15 16:15:11,787 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-15 16:15:11,795 INFO: Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-15 16:15:11,844 INFO: Starting 1 worker processes
+2020-12-15 16:15:11,942 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -G GGACTACNNGGGTATCTAAT -n 2 -O 12 -o dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_primersout_R2_.fastq.gz -pe1 test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_L001_R1_001.fastq.gz -pe2 test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: Y2A15-2M-06-S78_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-06-S78_L001_R2_001.fastq.gz
+
+Start time: 2020-12-15T16:15:11.791102
+Wallclock time: 0.15 s (9 us/read; 6.36 M reads/minute)
+CPU time (main process): 0.10 s
+
+--------
+Trimming
+--------
+
+Pairs                                 records  fraction
+----------------------------------- --------- ---------
+Total read pairs processed:            16,057
+  Read 1 with adapter:                  7,157     44.6%
+  Read 2 with adapter:                  9,007     56.1%
+Pairs that were too short:                  0         0
+Pairs with too many n:                     32      0.2%
+Pairs written (passing filters):        7,002     43.6%
+
+Base pairs                                 bp  fraction
+----------------------------------- --------- ---------
+Total bp processed:                 9,666,314
+  Read 1:                           4,833,157
+  Read 2:                           4,833,157
+Total bp written (filtered):        3,907,094     40.4%
+  Read 1:                           1,960,519     40.6%
+  Read 2:                           1,946,575     40.3%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       7,157
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0    1      
+------ ----- ------ ------- ------------
+    17     1    0.0       1 1           
+    18     1    0.0       1 0    1      
+    19     1    0.0       1 1           
+    20    11    0.0       1 4    7      
+    21 7,133    0.0       1 3483 3650   
+    22     9    0.0       1 4    5      
+    73     1    0.0       1 0    1      
+
+----------------------
+Second read: Adapter 2
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20       9,008
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length count expect max.err error counts 
+                            0    1    2  
+------ ----- ------ ------- -------------
+    16     1    0.0       1 1            
+    18     1    0.0       1 1            
+    19     1    0.0       1 0    1       
+    21     3    0.0       2 0    2    1  
+    22    20    0.0       2 6    10   4  
+    23 8,963    0.0       2 3956 4833 174
+    24    17    0.0       2 8    8    1  
+    58     1    0.0       2 0    0    1  
+    82     1    0.0       2 1            
+
+2020-12-15 16:15:18,154 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-15 16:15:18,163 INFO: Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-15 16:15:18,698 INFO: Starting 1 worker processes
+2020-12-15 16:15:18,818 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -G GGACTACNNGGGTATCTAAT -n 2 -O 12 -o dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_primersout_R2_.fastq.gz -pe1 test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_L001_R1_001.fastq.gz -pe2 test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: Y2A15-2M-12-S77_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y2A15-2M-12-S77_L001_R2_001.fastq.gz
+
+Start time: 2020-12-15T16:15:18.158818
+Wallclock time: 0.66 s (32 us/read; 1.90 M reads/minute)
+CPU time (main process): 0.13 s
+
+--------
+Trimming
+--------
+
+Pairs                                  records   fraction
+----------------------------------- ---------- ----------
+Total read pairs processed:             20,864
+  Read 1 with adapter:                   6,216      29.8%
+  Read 2 with adapter:                   8,244      39.5%
+Pairs that were too short:                   0          0
+Pairs with too many n:                      53       0.3%
+Pairs written (passing filters):         6,071      29.1%
+
+Base pairs                                  bp   fraction
+----------------------------------- ---------- ----------
+Total bp processed:                 12,560,128
+  Read 1:                            6,280,064
+  Read 2:                            6,280,064
+Total bp written (filtered):         3,387,520      27.0%
+  Read 1:                            1,699,813      27.1%
+  Read 2:                            1,687,707      26.9%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17       6,217
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0    1      
+------ ----- ------ ------- ------------
+    17     1    0.0       1 1           
+    18     1    0.0       1 0    1      
+    19     2    0.0       1 2           
+    20     8    0.0       1 3    5      
+    21 6,203    0.0       1 2993 3210   
+    22     1    0.0       1 1           
+    85     1    0.0       1 1           
+
+----------------------
+Second read: Adapter 2
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20       8,253
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length count expect max.err error counts 
+                            0    1    2  
+------ ----- ------ ------- -------------
+    12     1    0.0       1 1            
+    19     1    0.0       1 1            
+    20     2    0.0       2 2            
+    21     2    0.0       2 0    1    1  
+    22    19    0.0       2 8    11      
+    23 8,209    0.0       2 3680 4367 162
+    24     9    0.0       2 3    6       
+    48     1    0.0       2 0    1       
+    59     8    0.0       2 2    3    3  
+    82     1    0.0       2 1            
+
+2020-12-15 16:15:24,798 INFO: This is Atropos 1.1.29 with Python 3.6.12
+2020-12-15 16:15:24,807 INFO: Trimming 2 adapters with at most 10.0% errors in paired-end mode ...
+2020-12-15 16:15:24,858 INFO: Starting 1 worker processes
+2020-12-15 16:15:24,864 INFO: Starting 1 worker processes
+=======
+Atropos
+=======
+
+Atropos version: 1.1.29
+Python version: 3.6.12
+Command line parameters: trim --pair-filter any --no-indels --discard-untrimmed --max-n 0 -T 2 -g CCTAYGGGRBGCASCAG -G GGACTACNNGGGTATCTAAT -n 2 -O 12 -o dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_primersout_R1_.fastq.gz -p dada2/00_atropos_primer_removed/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_primersout_R2_.fastq.gz -pe1 test-data/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_L001_R1_001.fastq.gz -pe2 test-data/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_L001_R2_001.fastq.gz --minimum-length 100
+
+Sample ID: Y3-R1F4-S136_L001_R
+Input format: FASTQ, Paired, w/ Qualities
+Input files:
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_L001_R1_001.fastq.gz
+  /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/190719_M00842_0364_000000000-CKGHM/Y3-R1F4-S136_L001_R2_001.fastq.gz
+
+Start time: 2020-12-15T16:15:24.802160
+Wallclock time: 0.06 s (1339 us/read; 0.04 M reads/minute)
+CPU time (main process): 0.01 s
+
+--------
+Trimming
+--------
+
+Pairs                               records fraction
+----------------------------------- ------- --------
+Total read pairs processed:             46
+  Read 1 with adapter:                  28  60.9%
+  Read 2 with adapter:                  38  82.6%
+Pairs that were too short:               1   2.2%
+Pairs with too many n:                   0      0
+Pairs written (passing filters):        26  56.5%
+
+Base pairs                              bp fraction
+----------------------------------- ------ --------
+Total bp processed:                 26,359
+  Read 1:                           13,175
+  Read 2:                           13,184
+Total bp written (filtered):        13,731  52.1%
+  Read 1:                            6,892  52.3%
+  Read 2:                            6,839  51.9%
+
+---------------------
+First read: Adapter 1
+---------------------
+
+Sequence          Type       Length Trimmed (x)
+----------------- ---------- ------ -----------
+CCTAYGGGRBGCASCAG regular 5'     17          28
+
+No. of allowed errors:
+0-9 bp: 0; 10-17 bp: 1
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0 1         
+------ ----- ------ ------- ------------
+    21    28    0.0       1 8 20        
+
+----------------------
+Second read: Adapter 2
+----------------------
+
+Sequence             Type       Length Trimmed (x)
+-------------------- ---------- ------ -----------
+GGACTACNNGGGTATCTAAT regular 5'     20          38
+
+No. of allowed errors:
+0-9 bp: 0; 10-19 bp: 1; 20 bp: 2
+
+Overview of removed sequences:
+length count expect max.err error counts
+                            0  1  2     
+------ ----- ------ ------- ------------
+    23    38    0.0       2 11 26 1     
+
+
+##running run_dada2_qplot() '
+
+'
+##You are using DADA2 version 1.19.1
+
+##You are using tidyverse version 1.3.0.9000
+
+################################
+
+
+# output dir :  dada2/01_dada2_quality_profiles/180914_M00842_0310_000000000-C3GBT
+
+# sample names list starts with : 
+
+# output dir :  dada2/01_dada2_quality_profiles/190719_M00842_0364_000000000-CKGHM
+
+# sample names list starts with : 
+
+##running run_dada2_filter_denoise_merge_reads() '
+
+'
+##You are using DADA2 version 1.19.1
+
+##You are using tidyverse version 1.3.0.9000
+
+################################
+
+
+# output dir :  dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT
+
+# sample names list starts with : 
+
+# filterAndTrim 
+
+# Filtering and trimming done with the following parameters:
+# Forward pair: trimming at 260 nts and max expected error 4
+# Reverse pair: trimming at 250 nts and max expected error 5
+
+
+# Filtered fastq files were generated in : "dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT" 
+
+# derepFastq 
+
+# Dereplication done
+
+# learnErrors  
+4575740 total bases in 17599 reads from 3 samples will be used for learning the error rates.
+4399750 total bases in 17599 reads from 3 samples will be used for learning the error rates.
+
+# plotErrors  
+
+# Errors learnt and ploted 
+
+# dada 
+Sample 1 - 5370 reads in 1803 unique sequences.
+Sample 2 - 4475 reads in 1198 unique sequences.
+Sample 3 - 7754 reads in 2202 unique sequences.
+
+   selfConsist step 2Sample 1 - 5370 reads in 2666 unique sequences.
+Sample 2 - 4475 reads in 2165 unique sequences.
+Sample 3 - 7754 reads in 3534 unique sequences.
+
+   selfConsist step 2
+# DADA2 algorithm performed 
+
+# mergePairs with defined 10 nt overlap 
+# Pairs were merged
+# Number of samples: 3
+# Number of detected variants (ASVs): 216# The variants (ASVs) have the following length distribution:
+# saving seqtab as dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT/180914_M00842_0310_000000000-C3GBT_seqtab.rds
+
+# Plotting Sequences/ASV distribution to dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT/seq_distrib_180914_M00842_0310_000000000-C3GBT.pdf
+
+
+# Generating summary 
+
+# The distribution of merged kept is the following:
+
+# output dir :  dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM
+
+# sample names list starts with : 
+
+# filterAndTrim 
+
+# Filtering and trimming done with the following parameters:
+# Forward pair: trimming at 260 nts and max expected error 4
+# Reverse pair: trimming at 250 nts and max expected error 5
+
+
+# Filtered fastq files were generated in : "dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM" 
+
+# derepFastq 
+
+# Dereplication done
+
+# learnErrors  
+3241160 total bases in 12466 reads from 3 samples will be used for learning the error rates.
+3116500 total bases in 12466 reads from 3 samples will be used for learning the error rates.
+
+# plotErrors  
+
+# Errors learnt and ploted 
+
+# dada 
+Sample 1 - 6593 reads in 2410 unique sequences.
+Sample 2 - 5853 reads in 1648 unique sequences.
+Sample 3 - 20 reads in 15 unique sequences.
+
+   selfConsist step 2Sample 1 - 6593 reads in 2400 unique sequences.
+Sample 2 - 5853 reads in 2194 unique sequences.
+Sample 3 - 20 reads in 18 unique sequences.
+
+   selfConsist step 2
+# DADA2 algorithm performed 
+
+# mergePairs with defined 10 nt overlap 
+# Pairs were merged
+# Number of samples: 3
+# Number of detected variants (ASVs): 216# The variants (ASVs) have the following length distribution:
+# saving seqtab as dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/190719_M00842_0364_000000000-CKGHM_seqtab.rds
+
+# Plotting Sequences/ASV distribution to dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/seq_distrib_190719_M00842_0364_000000000-CKGHM.pdf
+
+
+# Generating summary 
+
+# The distribution of merged kept is the following:
+
+##running run_dada2_mergeRuns_removeBimeraDenovo() '
+
+'
+##You are using DADA2 version 1.19.1
+
+##You are using tidyverse version 1.3.0.9000
+
+################################
+
+
+# output dir :  dada2/03_dada2_merged_runs_chimera_removed
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  sample = col_character(),
+  input = col_double(),
+  filtered = col_double(),
+  denoisedF = col_double(),
+  denoisedR = col_double(),
+  merged = col_double(),
+  tabled = col_double(),
+  filtered_pc = col_double(),
+  denoisedF_pc = col_double(),
+  denoisedR_pc = col_double(),
+  merged_pc = col_double(),
+  filtered_merged_pc = col_double(),
+  input_merged_pc = col_double()
+)
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  sample = col_character(),
+  input = col_double(),
+  filtered = col_double(),
+  denoisedF = col_double(),
+  denoisedR = col_double(),
+  merged = col_double(),
+  tabled = col_double(),
+  filtered_pc = col_double(),
+  denoisedF_pc = col_double(),
+  denoisedR_pc = col_double(),
+  merged_pc = col_double(),
+  filtered_merged_pc = col_double(),
+  input_merged_pc = col_double()
+)
+
+
+# removeBimeraDenovo running on dada2/02_dada2_filtered_denoised_merged/180914_M00842_0310_000000000-C3GBT/180914_M00842_0310_000000000-C3GBT_seqtab.rds file  
+# removeBimeraDenovo running on dada2/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/190719_M00842_0364_000000000-CKGHM_seqtab.rds file 
+# mergeSequenceTables done
+
+# removeBimeraDenovo start
+
+# removeBimeraDenovo done
+# 72 chimera were found and removed
+# These represent 18.27% of total ASVs and 7.96% of total reads
+
+# The variants (ASVs) have the following length distribution:
+
+# Reads shorter than 240bp and longer than 500bp were removed.
+
+# The variants (ASVs) after length filtering have the following length distribution:
+
+# A total of 100% reads were kept after length filtering.
+
+
+# A total of 100% ASVs were kept after length filtering.
+
+
+# The distribution of chimera reads kept is the following:
+
+# Saving uncollapsed .rds and fasta files as well as summary .tsv 
+
+# You have decided to run collapseNoMismatch on your dataset. Please note that it is only helpful IF you are working with several sequencing runs and it might take a long time to run. You might want to go further (taxonomy, ...) on your uncollapsed seqtable while it is running 
+
+# Saving collapsed .rds and fasta files as well as summary .tsv  
+# Your final 100% clustered ASV table can be found in "dada2/03_dada2_merged_runs_chimera_removed/seqtab.rds"
+# A FASTA file with your final ASVs was written in "dada2/03_dada2_merged_runs_chimera_removed/seqtab.fasta"
+# In "dada2/03_dada2_merged_runs_chimera_removed/track_analysis.tsv" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!
+
+##running run_dada_DECIPHER_taxonomy() '
+
+'Loading required package: DECIPHER
+Loading required package: RSQLite
+
+##You are using DADA2 version 1.19.1
+
+##You are using tidyverse version 1.3.0.9000
+
+
+##You are using DECIPHER version 2.18.1
+
+################################
+
+
+# output dir :  dada2/04_dada2_taxonomy
+
+# You have decided to use : dada method against : silva_nr99_v138_train_set  database 
+Finished processing reference fasta.99 out of 321 were assigned to the species level.
+Of which 85 had genera consistent with the input table.# The obtained taxonomy file can be found in "dada2/04_dada2_taxonomy/silva_nr99_v138_train_set_assignation.rds"
+Loading required package: phyloseq
+
+Attaching package: ‘phyloseq’
+
+The following object is masked from ‘package:SummarizedExperiment’:
+
+    distance
+
+The following object is masked from ‘package:Biobase’:
+
+    sampleNames
+
+The following object is masked from ‘package:GenomicRanges’:
+
+    distance
+
+The following object is masked from ‘package:IRanges’:
+
+    distance
+
+
+##You are using DADA2 version 1.19.1
+
+##You are using tidyverse version 1.3.0.9000
+
+
+##You are using phyloseq version 1.34.0
+
+################################
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  ASV_id = col_character(),
+  ASV = col_character(),
+  Kingdom = col_character(),
+  Phylum = col_character(),
+  Class = col_character(),
+  Order = col_character(),
+  Family = col_character(),
+  Genus = col_character(),
+  Species = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double(),
+  sample = col_character()
+)
+ℹ Use `spec()` for the full column specifications.
+
+phyloseq-class experiment-level object
+otu_table()   OTU Table:         [ 321 taxa and 6 samples ]
+sample_data() Sample Data:       [ 6 samples by 23 sample variables ]
+tax_table()   Taxonomy Table:    [ 321 taxa by 7 taxonomic ranks ]
+refseq()      DNAStringSet:      [ 321 reference sequences ]
+There were 19 warnings (use warnings() to see them)
+
+
+Here some Info for the record keeping:
+
+R version 4.0.3 (2020-10-10)
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+Running under: macOS Mojave 10.14.6
+
+Matrix products: default
+BLAS/LAPACK: /Users/fconstan/miniconda3/envs/metabarcodingRpipeline/lib/libopenblasp-r0.3.12.dylib
+
+locale:
+[1] C/UTF-8/C/C/C/C
+
+attached base packages:
+[1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] phyloseq_1.34.0             DECIPHER_2.18.1            
+ [3] RSQLite_2.2.1               ShortRead_1.48.0           
+ [5] GenomicAlignments_1.26.0    SummarizedExperiment_1.20.0
+ [7] Biobase_2.50.0              MatrixGenerics_1.2.0       
+ [9] matrixStats_0.57.0          Rsamtools_2.6.0            
+[11] GenomicRanges_1.42.0        GenomeInfoDb_1.26.2        
+[13] Biostrings_2.58.0           XVector_0.30.0             
+[15] IRanges_2.24.1              S4Vectors_0.28.1           
+[17] BiocParallel_1.24.1         BiocGenerics_0.36.0        
+[19] dada2_1.19.1                Rcpp_1.0.5                 
+[21] forcats_0.5.0               stringr_1.4.0              
+[23] dplyr_1.0.2                 purrr_0.3.4                
+[25] readr_1.4.0                 tidyr_1.1.2                
+[27] tibble_3.0.4                ggplot2_3.3.2              
+[29] tidyverse_1.3.0.9000        optparse_1.6.6             
+
+loaded via a namespace (and not attached):
+ [1] colorspace_2.0-0       hwriter_1.3.2          ellipsis_0.3.1        
+ [4] fs_1.5.0               rstudioapi_0.13        farver_2.0.3          
+ [7] getopt_1.20.3          bit64_4.0.5            fansi_0.4.1           
+[10] lubridate_1.7.9.2      xml2_1.3.2             splines_4.0.3         
+[13] codetools_0.2-18       ade4_1.7-16            jsonlite_1.7.2        
+[16] broom_0.7.2            cluster_2.1.0          dbplyr_2.0.0          
+[19] png_0.1-7              compiler_4.0.3         httr_1.4.2            
+[22] backports_1.2.1        assertthat_0.2.1       Matrix_1.2-18         
+[25] cli_2.2.0              prettyunits_1.1.1      tools_4.0.3           
+[28] igraph_1.2.6           gtable_0.3.0           glue_1.4.2            
+[31] GenomeInfoDbData_1.2.4 reshape2_1.4.4         cellranger_1.1.0      
+[34] vctrs_0.3.5            rhdf5filters_1.2.0     multtest_2.46.0       
+[37] ape_5.4-1              nlme_3.1-151           iterators_1.0.13      
+[40] ps_1.5.0               rvest_0.3.6            lifecycle_0.2.0       
+[43] zlibbioc_1.36.0        MASS_7.3-53            scales_1.1.1          
+[46] hms_0.5.3              biomformat_1.18.0      rhdf5_2.34.0          
+[49] RColorBrewer_1.1-2     memoise_1.1.0          latticeExtra_0.6-29   
+[52] stringi_1.5.3          foreach_1.5.1          permute_0.9-5         
+[55] rlang_0.4.9            pkgconfig_2.0.3        bitops_1.0-6          
+[58] lattice_0.20-41        Rhdf5lib_1.12.0        labeling_0.4.2        
+[61] bit_4.0.4              tidyselect_1.1.0       plyr_1.8.6            
+[64] magrittr_2.0.1         R6_2.5.0               generics_0.1.0        
+[67] DelayedArray_0.16.0    DBI_1.1.0              mgcv_1.8-33           
+[70] pillar_1.4.7           haven_2.3.1            withr_2.3.0           
+[73] survival_3.2-7         RCurl_1.98-1.2         modelr_0.1.8          
+[76] crayon_1.3.4           jpeg_0.1-8.1           progress_1.2.2        
+[79] grid_4.0.3             readxl_1.3.1           data.table_1.13.4     
+[82] vegan_2.5-7            blob_1.2.1             reprex_0.3.0          
+[85] digest_0.6.27          RcppParallel_5.0.2     munsell_0.5.0         
+Parameters Used:
+
+
+# Input directory: test-data.
+
+# Tax_method: dada.
+
+# database: /Users/fconstan/db/DADA2/silva_nr99_v138_train_set.fa.gz.
+
+# database_for_species_assignments: /Users/fconstan/db/DADA2/silva_species_assignment_v138.fa.gz.
+
+############################################################
+All done 
+############################################################
+
+[1] "2020-12-15 16:18:53 CET"
+[1] "2020-12-15 16:18:53 CET"

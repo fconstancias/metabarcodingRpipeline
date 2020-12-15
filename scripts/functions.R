@@ -1240,7 +1240,7 @@ run_merge_phyloseq <- function(raw_files_path,
 #'
 #'
 
-run_16S_pipe <- function(raw_files_path,
+run_pipe <- function(raw_files_path,
                          atropos_bin = "atropos",
                          out_dir = "dada2",
                          V = "V4",
@@ -1421,9 +1421,10 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   ## ------------------------------------------------------------------------
   physeq@phy_tree <- phangorn::midpoint(fitGTR$tree)
   
-  return(physeq)
-  
   physeq %>%
     saveRDS(file = paste0(output_phyloseq, ".RDS"))
+  
+  return(physeq)
+  
 }
 
