@@ -22,16 +22,13 @@ Use ``git clone`` to clone on your computer the repository including the functio
 ### start R:
 	(metabarcodingRpipeline)$ R
 ### install necessary R packages:
-	install.packages("devtools")
-	install.packages("optparse")
-	devtools::install_github("tidyverse/tidyverse")
+	install.packages("devtools");install.packages("optparse");devtools::install_github("tidyverse/tidyverse");devtools::install_github("KlausVigo/phangorn");devtools::install_github("benjjneb/dada2")
+	
 	if (!requireNamespace("BiocManager", quietly = TRUE))
 	install.packages("BiocManager")
-	BiocManager::install("ShortRead")
-	BiocManager::install("DECIPHER")
-	BiocManager::install("phyloseq")
-	devtools::install_github("KlausVigo/phangorn")
-	devtools::install_github("benjjneb/dada2")
+	BiocManager::install("ShortRead");BiocManager::install("DECIPHER");BiocManager::install("phyloseq")
+	
+	
 ### quit R:
 	q()
 	
