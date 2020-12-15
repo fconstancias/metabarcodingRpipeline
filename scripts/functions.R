@@ -1218,7 +1218,7 @@ run_merge_phyloseq <- function(raw_files_path,
   
   
   saveRDS(physeq, 
-          paste0(output,"physeq.RDS"))
+          paste0(output,"/","physeq.RDS"))
   
   return(physeq)
 }
