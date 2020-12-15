@@ -42,9 +42,10 @@ Activate the dedicated conda environment:
 	$ conda activate metabarcodingRpipeline
 
 
+
 Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: *databases*
 
-	(metabarcodingRpipeline)$ Rscript scripts/dada2_metabarcoding_pipeline.R \
+	(metabarcodingRpipeline)$ Rscript scripts/dada2_metabar_pipe.R \
 		-i test-data \
 		-o dada2 \
 		-V V3V4 \
