@@ -34,10 +34,6 @@ Running the following commands will take a bit of time.
 ### quit R:
 	quit(save = "no")
 	
-Change the script to executable mode:
-
-	(metabarcodingRpipeline)$ chmod +x metabarcodingRpipeline/scripts/dada2_metabarcoding_pipeline.R
-
 
 ## Running the pipeline:
 
@@ -54,7 +50,6 @@ Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: 
 		-V V3V4 \
 		--metadata test-data/metadata.xlsx \
 		--database ~/db/DADA2/silva_nr99_v138_train_set.fa.gz \
-		--phylo FALSE \
 		--database_for_species_assignments ~/db/DADA2/silva_species_assignment_v138.fa.gz > run_logs.txt 2>&1
 		
 The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
@@ -91,9 +86,10 @@ print help:
 	Usage: scripts/dada2_metabarcoding_pipeline.R [options]
 
 
-Options:
+	Options:
+	
 	-i CHARACTER, --input_directory=CHARACTER
-		Path of the input directory containing raw _R1_ and _R2_ raw reads in their respective run sub-directories 
+	Path of the input directory containing raw _R1_ and _R2_ raw reads in their respective run sub-directories 
  
               e.g., -i raw [contains raw/run1 and raw/run2 
 
