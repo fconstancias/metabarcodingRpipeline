@@ -1,13 +1,17 @@
 # metabarcodingRpipeline
 
 ## Clone the repository:
-cd my_directory
 
-git clone https://github.com/fconstancias/metabarcodingRpipeline.git
+Change the directory where you would like to clone the repository.
 
-This will clone on your computer the functions and test data.
+	cd my_directory
 
-## Install
+Use ``git clone`` to clone on your computer the repository including the functions and test data.
+
+	git clone https://github.com/fconstancias/metabarcodingRpipeline.git
+
+
+## Install the proper conda envirionment
 ### Create conda environment:
 	conda create -n metabarcodingRpipeline -y
 ### Activate conda environment:
@@ -30,11 +34,14 @@ This will clone on your computer the functions and test data.
 	devtools::install_github("benjjneb/dada2")
 ### quit R:
 	q()
+	
+Change the script to executable mode:
+
+	cd metabarcodingRpipeline/
+	chmod +x scripts/dada2_metabarcoding_pipeline.R
 
 ## Usage:
-	cd metabarcodingRpipeline/
 
-	chmod +x scripts/dada2_metabarcoding_pipeline.R
 
 
 
@@ -42,8 +49,10 @@ print help:
 
 	Rscript scripts/dada2_metabarcoding_pipeline.R --help
 
+
 	Usage: scripts/dada2_metabarcoding_pipeline.R [options]
 	
+
 	
 	Options:
 		-i CHARACTER, --input_directory=CHARACTER
@@ -102,6 +111,13 @@ print help:
 
 ## Run the pipeline:
 
+activate the dedicated conda environment:
+
+	conda activate metabarcodingRpipeline
+
+
+Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: *databases*
+
 	Rscript scripts/dada2_metabarcoding_pipeline.R \
 		-i test-data \
 		-a atropos \
@@ -109,5 +125,6 @@ print help:
 		-V V3V4 \
 		--metadata test-data/metadata.xlsx \
 		--database /Users/localadmin/ENGINEs/NEWPIPE/db/silva_nr99_v138_train_set.fa.gz \
-		--database_for_species_assignments /Users/localadmin/ENGINEs/NEWPIPE/db/silva_species_assignment_v138.fa.gz \
-		> mylogs.txt 2>&1
+		--database_for_species_assignments /Users/localadmin/ENGINEs/NEWPIPE/db/silva_species_assignment_v138.fa.gz > mylogs.txt 2>&1
+		
+The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
