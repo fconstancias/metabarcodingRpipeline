@@ -28,14 +28,22 @@ Running the following commands will take a bit of time.
 
 =======
 ### install necessary R packages:
+<<<<<<< HEAD
 >>>>>>> parent of 604cf96... update install README
 	install.packages("devtools");install.packages("optparse");devtools::install_github("tidyverse/tidyverse");devtools::install_github("KlausVigo/phangorn");devtools::install_github("benjjneb/dada2")
 	
+=======
+	install.packages("devtools")
+	install.packages("optparse")
+	devtools::install_github("tidyverse/tidyverse")
+>>>>>>> parent of 42fe844... update add_phylogeny_phyloseq.R and README
 	if (!requireNamespace("BiocManager", quietly = TRUE))
 	install.packages("BiocManager")
-	BiocManager::install("ShortRead");BiocManager::install("DECIPHER");BiocManager::install("phyloseq")
-	
-	
+	BiocManager::install("ShortRead")
+	BiocManager::install("DECIPHER")
+	BiocManager::install("phyloseq")
+	devtools::install_github("KlausVigo/phangorn")
+	devtools::install_github("benjjneb/dada2")
 ### quit R:
 	quit(save = "no")
 	
