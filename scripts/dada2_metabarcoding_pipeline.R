@@ -27,16 +27,16 @@ option_list = list(
   make_option(c("-V", "--pipeline"), type="character", default = "V4", 
               help="V4 or V3V4 will use default primers and parameters as used in the FBT lab [primers, trunc, maxee, overlap, expected length, ...]", metavar="character"),
   make_option(c("-t", "--tax_method"), type="character", default="dada", 
-              help="User can specify using dada2 or DECIPHER for taxonomic assignments [default dada]", metavar="character"),
+              help="User can specify using dada2 (=dada) or DECIPHER for taxonomic assignments [default dada]", metavar="character"),
   make_option(c("--tax_threshold"), type="numeric", default= 60, 
-              help="Thershold for taxonomic assignments [if --tax_metod = dada: he minimum bootstrap confidence for assigning a taxonomic level. if --tax_method DECIPHER: Numeric specifying the confidence at which to truncate the output taxonomic classifications. ]", metavar="numeric"),
+              help="Thershold for taxonomic assignments [if --tax_metod dada: the minimum bootstrap confidence for assigning a taxonomic level. if --tax_method DECIPHER: Numeric specifying the confidence at which to truncate the output taxonomic classifications. ]", metavar="numeric"),
   make_option(c("--metadata"), type="character", default=NULL, 
               help="Path to excel document containing metadata [Sample identifier column should be sample_name]", metavar="character"),
   make_option(c("--database"), type="character", default = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", 
               help="Path to the taxonomic database", metavar="character"),
   make_option(c("--database_for_species_assignments"), type="character", default = "~/db/DADA2/silva_species_assignment_v138.fa.gz", 
-              help="Path to the speies-level taxonomic database [only for -t dada]", metavar="character"),
-  make_option(c("--phylo"), type="logical", default = FALSE, 
+              help="Path to the speies-level taxonomic database [only for --tax_metod  dada]", metavar="character"),
+  make_option(c("--phylo"), type="logical", default = "FALSE", 
               help="Compute phylogenetic tree from the ASV sequence ?", metavar="character"),
   make_option(c("--PRIMER_F"), type="character", default = NULL, 
               help="Sequence of the gene specific Fwd primer to be removed with atropos [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
@@ -52,11 +52,11 @@ option_list = list(
               help="Maximum expected error for Fwd and Rev reads [if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("--minLen"), type="numeric", default = 100, 
               help="Minimul read length [if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
-  make_option(c("-T", "--slots"), type="numeric", default = 6, 
+  make_option(c("-T", "--slots"), type="numeric", default = 4, 
               help="Number of threads to perform the analyses", metavar="numeric")
   
 ); 
-opt_parser = OptionParser(option_list=option_list);
+opt_parser = OptionParser(option_list = option_list);
 opt = parse_args(opt_parser)
 
 ## ------------------------------------------------------------------------
@@ -72,7 +72,7 @@ opt = parse_args(opt_parser)
 #   stop("You must provide path to atropos program (-a)")
 # }
 
-opt$phylo <- as.logical(opt$phylo)
+run_phylo <- as.logical(opt$phylo)
 
 ## ------------------------------------------------------------------------
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
@@ -89,7 +89,7 @@ run_16S_pipe(raw_files_path = opt$input_directory,
              metadata = opt$metadata,
              db = opt$database,
              db_species = opt$database_for_species_assignments,
-             phylo = opt$phylo,
+             run_phylo = run_phylo,
              tax_threshold = opt$tax_threshold,
              PRIMER_F = opt$PRIMER_F,
              PRIMER_R = opt$PRIMER_R,

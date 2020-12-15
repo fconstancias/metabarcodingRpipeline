@@ -676,7 +676,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
     
     track %>% 
       mutate(collapsed_100 = rowSums(collapsed_100)) %>%
-      mutate(collapsed_100_pc = round(collapsed_100 / length_filtered, digits = 3)) -> track.final
+      mutate(collapsed_100_pc = round(collapsed_100 / length_filtered, digits = 10)) -> track.final
     
     write_tsv(track.final, str_c(merged_run_path,"/track_analysis.tsv"))
     
@@ -1111,11 +1111,10 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
 #'
 #'
 
-
 run_merge_phyloseq <- function(raw_files_path,
                                metadata,
                                taxa_dir = "04_dada2_taxonomy",
-                               phylo = FALSE,
+                               phylo,
                                phylo_dir = "05_phylo",
                                merged_run_dir = "03_dada2_merged_runs_chimera_removed",
                                rooted_tree = TRUE,
@@ -1254,7 +1253,7 @@ run_16S_pipe <- function(raw_files_path,
                      maxee = c(3,4),
                      minLen = 100,
                      minover = 15,
-                     phylo = FALSE,
+                     run_phylo = FALSE,
                      tryRC = FALSE,
                      tax_method = "dada",
                      metadata,
@@ -1334,7 +1333,7 @@ run_16S_pipe <- function(raw_files_path,
                              output = out_dir
   )
   
-  if(phylo == TRUE) {
+  if(run_phylo == TRUE) {
     cat(paste0('\n##',"running run_DECIPHER_phangorn_phylogeny() '\n\n'"))
     
     run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
@@ -1347,7 +1346,7 @@ run_16S_pipe <- function(raw_files_path,
                        output = out_dir)
   }
   
-  if(phylo == FALSE) {
+  if(run_phylo == FALSE) {
     run_merge_phyloseq(raw_files_path = raw_files_path,
                        metadata = metadata,
                        phylo = FALSE,
