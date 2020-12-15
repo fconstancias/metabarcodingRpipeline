@@ -1006,13 +1006,12 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
                                             collapseNoMis = TRUE)
 {
   ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2); require(DECIPHER); require(phangorn); require(ape)
+  require(tidyverse); require(dada2); require(DECIPHER); require(phangorn)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
   cat(paste0('\n##',"You are using DECIPHER version ", packageVersion('DECIPHER'),'\n\n'))
   cat(paste0('\n##',"You are using phangorn version ", packageVersion('phangorn'),'\n\n'))
-  cat(paste0('\n##',"You are using ape version ", packageVersion('ape'),'\n\n'))
-  
+
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
@@ -1342,3 +1341,89 @@ run_16S_pipe <- function(raw_files_path,
                        output = out_dir)
   }
 }
+
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+
+
+add_phylogeny_to_phyloseq <- function(phyloseq_path,
+                                      method = "R",
+                                      output_phyloseq = "dada2_phylo"){
+  
+  ## ------------------------------------------------------------------------
+  require(tidyverse); require(dada2); require(DECIPHER); require(phangorn)
+  cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
+  cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
+  cat(paste0('\n##',"You are using DECIPHER version ", packageVersion('DECIPHER'),'\n\n'))
+  cat(paste0('\n##',"You are using phangorn version ", packageVersion('phangorn'),'\n\n'))
+
+  cat('################################\n\n')
+  
+  ## ------------------------------------------------------------------------
+  
+  phyloseq_path %>%
+    readRDS() -> physeq
+  
+  ## ------------------------------------------------------------------------
+  if(method=="R"){
+    
+    sequences <- DNAStringSet(physeq@refseq)
+    names(sequences) <- sequences  # this propagates to the tip labels of the tree
+    
+    alignment <- AlignSeqs(DNAStringSet(sequences),
+                           anchor=NA)
+    
+    phang_align <- phyDat(as(alignment, 'matrix'), type='DNA')
+    
+    dm <- dist.ml(phang_align)
+    
+    treeNJ <- NJ(dm)  # note, tip order != sequence order
+    
+    fit = pml(treeNJ, data=phang_align)
+    
+    ## negative edges length changed to 0!
+    fitGTR <- update(fit, k = 4, inv = 0.2)
+    
+    fitGTR <- optim.pml(fitGTR, model = 'GTR', optInv = TRUE, optGamma = TRUE,
+                        rearrangement = 'stochastic',
+                        control = pml.control(trace = 0))
+    
+    detach('package:phangorn', unload = TRUE)
+    detach('package:DECIPHER', unload = TRUE)
+    
+  }
+  ## ------------------------------------------------------------------------
+  if(method=="qiime2_MAFFT_Fastree"){
+    # TODO
+  }
+  # physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq))# https://github.com/benjjneb/dada2/issues/613
+  # 
+  # taxa_names(physeq)  <- paste0("ASV", str_pad(seq(ntaxa(physeq)), 
+  #                       nchar(ntaxa(physeq)), 
+  #                       pad = "0"))
+  
+  ## ------------------------------------------------------------------------
+  physeq@phy_tree <- phangorn::midpoint(fitGTR$tree)
+  
+  return(physeq)
+  
+  physeq %>%
+    saveRDS(file = paste0(output_phyloseq, ".RDS"))
+}
+
