@@ -123,6 +123,21 @@ Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: 
 		
 The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
 
+## Add phylogenetic tree to a phyloseq object:
+
+activate the dedicated conda environment:
+
+	$ conda activate metabarcodingRpipeline
+
+
+By default, based on <https://f1000research.com/articles/5-1492>.
+
+
+	(metabarcodingRpipeline)$ Rscript scripts/add_phyloseq_phylogeny.R \
+		-p test-data \
+		-o dada2 
+
+
 ## TO DO:
 
 - <s>add phylogenetic tree to a phyloseq object</s>

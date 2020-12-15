@@ -15,7 +15,7 @@ source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/ma
 suppressPackageStartupMessages(library("optparse"))
 
 option_list = list(
-  make_option(c("-ps", "--phyloseq_path"), type="character", default=NULL, 
+  make_option(c("-p", "--phyloseq_path"), type="character", default=NULL, 
               help="Path of the input phyloseq object", metavar="character"),
   make_option(c("-m", "--method"), type="character", default = "R", 
               help="Method for phylogenetic reconstruction [default DECIPHER phangorn R packages see: <https://f1000research.com/articles/5-1492>]", metavar="character"),
