@@ -131,5 +131,5 @@ The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a
 
 ## TO DO:
 
-- add phylogenetic tree to a phyloseq object
+- <s>add phylogenetic tree to a phyloseq object</s>
 - replace taxonomic assignments of a phyloseq object
