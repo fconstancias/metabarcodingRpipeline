@@ -1292,6 +1292,18 @@ run_16S_pipe <- function(raw_files_path,
     minover = 20
     
   }
+  
+  if(V == "V3"){
+    
+    PRIMER_F = "ACWCCTACGGGWGGCAGCAG" #388F
+    PRIMER_R = "ATTACCGCGGCTGCTGG"#518R
+    trim_length = c(150,250)
+    trunclen =  c(150,140)
+    maxee = c(2,3)
+    minLen = 120
+    minover = 60
+    
+  }
   cat(paste0('\n##',"running run_atropos() '\n\n'"))
   
   run_atropos(raw_files_path = raw_files_path,
