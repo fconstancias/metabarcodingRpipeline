@@ -1462,7 +1462,7 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   # physeq@phy_tree <- 
   
   physeq <- merge_phyloseq(physeq,
-                           phangorn::midpoint(fitGTR$tree))
+                           phangorn::midpoint(fitGTR$tree) %>% phyloseq::phy_tree())
   
   physeq %>%
     saveRDS(file = paste0(output_phyloseq, ".RDS"))
