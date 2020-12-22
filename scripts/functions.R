@@ -1424,7 +1424,8 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   if(method=="R"){
     
     sequences <- DNAStringSet(physeq@refseq)
-    names(sequences) <- sequences  # this propagates to the tip labels of the tree
+    # names(sequences) <- sequences  # this propagates to the tip labels of the tree
+    names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
     
     alignment <- AlignSeqs(DNAStringSet(sequences),
                            anchor=NA)
