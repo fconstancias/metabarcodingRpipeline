@@ -57,7 +57,8 @@ source("scripts/functions.R")
 ```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
 run_16S_pipe(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
                                 atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
-                                V = "V4",
+                                V = "V3V4",
+                                run_phylo = TRUE,
                                 metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx",
                                 db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
                                 db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz") -> phyloseq

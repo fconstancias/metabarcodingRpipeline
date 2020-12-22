@@ -62,11 +62,16 @@ run_dada2_qplot(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcoding
 ```
 
 ```{r, message = FALSE, warning = FALSE, results = FALSE}
-run_dada2_filter_denoise_merge_reads(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/")
+run_dada2_filter_denoise_merge_reads(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                                     trunclen = c(240,230),
+                                     minLen = 180,
+                                     maxee = c(2,3),
+                                     minover = 15)
 ```
 
 ```{r, message = FALSE, warning = FALSE, results = FALSE}
-run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/")
+run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                                       trim_length = c(100,400))
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
@@ -96,10 +101,15 @@ phylo
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
-run_merge_phyloseq_simple(tax_tsv = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/04_dada2_taxonomy/silva_nr_v138_train_set_table.tsv",
-                          metadata = "none", # sample_name
-                          phylo_tree = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/05_phylo/unrooted_tree.rds",
-                          output_physeq = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/dada2/physeq")-> physeq
+run_merge_phyloseq(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                               metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx",
+                               phylo = TRUE,
+                               taxa_dir = "04_dada2_taxonomy",
+                               phylo_dir = "05_phylo",
+                               merged_run_dir = "03_dada2_merged_runs_chimera_removed",
+                               rooted_tree = TRUE,
+                               output = "dada2",
+                               collapseNoMis = TRUE) -> physeq
 
 physeq
 ```

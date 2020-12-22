@@ -257,7 +257,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
                                                  maxee,
                                                  truncQ = 6,
                                                  minLen,
-                                                 nthreads = 8,
+                                                 nthreads = 6,
                                                  nbases = 20000000,
                                                  pool = "pseudo",
                                                  minover,
@@ -1160,13 +1160,9 @@ run_merge_phyloseq <- function(raw_files_path,
                      taxa_are_rows = TRUE))  %>%
     filter_taxa(function(x) sum(x > 0) > 0, TRUE) -> physeq
   
-  prune_samples(sample_sums(physeq) > 0, physeq) -> physeq
+  # prune_samples(sample_sums(physeq) > 0, physeq) -> physeq
   
-  ## ------------------------------------------------------------------------
-  ## add ASV as refseq part of the phyloseq object
-  
-  physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq)) # https://github.com/benjjneb/dada2/issues/613
-  
+
   ## ------------------------------------------------------------------------
   if(phylo == TRUE){
     if(rooted_tree == TRUE){
@@ -1174,19 +1170,32 @@ run_merge_phyloseq <- function(raw_files_path,
                  pattern = glob2rx("rooted_tree.rds"),
                  full.names = TRUE,
                  recursive = TRUE) %>% readRDS() -> tree
-      physeq@phy_tree = tree
+      # physeq@phy_tree = tree
+      
     }
     if(rooted_tree == FALSE){
       list.files(file.path(output, phylo_dir),
                  pattern = glob2rx("*unrooted_tree.rds"),
                  full.names = TRUE,
                  recursive = TRUE) %>% readRDS() -> tree
-      physeq@phy_tree = tree
+      # physeq@phy_tree = tree
     }
-    # physeq <- merge_phyloseq(physeq,
-    #                          tree)
+    physeq <- merge_phyloseq(physeq,
+                             tree %>% phy_tree())
+    # merge_phyloseq(otu_table(physeq),
+    #                tax_table(physeq),
+    #                # sample_data(physeq),
+    #                # refseq(physeq),
+    #                tree)
   }
   
+  ## ------------------------------------------------------------------------
+  ## add ASV as refseq part of the phyloseq object
+  
+  physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq)) # https://github.com/benjjneb/dada2/issues/613
+  
+  ## ------------------------------------------------------------------------
+
   taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
                                               nchar(ntaxa(physeq)),
                                               pad = "0"))
@@ -1248,6 +1257,8 @@ run_16S_pipe <- function(raw_files_path,
                      PRIMER_F,
                      PRIMER_R,
                      tax_threshold = 60,
+                     nbases = 20000000,
+                     pool = "pseudo",
                      trim_length = c(240,400),
                      trunclen = c(260,250),
                      maxee = c(3,4),
@@ -1325,7 +1336,9 @@ run_16S_pipe <- function(raw_files_path,
                                        maxee = maxee,
                                        minLen = minLen,
                                        minover = minover,
-                                       output = out_dir)
+                                       output = out_dir,
+                                       nbases = nbases,
+                                       pool = pool)
   
   cat(paste0('\n##',"running run_dada2_mergeRuns_removeBimeraDenovo() '\n\n'"))
   
@@ -1355,15 +1368,17 @@ run_16S_pipe <- function(raw_files_path,
     run_merge_phyloseq(raw_files_path = raw_files_path,
                        metadata = metadata,
                        phylo = TRUE,
-                       output = out_dir)
+                       output = out_dir) -> physeq
   }
   
   if(run_phylo == FALSE) {
     run_merge_phyloseq(raw_files_path = raw_files_path,
                        metadata = metadata,
                        phylo = FALSE,
-                       output = out_dir)
+                       output = out_dir) -> physeq
   }
+  
+return(physeq)
 }
 
 
@@ -1443,7 +1458,10 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   #                       pad = "0"))
   
   ## ------------------------------------------------------------------------
-  physeq@phy_tree <- phangorn::midpoint(fitGTR$tree)
+  # physeq@phy_tree <- 
+  
+  physeq <- merge_phyloseq(physeq,
+                           phangorn::midpoint(fitGTR$tree))
   
   physeq %>%
     saveRDS(file = paste0(output_phyloseq, ".RDS"))
