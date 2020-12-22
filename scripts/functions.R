@@ -1406,11 +1406,12 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
                                       output_phyloseq = "dada2_phylo"){
   
   ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2); require(DECIPHER); require(phangorn)
+  require(tidyverse); require(dada2); require(DECIPHER); require(phangorn); require(phyloseq)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
   cat(paste0('\n##',"You are using DECIPHER version ", packageVersion('DECIPHER'),'\n\n'))
   cat(paste0('\n##',"You are using phangorn version ", packageVersion('phangorn'),'\n\n'))
+  cat(paste0('\n##',"You are using phyloseq version ", packageVersion('phyloseq'),'\n\n'))
   
   cat('################################\n\n')
   
