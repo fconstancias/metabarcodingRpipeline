@@ -577,22 +577,32 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   summary <- map(track, read_tsv) %>% bind_rows()
   ## ------------------------------------------------------------------------
   
-  cat(str_c('\n# removeBimeraDenovo running on ',seqtables, ' file '))
+  cat(str_c('\n# removeBimeraDenovo running on ', seqtables, ' file '))
   
   ## ------------------------------------------------------------------------
   # https://github.com/benjjneb/dada2/issues/345
   
   list.df <- map(seqtables, readRDS)
   
-  st.all <- mergeSequenceTables(tables = list.df)
+  if(seqtables %>% length > 1)
+  {
+    st.all <- mergeSequenceTables(tables = list.df)
+    
+    cat('\n# mergeSequenceTables done\n')
+    
+  }else{
+    list.df -> st.all
+    
+    cat('\n# only one SequenceTable, no merging to do\n')
+    
+  }
   
-  cat('\n# mergeSequenceTables done\n')
   
   ## ------------------------------------------------------------------------
   cat('\n# removeBimeraDenovo start\n')
   seqtab.raw <- removeBimeraDenovo(st.all, method = chimera_method,
                                    multithread = TRUE, 
-                                   verbose = FALSE)
+                                   verbose = TRUE)
   
   cat('\n# removeBimeraDenovo done\n')
   
