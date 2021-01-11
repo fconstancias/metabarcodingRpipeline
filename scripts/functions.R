@@ -1305,12 +1305,23 @@ run_16S_pipe <- function(raw_files_path,
     minover = 10
     
   }
+  if(V == "V3V4-2x250"){
+    
+    PRIMER_F = "CCTAYGGGRBGCASCAG"
+    PRIMER_R = "GGACTACNNGGGTATCTAAT"
+    trim_length = c(230,227)
+    trunclen =  c(220,480)
+    maxee = c(3,4)
+    minLen = 160
+    minover = 10
+    
+  }
   if(V == "ITS2"){
     
     PRIMER_F = "GTGAATCATCGAATCTTTGAA"
     PRIMER_R = "TCCTCCGCTTATTGATATGC"
     trim_length = c(200,500)
-    trunclen =  c(225,220)
+    trunclen =  c(230,220)
     maxee = c(4,5)
     minLen = 120
     minover = 20
