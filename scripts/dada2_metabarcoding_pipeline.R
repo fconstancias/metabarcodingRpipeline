@@ -73,9 +73,19 @@ opt = parse_args(opt_parser)
 # }
 
 run_phylo <- as.logical(opt$phylo)
+opt$trunclen <- as.vector(opt$trunclen)
+opt$trim_length <- as.vector(opt$trim_length)
+opt$maxee <- as.vector(opt$maxee)
 
 ## ------------------------------------------------------------------------
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
+cat(paste0('\n# PRIMER_F: ',opt$PRIMER_F,'.\n'))
+cat(paste0('\n# PRIMER_R: ',opt$PRIMER_R,'.\n'))
+cat(paste0('\n# trunclen: ',opt$trunclen,'.\n'))
+cat(paste0('\n# trim_length: ',opt$trim_length,'.\n'))
+cat(paste0('\n# maxee: ',opt$maxee,'.\n'))
+
+
 cat(paste0('\n# Tax_method: ',opt$tax_method,'.\n'))
 cat(paste0('\n# database: ',opt$database,'.\n'))
 cat(paste0('\n# database_for_species_assignments: ',opt$database_for_species_assignments,'.\n'))
