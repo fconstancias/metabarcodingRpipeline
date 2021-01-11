@@ -1307,8 +1307,8 @@ run_16S_pipe <- function(raw_files_path,
   }
   if(V == "ITS2"){
     
-    PRIMER_F = "GTGAATCATCGAATCTTTGAA"
-    PRIMER_R = "TCCTCCGCTTATTGATATGC"
+    PRIMER_F = "NNNNGTGAATCATCGAATCTTTGAA"
+    PRIMER_R = "NNNNTCCTCCGCTTATTGATATGC"
     trim_length = c(200,500)
     trunclen =  c(225,220)
     maxee = c(4,5)
