@@ -602,7 +602,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   cat('\n# removeBimeraDenovo start\n')
   seqtab.raw <- removeBimeraDenovo(st.all, method = chimera_method,
                                    multithread = TRUE, 
-                                   verbose = TRUE)
+                                   verbose = FALSE)
   
   cat('\n# removeBimeraDenovo done\n')
   
