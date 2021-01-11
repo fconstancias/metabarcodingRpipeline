@@ -1305,7 +1305,7 @@ run_16S_pipe <- function(raw_files_path,
     minover = 10
     
   }
-  if(V == "V3V4_2_250"){
+  if(V == "V3V4_2x250"){
     
     PRIMER_F = "CCTAYGGGRBGCASCAG"
     PRIMER_R = "GGACTACNNGGGTATCTAAT"
