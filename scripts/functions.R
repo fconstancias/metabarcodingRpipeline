@@ -1234,7 +1234,7 @@ run_merge_phyloseq <- function(raw_files_path,
   {
     
     physeq <- merge_phyloseq(physeq,
-                             track %>% column_to_rownames("sample_name") %>% sample_data())
+                             track %>% column_to_rownames("sample") %>% sample_data())
   }
   
   
