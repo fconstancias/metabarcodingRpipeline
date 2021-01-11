@@ -845,7 +845,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
       select(ASV_id, everything())
     
     write_tsv(x = merged_table,
-              path = paste0(taxa_path,"/",dbname,"_table.tsv"))
+              file = paste0(taxa_path,"/",dbname,"_table.tsv"))
     
     cat(paste0('# The obtained taxonomy file can be found in "', paste0(output,"/", name,"_", dbname,"_assignation.rds"), '"\n\n'))
     cat(paste0('# Although we always recommend you to work directly in R with .rds files, we created a .tsv in "',paste0(output,"/", name,"_", dbname,"_table.tsv"),'" with tax and counts tables merged\n\n'))
@@ -884,7 +884,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
           select(ASV_id, everything())
         
         write_tsv(x = merged_table,
-                  path = paste0(taxa_path,"/", dbname,"_table.tsv"))
+                  file = paste0(taxa_path,"/", dbname,"_table.tsv"))
         
         saveRDS(taxaid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
         
@@ -910,7 +910,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
           select(ASV_id, everything())
         
         write_tsv(x = merged_table,
-                  path = paste0(taxa_path,"/", dbname,"_table.tsv"))
+                  file = paste0(taxa_path,"/", dbname,"_table.tsv"))
         
         saveRDS(as_tibble(taxa_Species, rownames = 'ASV')
                 , paste0(taxa_path,"/", dbname,"_assignation.rds"))
@@ -946,7 +946,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
           select(ASV_id, everything())
         
         write_tsv(x = merged_table,
-                  path = paste0(taxa_path,"/", dbname,"_table.tsv"))
+                  file = paste0(taxa_path,"/", dbname,"_table.tsv"))
         
         # saveRDS(as_tibble(boot_taxa, rownames = 'ASV'), 
         #         paste0(output,"/", name,"_", dbname,"_boot.rds"))
@@ -980,7 +980,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
           select(ASV_id, everything())
         
         write_tsv(x = merged_table,
-                  path = paste0(taxa_path,"/", dbname,"_table.tsv"))
+                  file = paste0(taxa_path,"/", dbname,"_table.tsv"))
         
         saveRDS(as_tibble(taxa, rownames = 'ASV'), 
                 paste0(taxa_path,"/", dbname,"_assignation.rds"))
