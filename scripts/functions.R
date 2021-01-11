@@ -582,16 +582,18 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   ## ------------------------------------------------------------------------
   # https://github.com/benjjneb/dada2/issues/345
   
-  list.df <- map(seqtables, readRDS)
-  
+
   if(seqtables %>% length > 1)
   {
+    list.df <- map(seqtables, readRDS)
+    
     st.all <- mergeSequenceTables(tables = list.df)
     
     cat('\n# mergeSequenceTables done\n')
     
   }else{
-    list.df -> st.all
+    st.all = seqtables %>%
+      readRDS()
     
     cat('\n# only one SequenceTable, no merging to do\n')
     
@@ -606,14 +608,14 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   
   cat('\n# removeBimeraDenovo done\n')
   
-  # num.chimera.removed <- ncol(st.all) - ncol(seqtab.raw)
-  # perc.num.chimera.removed <- round(100*num.chimera.removed/ncol(st.all) %>% round(2),2)
-  # reads.chimera.removed <- sum(colSums(st.all)) - sum(colSums(seqtab.raw))
-  # perc.reads.chimera.removed <- round(100*reads.chimera.removed/sum(colSums(st.all)) %>% round(2),2)
-  # 
-  # cat(paste0('# ',num.chimera.removed," chimera were found and removed\n"))
-  # cat(paste0('# These represent ',perc.num.chimera.removed,'% of total ASVs and ',perc.reads.chimera.removed,'% of total reads\n'))
-  
+  num.chimera.removed <- ncol(st.all) - ncol(seqtab.raw)
+  perc.num.chimera.removed <- round(100*num.chimera.removed/ncol(st.all) %>% round(2),2)
+  reads.chimera.removed <- sum(colSums(st.all)) - sum(colSums(seqtab.raw))
+  perc.reads.chimera.removed <- round(100*reads.chimera.removed/sum(colSums(st.all)) %>% round(2),2)
+
+  cat(paste0('# ',num.chimera.removed," chimera were found and removed\n"))
+  cat(paste0('# These represent ',perc.num.chimera.removed,'% of total ASVs and ',perc.reads.chimera.removed,'% of total reads\n'))
+
   ## ------------------------------------------------------------------------
   # Distribution of variants
   cat("\n# The variants (ASVs) have the following length distribution:\n")
