@@ -19,15 +19,18 @@ Use ``git clone`` to clone on your computer the repository including the functio
 ### install R and atropos:
 	(metabarcodingRpipeline)$ conda install -c bioconda atropos -y
 	(metabarcodingRpipeline)$ conda install -c conda-forge r-base -y
+	(metabarcodingRpipeline)$ conda install -c conda-forge r-devtools -y
+	(metabarcodingRpipeline)$ conda install -c conda-forge r-optparse -y
 ### start R terminal:
 	(metabarcodingRpipeline)$ R
+
 ### install necessary R packages - within the R terminal:
-	install.packages("devtools");install.packages("optparse");devtools::install_github("tidyverse/tidyverse");devtools::install_github("KlausVigo/phangorn");devtools::install_github("benjjneb/dada2")
+	devtools::install_github("tidyverse/tidyverse");devtools::install_github("KlausVigo/phangorn");devtools::install_github("benjjneb/dada2")
 	
 	if (!requireNamespace("BiocManager", quietly = TRUE))
 	install.packages("BiocManager")
 	BiocManager::install("ShortRead");BiocManager::install("DECIPHER");BiocManager::install("phyloseq")
-	
+
 	
 ### quit R:
 	quit(save = "no")
