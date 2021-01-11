@@ -606,13 +606,13 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   
   cat('\n# removeBimeraDenovo done\n')
   
-  num.chimera.removed <- ncol(st.all) - ncol(seqtab.raw)
-  perc.num.chimera.removed <- round(100*num.chimera.removed/ncol(st.all) %>% round(2),2)
-  reads.chimera.removed <- sum(colSums(st.all)) - sum(colSums(seqtab.raw))
-  perc.reads.chimera.removed <- round(100*reads.chimera.removed/sum(colSums(st.all)) %>% round(2),2)
-  
-  cat(paste0('# ',num.chimera.removed," chimera were found and removed\n"))
-  cat(paste0('# These represent ',perc.num.chimera.removed,'% of total ASVs and ',perc.reads.chimera.removed,'% of total reads\n'))
+  # num.chimera.removed <- ncol(st.all) - ncol(seqtab.raw)
+  # perc.num.chimera.removed <- round(100*num.chimera.removed/ncol(st.all) %>% round(2),2)
+  # reads.chimera.removed <- sum(colSums(st.all)) - sum(colSums(seqtab.raw))
+  # perc.reads.chimera.removed <- round(100*reads.chimera.removed/sum(colSums(st.all)) %>% round(2),2)
+  # 
+  # cat(paste0('# ',num.chimera.removed," chimera were found and removed\n"))
+  # cat(paste0('# These represent ',perc.num.chimera.removed,'% of total ASVs and ',perc.reads.chimera.removed,'% of total reads\n'))
   
   ## ------------------------------------------------------------------------
   # Distribution of variants
@@ -1295,7 +1295,7 @@ run_16S_pipe <- function(raw_files_path,
     
     PRIMER_F = "CCTAYGGGRBGCASCAG"
     PRIMER_R = "GGACTACNNGGGTATCTAAT"
-    trim_length = c(240,500)
+    trim_length = c(240,600)
     trunclen =  c(260,250)
     maxee = c(4,5)
     minLen = 160
