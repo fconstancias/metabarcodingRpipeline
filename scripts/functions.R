@@ -260,7 +260,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
                                                  nthreads = 6,
                                                  nbases = 20000000,
                                                  pool = "pseudo",
-                                                 minover,
+                                                 minover = 12,
                                                  cut_dir = "00_atropos_primer_removed",
                                                  filt_dir = "02_dada2_filtered_denoised_merged",
                                                  output = "dada2",
@@ -416,12 +416,12 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
     
     dadaFs <- dada(derepFs, 
                    err=errF, 
-                   multithread=TRUE, 
+                   multithread= nthreads, 
                    pool=ifelse(pool == "FALSE", as.logical(pool), pool))
     
     dadaRs <- dada(derepRs, 
                    err=errR, 
-                   multithread=TRUE, 
+                   multithread= nthreads, 
                    pool=ifelse(pool == "FALSE", as.logical(pool), pool))
     
     cat('\n# DADA2 algorithm performed \n')
@@ -1433,6 +1433,7 @@ return(physeq)
 
 add_phylogeny_to_phyloseq <- function(phyloseq_path,
                                       method = "R",
+                                      nthreads = 6,
                                       output_phyloseq = "dada2_phylo"){
   
   ## ------------------------------------------------------------------------
@@ -1458,7 +1459,8 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
     names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
     
     alignment <- AlignSeqs(DNAStringSet(sequences),
-                           anchor=NA)
+                           anchor = NA,
+                           processors = nthreads)
     
     phang_align <- phyDat(as(alignment, 'matrix'), type='DNA')
     
