@@ -1504,3 +1504,248 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   
 }
 
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+
+
+add_taxonomy_to_phyloseq <- function(phyloseq_path,
+                                     method = "dada", # method = "DECIPHER" or "dada" 
+                                     threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
+                                     tryRC = FALSE,
+                                     db,
+                                     db_species,
+                                     nthreads = 6,
+                                     outputBootstraps = TRUE, #3 only for dada2 method# outputBootstraps <- TRUE 
+                                     allowMultiple = TRUE,
+                                     seed_value = 123){
+  
+  ## ------------------------------------------------------------------------
+  require(tidyverse); require(dada2); require(DECIPHER)
+  cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
+  cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
+  cat(paste0('\n##',"You are using DECIPHER version ", packageVersion('DECIPHER'),'\n\n'))
+  cat('################################\n\n')
+  
+  ## ------------------------------------------------------------------------
+  
+  phyloseq_path %>%
+    readRDS() -> physeq
+
+  ## ------------------------------------------------------------------------
+  
+    dbname <- str_extract(basename(db), "[^.]+")
+    
+    set.seed(seed_value) #random  generator necessary for reproducibility
+    
+    seqtab.nochim <- readRDS(seqtab.nochim)
+    # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
+    ## ------------------------------------------------------------------------
+    cat(paste0('\n# You have decided to use : ',method ,' method against : ', dbname), ' database \n')
+    
+    ## ------------------------------------------------------------------------
+    if(method=="DECIPHER"){
+      
+      
+      dna <- DNAStringSet(physeq@refseq)
+      names(dna) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
+      
+
+      load(db)
+      
+      ids <- IdTaxa(dna,
+                    trainingSet,
+                    strand = if_else(tryRC == TRUE, "both", "top"),
+                    processors = nthreads,
+                    verbose = TRUE,
+                    threshold = threshold)
+      
+      ranks <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species") # ranks of interest
+      # need to check if this work for GTDB also...
+      
+      # Convert the output object of class "Taxa" to a matrix analogous to the output from assignTaxonomy
+      taxid <- t(sapply(ids, function(x) {
+        m <- match(ranks, x$rank)
+        taxa <- x$taxon[m]
+        taxa[startsWith(taxa, "unclassified_")] <- NA
+        taxa
+      }))
+      
+      colnames(taxid) <- ranks; rownames(taxid) <- getSequences(seqtab.nochim)
+      
+      # Saving rds object
+      saveRDS(taxid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
+      
+      # Create a merged table with counts and tax
+      taxid <- as_tibble(taxid, rownames = 'ASV')
+      merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
+        left_join(taxid, by = 'ASV') %>%
+        mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
+        select(ASV_id, everything())
+      
+      write_tsv(x = merged_table,
+                file = paste0(taxa_path,"/",dbname,"_table.tsv"))
+      
+      cat(paste0('# The obtained taxonomy file can be found in "', paste0(output,"/", name,"_", dbname,"_assignation.rds"), '"\n\n'))
+      cat(paste0('# Although we always recommend you to work directly in R with .rds files, we created a .tsv in "',paste0(output,"/", name,"_", dbname,"_table.tsv"),'" with tax and counts tables merged\n\n'))
+      # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further .\n\n'))
+      
+    }
+    
+    if(method=="dada"){
+      
+      # physeq@refseq
+        
+      taxa <- assignTaxonomy(seqtab.nochim, db,
+                             outputBootstraps = as.logical(outputBootstraps),
+                             multithread = nthreads,
+                             verbose = TRUE,
+                             minBoot = threshold,
+                             tryRC = as.logical(tryRC),
+                             taxLevels = c("Kingdom", "Phylum", "Class",
+                                           "Order", "Family", "Genus", "Species"))
+      
+      if(outputBootstraps==FALSE)
+      {
+        
+        if(!file.exists(db_species))
+        {
+          if(str_extract(basename(db), "[^.]+")=="hitdb_v1")
+          {  
+            taxa %>% mutate(Kingdom = "Bacteria")
+            colnames(taxa) = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+            
+          }
+          # Create a merged table with counts and tax
+          taxaid <- as_tibble(taxa, rownames = 'ASV')
+          
+          merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
+            left_join(taxaid, by = 'ASV') %>%
+            mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
+            select(ASV_id, everything())
+          
+          write_tsv(x = merged_table,
+                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
+          
+          saveRDS(taxaid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
+          
+          cat(paste0('\n# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
+          cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(taxa_path,"/", dbname,"*"),'." and go further ... \n\n'))
+        }
+        
+        if(file.exists(db_species))
+        {
+          taxa_Species <- addSpecies(taxa, db_species,
+                                     verbose = TRUE,
+                                     allowMultiple = as.logical(allowMultiple),
+                                     tryRC = as.logical(tryRC))
+          
+          
+          # Create a merged table with counts and tax
+          taxa_full <- as_tibble(taxa_Species, rownames = 'ASV')  %>% 
+            unite("Species",Species:tail(names(.), 1), na.rm = TRUE, remove = TRUE, sep = "|")
+          
+          merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
+            left_join(taxa_full, by = 'ASV') %>%
+            mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
+            select(ASV_id, everything())
+          
+          write_tsv(x = merged_table,
+                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
+          
+          saveRDS(as_tibble(taxa_Species, rownames = 'ASV')
+                  , paste0(taxa_path,"/", dbname,"_assignation.rds"))
+          
+          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
+          cat(paste0('# Mutliple species assignments can be returned if you set allowMultiple = TRUE. \n'))
+          # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
+          
+        }
+        
+      }
+      if(outputBootstraps==TRUE)
+      {
+        
+        if(file.exists(db_species))
+        {
+          boot_taxa <- taxa$boot
+          
+          taxa_Species <- addSpecies(taxa$tax, db_species,
+                                     verbose = TRUE,
+                                     allowMultiple = as.logical(allowMultiple),
+                                     tryRC = as.logical(tryRC))
+          
+          # Create a merged table with counts and tax
+          taxa_full <- left_join(as_tibble(taxa_Species, rownames = 'ASV') %>% 
+                                   unite("Species",Species:tail(names(.), 1), na.rm = TRUE, sep = "|"), # because / sometimes already Pseudomonas_koreensis(AF468452)/koreensis
+                                 (as_tibble(taxa$boot, rownames = 'ASV')),
+                                 by = 'ASV', suffix = c("", "_Boot"))
+          
+          merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
+            left_join(taxa_full, by = 'ASV') %>%
+            mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
+            select(ASV_id, everything())
+          
+          write_tsv(x = merged_table,
+                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
+          
+          # saveRDS(as_tibble(boot_taxa, rownames = 'ASV'), 
+          #         paste0(output,"/", name,"_", dbname,"_boot.rds"))
+          
+          # saveRDS(as_tibble(taxa_Species, rownames = 'ASV'), 
+          #         paste0(output,"/", name,"_", dbname,"_assignation.rds"))
+          
+          saveRDS(list(as_tibble(taxa_Species, rownames = 'ASV'),
+                       as_tibble(boot_taxa, rownames = 'ASV')),
+                  paste0(taxa_path,"/", dbname,"_assignation.rds"))
+          
+          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
+          # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
+        }
+        
+        if(!file.exists(db_species))
+        {
+          if(str_extract(basename(db), "[^.]+") == "hitdb_v1")
+          {  
+            taxa$tax %>% mutate(Kingdom = "Bacteria")
+            colnames(taxa$tax) = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
+            
+            boot_taxa %>% mutate(Kingdom_Boot = 100)
+          }
+          # Create a merged table with counts and tax
+          taxaid <- left_join(as_tibble(taxa$tax, rownames = 'ASV'),(as_tibble(taxa$boot, rownames = 'ASV')),by = 'ASV', suffix = c("", "_Boot"))
+          
+          merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
+            left_join(taxaid, by = 'ASV') %>%
+            mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
+            select(ASV_id, everything())
+          
+          write_tsv(x = merged_table,
+                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
+          
+          saveRDS(as_tibble(taxa, rownames = 'ASV'), 
+                  paste0(taxa_path,"/", dbname,"_assignation.rds"))
+          
+          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
+          # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
+        }
+      }
+    }
+    
+    #return(phyloseq_object)
+  }
+  
