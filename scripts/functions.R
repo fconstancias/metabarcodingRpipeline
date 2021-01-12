@@ -380,13 +380,13 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
     cat(str_c('\n# learnErrors  \n'))
     
     errF <- learnErrors(derepFs, 
-                        multithread=TRUE, 
+                        multithread = nthreads, 
                         MAX_CONSIST = 12, 
                         randomize = TRUE, 
                         nbases = nbases)
     
     errR <- learnErrors(derepRs,
-                        multithread=TRUE, 
+                        multithread = nthreads, 
                         MAX_CONSIST = 12, 
                         randomize = TRUE, 
                         nbases = nbases)
@@ -754,6 +754,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
                                        collapseNoMis = TRUE,
                                        db,
                                        db_species,
+                                       nthreads = 6,
                                        outputBootstraps = TRUE, #3 only for dada2 method# outputBootstraps <- TRUE 
                                        allowMultiple = TRUE,
                                        merged_run_dir = "03_dada2_merged_runs_chimera_removed",
@@ -817,7 +818,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
     ids <- IdTaxa(dna,
                   trainingSet,
                   strand = if_else(tryRC == TRUE, "both", "top"),
-                  processors = NULL,
+                  processors = nthreads,
                   verbose = TRUE,
                   threshold = threshold)
     
@@ -857,7 +858,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
     
     taxa <- assignTaxonomy(seqtab.nochim, db,
                            outputBootstraps = as.logical(outputBootstraps),
-                           multithread = TRUE,
+                           multithread = nthreads,
                            verbose = TRUE,
                            minBoot = threshold,
                            tryRC = as.logical(tryRC),
@@ -1362,7 +1363,8 @@ run_16S_pipe <- function(raw_files_path,
                                        minover = minover,
                                        output = out_dir,
                                        nbases = nbases,
-                                       pool = pool)
+                                       pool = pool,
+                                       nthreads = ifelse(SLOTS > 6, 6, SLOTS))
   
   cat(paste0('\n##',"running run_dada2_mergeRuns_removeBimeraDenovo() '\n\n'"))
   
