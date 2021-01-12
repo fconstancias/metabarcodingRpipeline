@@ -1015,6 +1015,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
 
 run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
                                             method = "R",
+                                            nthreads = 6,
                                             output = "dada2",
                                             phylo_dir = "05_phylo",
                                             merged_run_dir = "03_dada2_merged_runs_chimera_removed",
@@ -1064,7 +1065,8 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
     names(sequences) <- sequences  # this propagates to the tip labels of the tree
     
     alignment <- AlignSeqs(DNAStringSet(sequences),
-                           anchor=NA)
+                           anchor = NA,
+                           processors = nthreads)
     
     phang_align <- phyDat(as(alignment, 'matrix'), type='DNA')
     
@@ -1376,6 +1378,7 @@ run_16S_pipe <- function(raw_files_path,
   
   run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
                              method = tax_method, # "DECIPHER" or "dada" 
+                             nthreads = SLOTS,
                              threshold = tax_threshold,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
                              tryRC = tryRC,
                              collapseNoMis = TRUE,
@@ -1389,6 +1392,7 @@ run_16S_pipe <- function(raw_files_path,
     
     run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
                                     method = "R",
+                                    nthreads = SLOTS,
                                     output = out_dir) -> phylo
     
     run_merge_phyloseq(raw_files_path = raw_files_path,
