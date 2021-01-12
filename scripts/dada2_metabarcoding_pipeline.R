@@ -52,7 +52,7 @@ option_list = list(
               help="Maximum expected error for Fwd and Rev reads [if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("--minLen"), type="numeric", default = 100, 
               help="Minimul read length [if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
-  make_option(c("-T", "--slots"), type="numeric", default = 4, 
+  make_option(c("-T", "--slots"), type="numeric", default = 6, 
               help="Number of threads to perform the analyses", metavar="numeric")
   
 ); 
