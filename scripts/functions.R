@@ -537,6 +537,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
                                                    merged_run_dir = "03_dada2_merged_runs_chimera_removed",
                                                    chimera_method = "consensus",
                                                    trim_length,
+                                                   nthreads = 6,
                                                    collapseNoMis = TRUE,
                                                    minOverlap = 20, # https://github.com/benjjneb/dada2/issues/518
                                                    filt_dir = "02_dada2_filtered_denoised_merged",
@@ -603,7 +604,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   ## ------------------------------------------------------------------------
   cat('\n# removeBimeraDenovo start\n')
   seqtab.raw <- removeBimeraDenovo(st.all, method = chimera_method,
-                                   multithread = TRUE, 
+                                   multithread = nthreads, 
                                    verbose = FALSE)
   
   cat('\n# removeBimeraDenovo done\n')
@@ -1372,7 +1373,8 @@ run_16S_pipe <- function(raw_files_path,
   
   run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = raw_files_path,
                                          trim_length = trim_length,
-                                         output = out_dir)
+                                         output = out_dir,
+                                         nthreads = SLOTS)
   
   cat(paste0('\n##',"running run_dada_DECIPHER_taxonomy() '\n\n'"))
   
