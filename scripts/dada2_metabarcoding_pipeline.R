@@ -84,8 +84,7 @@ cat(paste0('\n# PRIMER_R: ',opt$PRIMER_R,'.\n'))
 cat(paste0('\n# trunclen: ',opt$trunclen,'.\n'))
 cat(paste0('\n# trim_length: ',opt$trim_length,'.\n'))
 cat(paste0('\n# maxee: ',opt$maxee,'.\n'))
-
-
+cat(paste0('\n# slots: ',opt$slots,'.\n'))
 cat(paste0('\n# Tax_method: ',opt$tax_method,'.\n'))
 cat(paste0('\n# database: ',opt$database,'.\n'))
 cat(paste0('\n# database_for_species_assignments: ',opt$database_for_species_assignments,'.\n'))
