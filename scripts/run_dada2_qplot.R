@@ -25,7 +25,7 @@ option_list = list(
               help="Name of the output directory", metavar="character"),
   make_option(c("-p", "--prop_sample"), type="numeric", default = 20, 
               help="Proportion of samples to consider for quality plot", metavar="character"),
-  make_option(c("-c", "--cut_file_pattern"), type="character", default= NULL, 
+  make_option(c("-c", "--cut_file_pattern"), type="character", default= c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"), 
               help="Pattern of primer removed files", metavar="character"),
   make_option(c("-f", "--fun_dir"), type="character", default= NULL, 
               help="Directory containing the R functions", metavar="character")
