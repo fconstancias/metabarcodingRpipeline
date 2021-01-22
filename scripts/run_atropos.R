@@ -22,7 +22,7 @@ option_list = list(
   make_option(c("--atropos_bin"), type="character", default = "atropos", 
               help="atropos binary", metavar="character"),
    make_option(c("-r", "--primer_removed_directory"), type="character", default = "00_atropos_primer_removed", 
-              help="Directory containing primer trimmed/demultiplexed samples", metavar="character"),
+              help="Directory to store primer trimmed/demultiplexed samples", metavar="character"),
   make_option(c("-o", "--output_directory"), type="character", default= "dada2", 
               help="Name of the output directory", metavar="character"),
   make_option(c("--fwd_primer"), type="character", default = NULL, 
@@ -55,12 +55,17 @@ opt = parse_args(opt_parser)
 source(opt$fun_dir)
 
 ## ------------------------------------------------------------------------
+unlist(lapply(strsplit(opt$raw_file_pattern, ","), as.character)) -> opt$raw_file_pattern
+
+
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
 cat(paste0('\n# Directory for primer removed files: ',opt$primer_removed_directory,'.\n'))
 cat(paste0('\n# Output directory: ',opt$output_directory,'.\n'))
 cat(paste0('\n# Fwd Primer sequence: ',opt$fwd_primer,'.\n'))
 cat(paste0('\n# Rev Primer sequence: ',opt$rev_primer,'.\n'))
 cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
+cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
+cat(paste0('\n# Raw file pattern: ',opt$raw_file_pattern,'.\n'))
 
 ## ------------------------------------------------------------------------
 
@@ -87,6 +92,9 @@ cat(paste0('\n# Output directory: ',opt$output_directory,'.\n'))
 cat(paste0('\n# Fwd Primer sequence: ',opt$fwd_primer,'.\n'))
 cat(paste0('\n# Rev Primer sequence: ',opt$rev_primer,'.\n'))
 cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
+cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
+cat(paste0('\n# Raw file pattern: ',opt$raw_file_pattern,'.\n'))
+
 
 
 cat("\n############################################################\n")
