@@ -19,7 +19,9 @@ option_list = list(
               e.g., -i raw [contains raw/run1 and raw/run2]\n
               N.B.: sample name is extracted from .fastq.gz samples  before the first '_' e.g., XXX-XX \n
               sample names must be unambigious and unique e.g., sample-1 = sample-11, sample-01 != sample-10", metavar="character"),
-  make_option(c("-r", "--primer_removed_directory"), type="character", default = NULL, 
+  make_option(c("--atropos_bin"), type="character", default = "atropos", 
+              help="atropos binary", metavar="character"),
+   make_option(c("-r", "--primer_removed_directory"), type="character", default = NULL, 
               help="Directory containing primer trimmed/demultiplexed samples", metavar="character"),
   make_option(c("-o", "--output_directory"), type="character", default= "dada2", 
               help="Name of the output directory", metavar="character"),
@@ -63,6 +65,7 @@ cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
 ## ------------------------------------------------------------------------
 
 run_atropos(raw_files_path = opt$input_directory,
+            atropos = opt$atropos_bin,
             cut_dir = opt$primer_removed_directory,
             raw_file_pattern = opt$raw_file_pattern,
             output  = opt$output_directory,
