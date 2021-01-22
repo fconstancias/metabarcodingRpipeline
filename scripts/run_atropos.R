@@ -27,7 +27,7 @@ option_list = list(
               help="Sequence of the Fwd primer to remove", metavar="character"),
   make_option(c("--rev_primer"), type="character", default = NULL, 
               help="Sequence of the Rev primer to remove", metavar="character"),
-  make_option(c("-c", "--raw_file_pattern"), type="character", default= NULL, 
+  make_option(c("-c", "--raw_file_pattern"), type="character", default= c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"), 
               help="Pattern of raw files", metavar="character"),
   make_option(c("-T", "--threads"), type="character", default= NULL, 
               help="Number of threads", metavar="character"),

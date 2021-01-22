@@ -57,8 +57,7 @@ run_dada2_qplot(raw_files_path = opt$input_directory,
                 cut_dir = opt$primer_removed_directory,
                 cut_file_pattern = opt$cut_file_pattern,
                 output  = opt$output_directory,
-                prop.sample = opt$prop_sample,
-                print_plot = FALSE)
+                prop.sample = opt$prop_sample)
 
 ## ------------------------------------------------------------------------
 
