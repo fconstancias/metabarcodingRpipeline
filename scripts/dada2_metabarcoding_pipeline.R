@@ -9,7 +9,6 @@ cat("############################################################\n\n")
 ## ------------------------------------------------------------------------
 
 require("optparse")
-source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/master/scripts/functions.R")
 
 ## ------------------------------------------------------------------------
 suppressPackageStartupMessages(library("optparse"))
@@ -44,11 +43,11 @@ option_list = list(
               help="Sequence of the gene specific Rev primer to be removed with atropos [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
   make_option(c("--minover"), type="numeric", default = 15, 
               help="Minimum overlap for merginf R1 and R2 reads [if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
-  make_option(c("--trunclen"), type="character", default = "c(260,250)", 
+  make_option(c("--trunclen"), type="character", default = c(260,250), 
               help="Nucleotide position to truncate the Fwd and Rev reads at [if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
-  make_option(c("--trim_length"), type="character", default = "c(240,400)", 
+  make_option(c("--trim_length"), type="character", default = c(240,400), 
               help="ASV of length outside the range will be discarded [i.e., insilco size exclusion of ASV - if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
-  make_option(c("--maxee"), type="character", default = "c(3,4)", 
+  make_option(c("--maxee"), type="character", default = c(3,4), 
               help="Maximum expected error for Fwd and Rev reads [if using -V V4 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("--minLen"), type="numeric", default = 100, 
               help="Minimul read length [if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
