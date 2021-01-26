@@ -50,6 +50,7 @@ source(opt$fun_dir)
 
 ## ------------------------------------------------------------------------
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
+unlist(lapply(strsplit(opt$cut_file_pattern, ","), as.character)) -> opt$cut_file_pattern
 
 ## ------------------------------------------------------------------------
 
@@ -57,7 +58,8 @@ run_dada2_qplot(raw_files_path = opt$input_directory,
                 cut_dir = opt$primer_removed_directory,
                 cut_file_pattern = opt$cut_file_pattern,
                 output  = opt$output_directory,
-                prop.sample = opt$prop_sample)
+                prop.sample = opt$prop_sample,
+                export = TRUE)
 
 ## ------------------------------------------------------------------------
 

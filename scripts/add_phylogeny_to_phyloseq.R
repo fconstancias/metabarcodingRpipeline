@@ -20,7 +20,9 @@ option_list = list(
   make_option(c("-m", "--method"), type="character", default = "R", 
               help="Method for phylogenetic reconstruction [default DECIPHER phangorn R packages see: <https://f1000research.com/articles/5-1492>]", metavar="character"),
   make_option(c("-o", "--output_phyloseq"), type="character", default= "phyloseq_tree", 
-              help="Output path of the phyloseq object", metavar="character")
+              help="Output path of the phyloseq object", metavar="character"),
+  make_option(c("-f", "--fun_dir"), type="character", default= NULL, 
+              help="Directory containing the R functions", metavar="character")
   
 ); 
 opt_parser = OptionParser(option_list=option_list);
@@ -41,6 +43,7 @@ opt = parse_args(opt_parser)
 
 
 ## ------------------------------------------------------------------------
+source(opt$fun_dir)
 
 add_phylogeny_to_phyloseq(phyloseq_path = opt$phyloseq_path,
                           method = opt$method,
