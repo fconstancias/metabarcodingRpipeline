@@ -53,7 +53,10 @@ option_list = list(
   make_option(c("--minLen"), type="numeric", default = 100, 
               help="Minimul read length [if using -V V3 or V3V4, this parameter is already set]", metavar="numeric"),
   make_option(c("-T", "--slots"), type="numeric", default = 6, 
-              help="Number of threads to perform the analyses", metavar="numeric")
+              help="Number of threads to perform the analyses", metavar="numeric"),
+  make_option(c("-f", "--fun_dir"), type="character", default= NULL, 
+              help="Directory containing the R functions", metavar="character")
+  
   
 ); 
 opt_parser = OptionParser(option_list = option_list);
@@ -73,10 +76,11 @@ opt = parse_args(opt_parser)
 # }
 
 run_phylo <- as.logical(opt$phylo)
-opt$trunclen <- as.vector(opt$trunclen)
-opt$trim_length <- as.vector(opt$trim_length)
-opt$maxee <- as.vector(opt$maxee)
+unlist(lapply(strsplit(opt$trunclen, ","), as.character)) -> opt$trunclen
+unlist(lapply(strsplit(opt$trim_length, ","), as.character)) -> opt$trim_length
+unlist(lapply(strsplit(opt$maxee, ","), as.character)) -> opt$maxee
 
+source(opt$fun_dir)
 ## ------------------------------------------------------------------------
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
 cat(paste0('\n# PRIMER_F: ',opt$PRIMER_F,'.\n'))
@@ -118,6 +122,12 @@ print(sessionInfo())
 cat("Parameters Used:\n\n")
 
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
+cat(paste0('\n# PRIMER_F: ',opt$PRIMER_F,'.\n'))
+cat(paste0('\n# PRIMER_R: ',opt$PRIMER_R,'.\n'))
+cat(paste0('\n# trunclen: ',opt$trunclen,'.\n'))
+cat(paste0('\n# trim_length: ',opt$trim_length,'.\n'))
+cat(paste0('\n# maxee: ',opt$maxee,'.\n'))
+cat(paste0('\n# slots: ',opt$slots,'.\n'))
 cat(paste0('\n# Tax_method: ',opt$tax_method,'.\n'))
 cat(paste0('\n# database: ',opt$database,'.\n'))
 cat(paste0('\n# database_for_species_assignments: ',opt$database_for_species_assignments,'.\n'))
