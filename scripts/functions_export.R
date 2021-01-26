@@ -120,7 +120,8 @@ run_dada2_qplot <- function(raw_files_path,
                             output = "dada2",
                             cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
                             seed_value = 123,
-                            sep = "_"){
+                            sep = "_",
+                            export = TRUE){
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
@@ -133,12 +134,15 @@ run_dada2_qplot <- function(raw_files_path,
             full.names = FALSE, 
             recursive = FALSE) %>% as.vector() -> run_list  
   
+  out_fwd <- vector("list", length(run_list)) # Fwd and Rev
+  names(out_fwd) = c(run_list)
+  out_rev <- vector("list", length(run_list)) # Fwd and Rev
+  names(out_rev) = c(run_list)
+  
   ## ------------------------------------------------------------------------
   ## get run directories (under the raw_files_path)
   setwd(raw_files_path)
   setwd("./..")
-  
-  # out <- vector("list", length(run_list)*2) # Fwd and Rev
   
   for(i in seq_along(run_list)) {
     
@@ -201,38 +205,44 @@ run_dada2_qplot <- function(raw_files_path,
     
     qplot_f <- plotQualityProfile(fnFs[ii], aggregate = as.logical(aggregate))
     
-    qplot_f_lines <- qplot_f +
+    out_fwd[[i]] <- qplot_f +
       geom_vline(xintercept = lines_seq(max(qplot_f$data$Cycle)), alpha = 0.3, size = 0.3, linetype = 'dashed') +
       improve_headers +
       ggtitle(paste0(run_list[i]," - ","Forward reads"))
-    
-    ggsave(plot = qplot_f_lines,
-           path= out_qplot,
-           device="pdf",
-           filename = paste0(run_list[i],"_forward.pdf"),
-           width = 410,
-           height = 300,
-           units = 'mm')
     
     ## ------------------------------------------------------------------------
     ### Reverse
     
     qplot_r <- plotQualityProfile(fnRs[ii], aggregate = aggregate)
     
-    qplot_r_lines <- qplot_r +
+    out_rev[[i]] <- qplot_r +
       geom_vline(xintercept = lines_seq(max(qplot_r$data$Cycle)), alpha = 0.3, size = 0.3, linetype = 'dashed') +
       improve_headers +
       ggtitle(paste0(run_list[i]," - ","Reverse reads"))
     
-    ggsave(plot = qplot_r_lines,
-           path= out_qplot,
-           device="pdf",
-           filename = paste0(run_list[i],"_reverse.pdf"),
-           width = 410,
-           height = 300,
-           units = 'mm')
+    
+    if (export == TRUE){
+      ggsave(plot = out_fwd[[i]],
+             path= out_qplot,
+             device="pdf",
+             filename = paste0(run_list[i],"_forward.pdf"),
+             width = 410,
+             height = 300,
+             units = 'mm')
+      
+      ggsave(plot = out_rev[[i]] ,
+             path= out_qplot,
+             device="pdf",
+             filename = paste0(run_list[i],"_reverse.pdf"),
+             width = 410,
+             height = 300,
+             units = 'mm')
+    }
     
   }
+  out <- list("fwd_plot" = out_fwd,
+              "rev_plot" = out_rev)
+  return(out)
 }
 
 
@@ -259,6 +269,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
                                                  truncQ = 6,
                                                  minLen = 100,
                                                  nthreads = 6,
+                                                 maxLen = Inf,
                                                  nbases = 20000000,
                                                  pool = "pseudo",
                                                  minover = 12,
@@ -268,7 +279,9 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
                                                  cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
                                                  filt_pattern = c("_R1_filtered.fastq.gz","_R2_filtered.fastq.gz"),
                                                  sep = "_",
-                                                 seed_value = 123)
+                                                 seed_value = 123,
+                                                 remove_input_fastq = TRUE,
+                                                 export = TRUE)
 {
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2)
@@ -282,10 +295,26 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
             full.names = FALSE, 
             recursive = FALSE) %>% as.vector() -> run_list  
   
+  seqtab <- vector("list", length(run_list)) # Fwd and Rev
+  names(seqtab) = c(run_list)
+  
+  plot <- vector("list", length(run_list)) # Fwd and Rev
+  names(plot) = c(run_list)
+  
+  track <- vector("list", length(run_list)) # Fwd and Rev
+  names(track) = c(run_list)
+  
+  out_fwd <- vector("list", length(run_list)) # Fwd and Rev
+  names(out_fwd) = c(run_list)
+  
+  out_rev <- vector("list", length(run_list)) # Fwd and Rev
+  names(out_rev) = c(run_list)
+  
   ## ------------------------------------------------------------------------
   ## get run directories (under the raw_files_path)
   setwd(raw_files_path)
   setwd("./..")
+  
   
   for(i in seq_along(run_list)) {
     
@@ -339,7 +368,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
     # now OMP = TRUE and multi = FALSE
     
     out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, truncLen=trunclen, trimLeft = 0, trimRight = 0,
-                         maxEE=maxee,  rm.phix=TRUE, maxN=0, minLen=minLen, verbose = T,
+                         maxEE=maxee, maxLen = maxLen,  rm.phix=TRUE, maxN=0, minLen=minLen, verbose = T,
                          compress=TRUE, multithread= nthreads, truncQ = truncQ, n = 1e5, OMP = FALSE)
     
     out2 <- data.frame(row.names = sample.names,
@@ -396,18 +425,20 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
     ## ------------------------------------------------------------------------
     cat(str_c('\n# plotErrors  \n'))
     
-    err.plotf <- plotErrors(errF, nominalQ=TRUE) + 
+    out_fwd[[i]] <- plotErrors(errF, nominalQ=TRUE) + 
       ggtitle(str_c(run_list[i], " Run - error rates - Forward reads"))
     
-    ggsave(str_c(filt_path, "/" ,"errors_",run_list[i],"_fwd.pdf"),
-           plot=err.plotf, width = 9, height = 8)
-    
-    err.plotr <- plotErrors(errR, nominalQ=TRUE) + 
+    out_rev[[i]] <- plotErrors(errR, nominalQ=TRUE) + 
       ggtitle(str_c(run_list[i], " Run - error rates - Reverse reads"))
     
-    ggsave(str_c(filt_path, "/" ,"errors_",run_list[i],"_rev.pdf"),
-           plot=err.plotr, width = 9, height = 8)
+    if (export == TRUE){
+    ggsave(str_c(filt_path, "/" ,"errors_",run_list[i],"_fwd.pdf"),
+           plot=out_fwd[[i]], width = 9, height = 8)
     
+    ggsave(str_c(filt_path, "/" ,"errors_",run_list[i],"_rev.pdf"),
+           plot=out_rev[[i]], width = 9, height = 8)
+    
+    }
     cat('\n# Errors learnt and ploted \n')
     
     ## ------------------------------------------------------------------------
@@ -451,15 +482,19 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
     cat('# Pairs were merged\n')
     
     ## ------------------------------------------------------------------------
-    seqtab <- makeSequenceTable(mergers)
+    seqtab[[i]] <- makeSequenceTable(mergers)
     
-    cat(paste0('# Number of samples: ',dim(seqtab)[1], '\n'))
-    cat(paste0('# Number of detected variants (ASVs): ',dim(seqtab)[2]))
+    cat(paste0('# Number of samples: ',dim(seqtab[[i]])[1], '\n'))
+    cat(paste0('# Number of detected variants (ASVs): ',dim(seqtab[[i]])[2]))
     cat("# The variants (ASVs) have the following length distribution:")
-    table(nchar(getSequences(seqtab))) # plot in the future ?
+    table(nchar(getSequences(seqtab[[i]]))) # plot in the future ?
     
     cat(str_c('\n# saving seqtab as ',str_c(filt_path,"/",run_list[i],"_seqtab.rds") ,'\n'))
-    saveRDS(seqtab, str_c(filt_path,"/",run_list[i],"_seqtab.rds"))
+    
+    if( export ==TRUE){
+      saveRDS(seqtab[[i]], str_c(filt_path,"/",run_list[i],"_seqtab.rds"))
+      
+    }
     
     ## ------------------------------------------------------------------------
     cat(str_c('\n# Plotting Sequences/ASV distribution to ',str_c(filt_path, "/", "seq_distrib_",run_list[i],".pdf") ,'\n\n'))
@@ -474,11 +509,12 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
         facet_wrap(~Type, scales="free_y") + theme_bw() + xlab("Amplicon Length")
     }
     
-    plotLengthDistro(seqtab) + scale_y_log10() + 
-      ggtitle(str_c("Sequence / ASV length distribution : ",run_list[i], " Run")) -> p
+    plotLengthDistro(seqtab[[i]]) + scale_y_log10() + 
+      ggtitle(str_c("Sequence / ASV length distribution : ",run_list[i], " Run")) -> plot[[i]]
     
-    ggsave(str_c(filt_path, "/","seq_distrib_",run_list[i],".pdf"), plot=p, width = 9, height = 8)
-    
+    if( export ==TRUE){
+    ggsave(str_c(filt_path, "/","seq_distrib_",run_list[i],".pdf"), plot=plot[[i]], width = 9, height = 8)
+    }
     ## ------------------------------------------------------------------------
     cat(str_c('\n# Generating summary \n'))
     
@@ -490,30 +526,47 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
                denoisedF=sapply(dadaFs, getN),
                denoisedR=sapply(dadaRs, getN),
                merged=sapply(mergers, getN),
-               tabled=rowSums(seqtab)) %>%
+               tabled=rowSums(seqtab[[i]])) %>%
       mutate(filtered_pc = round(filtered/input, 3)) %>%
       mutate(denoisedF_pc = round(denoisedF/filtered, 3)) %>% 
       mutate(denoisedR_pc = round(denoisedR/filtered, 3)) %>%     
       mutate(merged_pc = round(merged/denoisedF, 3)) %>% 
       mutate(filtered_merged_pc = round(merged/filtered, 3)) %>%
-      mutate(input_merged_pc = round(merged/input, 3)) -> track
+      mutate(input_merged_pc = round(merged/input, 3)) -> track[[i]]
     
+    if( export ==TRUE){
     write_tsv(data.frame(track),str_c(filt_path,"/",run_list[i],"_track_analysis.tsv"))
+      
+      save(track, 
+           seqtab,
+           file=paste0(filt_path,"/",run_list[i],".RData"))
+    }
     
     cat("\n# The distribution of merged kept is the following:\n")
-    summary(track$merged_pc)
+    summary(track[[i]]$merged_pc)
     
     # assign(paste0(name.run,"_track"), track)
     # assign(paste0(name.run,"_seqtab"), seqtab)
     
-    save(track, 
-         seqtab,
-         file=paste0(filt_path,"/",run_list[i],".RData"))
+
     #load(paste0(output,"/",name.run,".RData"))
     
-    file.remove(filtFs, filtRs, fnFs_cut, fnRs_cut, showWarnings = TRUE)
+    file.remove(filtFs, filtRs)
+    
+    if( remove_input_fastq ==TRUE){
+      file.remove( fnFs_cut, fnRs_cut)
+      
+    }
     
   }
+  
+out <- list("track" = track,
+              "seqtab" = seqtab,
+              "plot" = plot,
+              "out_fwd" = out_fwd,
+              "out_rev" = out_rev)
+  
+return(out)
 }
 
 
@@ -544,6 +597,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
                                                    minOverlap = 20, # https://github.com/benjjneb/dada2/issues/518
                                                    filt_dir = "02_dada2_filtered_denoised_merged",
                                                    output = "dada2",
+                                                   export = TRUE,
                                                    seed_value = 123)
 {
   ## ------------------------------------------------------------------------
@@ -635,8 +689,10 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   plot <- plotLengthDistro(seqtab.raw) + scale_y_log10() + 
     ggtitle(str_c("Overall Sequence / ASV length distribution ")) +
     geom_vline(xintercept = trim_length[1], size = 0.1, colour = "red", alpha = 0.8, linetype = 2, show.legend = "min") + geom_vline(xintercept = trim_length[2], size = 0.1, colour = "red", alpha = 0.8, linetype = 2 ) -> p
-  ggsave(str_c(merged_run_path,"/","seqtab_distrib",".pdf"),plot=plot, width = 9, height = 8)
   
+  if (export == TRUE){
+  ggsave(str_c(merged_run_path,"/","seqtab_distrib",".pdf"),plot=plot, width = 9, height = 8)
+  }
   ## ------------------------------------------------------------------------
   # Trim the unespecific amplifications from our dataset
   seqtab <- seqtab.raw[,nchar(colnames(seqtab.raw)) %in% seq(trim_length[1],
@@ -667,6 +723,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   if(collapseNoMis==TRUE){
     cat(str_c('\n# Saving uncollapsed .rds and fasta files as well as summary .tsv \n'))
     
+    if (export == TRUE){
     saveRDS(seqtab, str_c(merged_run_path,"/uncollapsed_no-chim-seqtab.rds"))
     
     uniquesToFasta(seqtab,
@@ -674,7 +731,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
                    ids= str_c("asv",c(1:ncol(seqtab)), ";size=", colSums(seqtab)))
     
     write_tsv(track, str_c(merged_run_path,"/uncollapsed_track_analysis.tsv"))
-    
+    }
     cat('\n# You have decided to run collapseNoMismatch on your dataset. Please note that it is only helpful IF you are working with several sequencing runs and it might take a long time to run. You might want to go further (taxonomy, ...) on your uncollapsed seqtable while it is running \n')
     
     collapsed_100 <- collapseNoMismatch(seqtab,  
@@ -683,15 +740,18 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
     
     cat(str_c('\n# Saving collapsed .rds and fasta files as well as summary .tsv  \n'))
     
+    if (export == TRUE){
     saveRDS(collapsed_100, str_c(merged_run_path,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.rds"))
     
     uniquesToFasta(collapsed_100,
                    str_c(merged_run_path,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.fasta"),
                    ids= str_c("asv",c(1:ncol(collapsed_100)), ";size=", colSums(collapsed_100)))
-    
+    }
     track %>% 
       mutate(collapsed_100 = rowSums(collapsed_100)) %>%
       mutate(collapsed_100_pc = round(collapsed_100 / length_filtered, digits = 10)) -> track.final
+    
+    if (export == TRUE){
     
     write_tsv(track.final, str_c(merged_run_path,"/track_analysis.tsv"))
     
@@ -700,10 +760,12 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
     
     cat(str_c('# In "',paste0(merged_run_path,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
     # cat(str_c('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',str_c(output,"/",name,"_track_analysis.tsv "),'." and go further.\n'))
-    
+    }
   }
   ## ------------------------------------------------------------------------
   if(collapseNoMis==FALSE){
+    
+    if (export == TRUE){
     cat(str_c('\n# Saving .rds and fasta files as well as summary .tsv \n'))
     
     saveRDS(seqtab, str_c(merged_run_path,"/no-chim-seqtab.rds"))
@@ -719,13 +781,16 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
     
     cat(str_c('# In "',paste0(merged_run_path,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
     # cat(str_c('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',str_c(output,"/",name,"_track_analysis.tsv "),'." and go further.\n'))
-    
+    }
     cat('\n# chimera removal step is done. You can go further into the analysis (taxonomy, phylogeny) or explore collapseNoMismatch IF you are dealing with multiple runs ... it might take very long \n\n')
   }
   ## ------------------------------------------------------------------------
-  # return(list("unrooted_tree" = fitGTR$tree,
-  #           "rooted_tree" = ape::multi2di(fitGTR$tree))) #https://github.com/joey711/phyloseq/issues/936
-  
+  return(list("seqtab" = seqtab,
+              "track" = track))
+  if(collapseNoMis==TRUE){
+    return(list("seqtab" = seqtab,
+                "track" = track,
+                "collapsed_100" = collapsed_100))
 }
 
 
@@ -762,6 +827,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
                                        allowMultiple = TRUE,
                                        merged_run_dir = "03_dada2_merged_runs_chimera_removed",
                                        output = "dada2",
+                                       export = TRUE,
                                        seed_value = 123)
 {
   
@@ -838,6 +904,9 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
     
     colnames(taxid) <- ranks; rownames(taxid) <- getSequences(seqtab.nochim)
     
+    
+    if (export == TRUE){
+      
     # Saving rds object
     saveRDS(taxid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
     
@@ -854,7 +923,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
     cat(paste0('# The obtained taxonomy file can be found in "', paste0(output,"/", name,"_", dbname,"_assignation.rds"), '"\n\n'))
     cat(paste0('# Although we always recommend you to work directly in R with .rds files, we created a .tsv in "',paste0(output,"/", name,"_", dbname,"_table.tsv"),'" with tax and counts tables merged\n\n'))
     # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further .\n\n'))
-    
+    }
   }
   
   if(method=="dada"){
@@ -887,6 +956,8 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
           mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
           select(ASV_id, everything())
         
+        if (export == TRUE){
+          
         write_tsv(x = merged_table,
                   file = paste0(taxa_path,"/", dbname,"_table.tsv"))
         
@@ -894,7 +965,8 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
         
         cat(paste0('\n# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
         cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(taxa_path,"/", dbname,"*"),'." and go further ... \n\n'))
-      }
+        }
+        }
       
       if(file.exists(db_species))
       {
@@ -913,6 +985,8 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
           mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
           select(ASV_id, everything())
         
+        if (export == TRUE){
+          
         write_tsv(x = merged_table,
                   file = paste0(taxa_path,"/", dbname,"_table.tsv"))
         
@@ -922,7 +996,7 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
         cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
         cat(paste0('# Mutliple species assignments can be returned if you set allowMultiple = TRUE. \n'))
         # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
-        
+        }
       }
       
     }
@@ -949,6 +1023,8 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
           mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
           select(ASV_id, everything())
         
+        if (export == TRUE){
+          
         write_tsv(x = merged_table,
                   file = paste0(taxa_path,"/", dbname,"_table.tsv"))
         
@@ -964,7 +1040,8 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
         
         cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
         # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
-      }
+        }
+        }
       
       if(!file.exists(db_species))
       {
@@ -983,6 +1060,8 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
           mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
           select(ASV_id, everything())
         
+        if (export == TRUE){
+          
         write_tsv(x = merged_table,
                   file = paste0(taxa_path,"/", dbname,"_table.tsv"))
         
@@ -990,12 +1069,12 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
                 paste0(taxa_path,"/", dbname,"_assignation.rds"))
         
         cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-        # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
+       } # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
       }
     }
   }
   
-  #return(phyloseq_object)
+return("merged_table" = merged_table)
 }
 
 
