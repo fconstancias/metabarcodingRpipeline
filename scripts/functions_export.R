@@ -432,12 +432,12 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
       ggtitle(str_c(run_list[i], " Run - error rates - Reverse reads"))
     
     if (export == TRUE){
-    ggsave(str_c(filt_path, "/" ,"errors_",run_list[i],"_fwd.pdf"),
-           plot=out_fwd[[i]], width = 9, height = 8)
-    
-    ggsave(str_c(filt_path, "/" ,"errors_",run_list[i],"_rev.pdf"),
-           plot=out_rev[[i]], width = 9, height = 8)
-    
+      ggsave(str_c(filt_path, "/" ,"errors_",run_list[i],"_fwd.pdf"),
+             plot=out_fwd[[i]], width = 9, height = 8)
+      
+      ggsave(str_c(filt_path, "/" ,"errors_",run_list[i],"_rev.pdf"),
+             plot=out_rev[[i]], width = 9, height = 8)
+      
     }
     cat('\n# Errors learnt and ploted \n')
     
@@ -513,7 +513,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
       ggtitle(str_c("Sequence / ASV length distribution : ",run_list[i], " Run")) -> plot[[i]]
     
     if( export ==TRUE){
-    ggsave(str_c(filt_path, "/","seq_distrib_",run_list[i],".pdf"), plot=plot[[i]], width = 9, height = 8)
+      ggsave(str_c(filt_path, "/","seq_distrib_",run_list[i],".pdf"), plot=plot[[i]], width = 9, height = 8)
     }
     ## ------------------------------------------------------------------------
     cat(str_c('\n# Generating summary \n'))
@@ -535,7 +535,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
       mutate(input_merged_pc = round(merged/input, 3)) -> track[[i]]
     
     if( export ==TRUE){
-    write_tsv(data.frame(track),str_c(filt_path,"/",run_list[i],"_track_analysis.tsv"))
+      write_tsv(data.frame(track),str_c(filt_path,"/",run_list[i],"_track_analysis.tsv"))
       
       save(track, 
            seqtab,
@@ -548,7 +548,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
     # assign(paste0(name.run,"_track"), track)
     # assign(paste0(name.run,"_seqtab"), seqtab)
     
-
+    
     #load(paste0(output,"/",name.run,".RData"))
     
     file.remove(filtFs, filtRs)
@@ -560,13 +560,13 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
     
   }
   
-out <- list("track" = track,
+  out <- list("track" = track,
               "seqtab" = seqtab,
               "plot" = plot,
               "out_fwd" = out_fwd,
               "out_rev" = out_rev)
   
-return(out)
+  return(out)
 }
 
 
@@ -589,6 +589,8 @@ return(out)
 #'
 
 run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
+                                                   seqtab = NULL,
+                                                   track = NULL,
                                                    merged_run_dir = "03_dada2_merged_runs_chimera_removed",
                                                    chimera_method = "consensus",
                                                    trim_length,
@@ -598,8 +600,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
                                                    filt_dir = "02_dada2_filtered_denoised_merged",
                                                    output = "dada2",
                                                    export = TRUE,
-                                                   seed_value = 123)
-{
+                                                   seed_value = 123){
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
@@ -609,56 +610,77 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   
   
   ## ------------------------------------------------------------------------
-  setwd(raw_files_path)
-  setwd("./..")
   
-  merged_run_path <- file.path(output, 
-                               merged_run_dir)
-  
-  dir.create(merged_run_path, showWarnings = TRUE, recursive = TRUE)
-  
-  cat(paste0('\n# output dir :  ',merged_run_path,'\n'))
-  
-  ## ------------------------------------------------------------------------
-  ## get .rds seqtables and tsv summary files:
-  seqtables <- sort(list.files(paste0(output,"/",filt_dir),
-                               pattern = glob2rx("*_seqtab.rds*"),
-                               full.names = TRUE,
-                               recursive = TRUE))
-  
-  track <- sort(list.files(paste0(output,"/",filt_dir),
-                           pattern = glob2rx("*_track_analysis.tsv*"),
-                           full.names = TRUE,
-                           recursive = TRUE))
-  
-  summary <- map(track, read_tsv) %>% bind_rows()
-  ## ------------------------------------------------------------------------
-  
-  cat(str_c('\n# removeBimeraDenovo running on ', seqtables, ' file '))
-  
-  ## ------------------------------------------------------------------------
-  # https://github.com/benjjneb/dada2/issues/345
-  
-
-  if(seqtables %>% length > 1)
-  {
-    list.df <- map(seqtables, readRDS)
+  if(is.null(seqtab)  & is.null(track) ){
     
-    st.all <- mergeSequenceTables(tables = list.df)
+    setwd(raw_files_path)
+    setwd("./..")
     
-    cat('\n# mergeSequenceTables done\n')
+    merged_run_path <- file.path(output, 
+                                 merged_run_dir)
     
-  }else{
-    st.all = seqtables %>%
-      readRDS()
+    dir.create(merged_run_path, showWarnings = TRUE, recursive = TRUE)
     
-    cat('\n# only one SequenceTable, no merging to do\n')
+    seqtables <- sort(list.files(paste0(output,"/",filt_dir),
+                                 pattern = glob2rx("*_seqtab.rds*"),
+                                 full.names = TRUE,
+                                 recursive = TRUE))
     
+    track <- sort(list.files(paste0(output,"/",filt_dir),
+                             pattern = glob2rx("*_track_analysis.tsv*"),
+                             full.names = TRUE,
+                             recursive = TRUE))
+    
+    summary <- map(track, 
+                   read_tsv) %>% bind_rows()
+    
+    ## ------------------------------------------------------------------------
+    
+    cat(str_c('\n# removeBimeraDenovo running on ', seqtables, ' file '))
+    
+    ## ------------------------------------------------------------------------
+    # https://github.com/benjjneb/dada2/issues/345
+    
+    
+    if(seqtables %>% length > 1){
+      list.df <- map(seqtables, readRDS)
+      
+      st.all <- mergeSequenceTables(tables = list.df)
+      
+      cat('\n# mergeSequenceTables done\n')
+      
+    }else{
+      st.all = seqtables %>%
+        readRDS()
+      
+      cat('\n# only one SequenceTable, no merging to do\n')
+      
+    }
   }
   
+  if(!is.null(seqtab) == TRUE & !is.null(track) == TRUE){
+    
+    summary <- track %>% bind_rows()
+    
+    if(seqtab %>% length > 1){
+      
+      st.all <- mergeSequenceTables(tables = seqtab)
+      
+      
+      
+      cat('\n# mergeSequenceTables done\n')
+      
+    }else{
+      st.all = seqtab
+      
+      cat('\n# only one SequenceTable, no merging to do\n')
+      
+    }
+  }
   
   ## ------------------------------------------------------------------------
   cat('\n# removeBimeraDenovo start\n')
+  
   seqtab.raw <- removeBimeraDenovo(st.all, method = chimera_method,
                                    multithread = nthreads, 
                                    verbose = FALSE)
@@ -669,10 +691,10 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   perc.num.chimera.removed <- round(100*num.chimera.removed/ncol(st.all) %>% round(2),2)
   reads.chimera.removed <- sum(colSums(st.all)) - sum(colSums(seqtab.raw))
   perc.reads.chimera.removed <- round(100*reads.chimera.removed/sum(colSums(st.all)) %>% round(2),2)
-
+  
   cat(paste0('# ',num.chimera.removed," chimera were found and removed\n"))
   cat(paste0('# These represent ',perc.num.chimera.removed,'% of total ASVs and ',perc.reads.chimera.removed,'% of total reads\n'))
-
+  
   ## ------------------------------------------------------------------------
   # Distribution of variants
   cat("\n# The variants (ASVs) have the following length distribution:\n")
@@ -688,10 +710,10 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
   }
   plot <- plotLengthDistro(seqtab.raw) + scale_y_log10() + 
     ggtitle(str_c("Overall Sequence / ASV length distribution ")) +
-    geom_vline(xintercept = trim_length[1], size = 0.1, colour = "red", alpha = 0.8, linetype = 2, show.legend = "min") + geom_vline(xintercept = trim_length[2], size = 0.1, colour = "red", alpha = 0.8, linetype = 2 ) -> p
+    geom_vline(xintercept = trim_length[1], size = 0.1, colour = "red", alpha = 0.8, linetype = 2, show.legend = "min") + geom_vline(xintercept = trim_length[2], size = 0.1, colour = "red", alpha = 0.8, linetype = 2 )
   
   if (export == TRUE){
-  ggsave(str_c(merged_run_path,"/","seqtab_distrib",".pdf"),plot=plot, width = 9, height = 8)
+    ggsave(str_c(merged_run_path,"/","seqtab_distrib",".pdf"),plot=plot, width = 9, height = 8)
   }
   ## ------------------------------------------------------------------------
   # Trim the unespecific amplifications from our dataset
@@ -724,13 +746,13 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
     cat(str_c('\n# Saving uncollapsed .rds and fasta files as well as summary .tsv \n'))
     
     if (export == TRUE){
-    saveRDS(seqtab, str_c(merged_run_path,"/uncollapsed_no-chim-seqtab.rds"))
-    
-    uniquesToFasta(seqtab,
-                   str_c(merged_run_path,"/uncollapsed_no-chim-seqtab.fasta"),
-                   ids= str_c("asv",c(1:ncol(seqtab)), ";size=", colSums(seqtab)))
-    
-    write_tsv(track, str_c(merged_run_path,"/uncollapsed_track_analysis.tsv"))
+      saveRDS(seqtab, str_c(merged_run_path,"/uncollapsed_no-chim-seqtab.rds"))
+      
+      uniquesToFasta(seqtab,
+                     str_c(merged_run_path,"/uncollapsed_no-chim-seqtab.fasta"),
+                     ids= str_c("asv",c(1:ncol(seqtab)), ";size=", colSums(seqtab)))
+      
+      write_tsv(track, str_c(merged_run_path,"/uncollapsed_track_analysis.tsv"))
     }
     cat('\n# You have decided to run collapseNoMismatch on your dataset. Please note that it is only helpful IF you are working with several sequencing runs and it might take a long time to run. You might want to go further (taxonomy, ...) on your uncollapsed seqtable while it is running \n')
     
@@ -741,58 +763,62 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
     cat(str_c('\n# Saving collapsed .rds and fasta files as well as summary .tsv  \n'))
     
     if (export == TRUE){
-    saveRDS(collapsed_100, str_c(merged_run_path,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.rds"))
-    
-    uniquesToFasta(collapsed_100,
-                   str_c(merged_run_path,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.fasta"),
-                   ids= str_c("asv",c(1:ncol(collapsed_100)), ";size=", colSums(collapsed_100)))
+      saveRDS(collapsed_100, str_c(merged_run_path,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.rds"))
+      
+      uniquesToFasta(collapsed_100,
+                     str_c(merged_run_path,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.fasta"),
+                     ids= str_c("asv",c(1:ncol(collapsed_100)), ";size=", colSums(collapsed_100)))
     }
     track %>% 
       mutate(collapsed_100 = rowSums(collapsed_100)) %>%
       mutate(collapsed_100_pc = round(collapsed_100 / length_filtered, digits = 10)) -> track.final
     
     if (export == TRUE){
-    
-    write_tsv(track.final, str_c(merged_run_path,"/track_analysis.tsv"))
-    
-    cat(str_c('# Your final 100% clustered ASV table can be found in "', paste0(merged_run_path,"/seqtab.rds"),'"\n'))
-    cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_path,"/seqtab.fasta"), '"\n'))
-    
-    cat(str_c('# In "',paste0(merged_run_path,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
-    # cat(str_c('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',str_c(output,"/",name,"_track_analysis.tsv "),'." and go further.\n'))
+      
+      write_tsv(track.final, str_c(merged_run_path,"/track_analysis.tsv"))
+      
+      cat(str_c('# Your final 100% clustered ASV table can be found in "', paste0(merged_run_path,"/seqtab.rds"),'"\n'))
+      cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_path,"/seqtab.fasta"), '"\n'))
+      
+      cat(str_c('# In "',paste0(merged_run_path,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
+      # cat(str_c('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',str_c(output,"/",name,"_track_analysis.tsv "),'." and go further.\n'))
     }
   }
   ## ------------------------------------------------------------------------
   if(collapseNoMis==FALSE){
     
     if (export == TRUE){
-    cat(str_c('\n# Saving .rds and fasta files as well as summary .tsv \n'))
-    
-    saveRDS(seqtab, str_c(merged_run_path,"/no-chim-seqtab.rds"))
-    
-    uniquesToFasta(seqtab,
-                   str_c(merged_run_path,"/no-chim-seqtab.fasta"),
-                   ids= str_c("asv",c(1:ncol(seqtab)), ";size=", colSums(seqtab)))
-    
-    write_tsv(track, str_c(merged_run_path,"/track_analysis.tsv"))
-    
-    cat(str_c('# Your final ASV table can be found in "', paste0(merged_run_path,"/seqtab.rds"),'"\n'))
-    cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_path,"/seqtab.fasta"), '"\n'))
-    
-    cat(str_c('# In "',paste0(merged_run_path,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
-    # cat(str_c('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',str_c(output,"/",name,"_track_analysis.tsv "),'." and go further.\n'))
+      cat(str_c('\n# Saving .rds and fasta files as well as summary .tsv \n'))
+      
+      saveRDS(seqtab, str_c(merged_run_path,"/no-chim-seqtab.rds"))
+      
+      uniquesToFasta(seqtab,
+                     str_c(merged_run_path,"/no-chim-seqtab.fasta"),
+                     ids= str_c("asv",c(1:ncol(seqtab)), ";size=", colSums(seqtab)))
+      
+      write_tsv(track, str_c(merged_run_path,"/track_analysis.tsv"))
+      
+      cat(str_c('# Your final ASV table can be found in "', paste0(merged_run_path,"/seqtab.rds"),'"\n'))
+      cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_path,"/seqtab.fasta"), '"\n'))
+      
+      cat(str_c('# In "',paste0(merged_run_path,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
+      # cat(str_c('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',str_c(output,"/",name,"_track_analysis.tsv "),'." and go further.\n'))
     }
     cat('\n# chimera removal step is done. You can go further into the analysis (taxonomy, phylogeny) or explore collapseNoMismatch IF you are dealing with multiple runs ... it might take very long \n\n')
   }
   ## ------------------------------------------------------------------------
-  return(list("seqtab" = seqtab,
-              "track" = track))
+  
   if(collapseNoMis==TRUE){
     return(list("seqtab" = seqtab,
                 "track" = track,
-                "collapsed_100" = collapsed_100))
+                "plot" = plot,
+                "collapsed_seqtab" = collapsed_100))
+  }else{
+    return(list("seqtab" = seqtab,
+                "track" = track,
+                "plot" = plot))
+  }
 }
-
 
 
 #' @title ...
@@ -815,6 +841,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(raw_files_path,
 
 
 run_dada_DECIPHER_taxonomy <- function(raw_files_path,
+                                       seqtab = NULL,
                                        taxa_dir = "04_dada2_taxonomy",
                                        method = "dada", # method = "DECIPHER" or "dada" 
                                        threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
@@ -839,40 +866,49 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
-  setwd(raw_files_path)
-  setwd("./..")
   
-  taxa_path <- file.path(output, 
-                         taxa_dir)
-  
-  dir.create(taxa_path, showWarnings = TRUE, recursive = TRUE)
-  
-  cat(paste0('\n# output dir :  ',taxa_path,'\n'))
-  
-  ## ------------------------------------------------------------------------
-  
-  merged_run_path <- file.path(output, 
-                               merged_run_dir)
-  
-  if(collapseNoMis==FALSE){
-    list.files(merged_run_path,
-               pattern = glob2rx("*uncollapsed_no-chim-seqtab.rds"),
-               full.names = TRUE,
-               recursive = TRUE) -> seqtab.nochim
+  if(is.null(seqtab)){
+    
+    setwd(raw_files_path)
+    setwd("./..")
+    
+    taxa_path <- file.path(output, 
+                           taxa_dir)
+    
+    dir.create(taxa_path, showWarnings = TRUE, recursive = TRUE)
+    
+    cat(paste0('\n# output dir :  ',taxa_path,'\n'))
+    
+    ## ------------------------------------------------------------------------
+    
+    merged_run_path <- file.path(output, 
+                                 merged_run_dir)
+    
+    if(collapseNoMis==FALSE){
+      list.files(merged_run_path,
+                 pattern = glob2rx("*uncollapsed_no-chim-seqtab.rds"),
+                 full.names = TRUE,
+                 recursive = TRUE) -> seqtab.nochim
+    }else{
+      list.files(merged_run_path,
+                 pattern = glob2rx("*collapse_no_mismatch_no-chim-seqtab.rds"),
+                 full.names = TRUE,
+                 recursive = TRUE) -> seqtab.nochim
+      
+    }
+    
+    seqtab.nochim <- readRDS(seqtab.nochim)
+    
   }else{
-    list.files(merged_run_path,
-               pattern = glob2rx("*collapse_no_mismatch_no-chim-seqtab.rds"),
-               full.names = TRUE,
-               recursive = TRUE) -> seqtab.nochim
+    seqtab.nochim <- seqtab
   }
-  
   ## ------------------------------------------------------------------------
   
   dbname <- str_extract(basename(db), "[^.]+")
   
   set.seed(seed_value) #random  generator necessary for reproducibility
   
-  seqtab.nochim <- readRDS(seqtab.nochim)
+  
   # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
   ## ------------------------------------------------------------------------
   cat(paste0('\n# You have decided to use : ',method ,' method against : ', dbname), ' database \n')
@@ -907,22 +943,22 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
     
     if (export == TRUE){
       
-    # Saving rds object
-    saveRDS(taxid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
-    
-    # Create a merged table with counts and tax
-    taxid <- as_tibble(taxid, rownames = 'ASV')
-    merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
-      left_join(taxid, by = 'ASV') %>%
-      mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
-      select(ASV_id, everything())
-    
-    write_tsv(x = merged_table,
-              file = paste0(taxa_path,"/",dbname,"_table.tsv"))
-    
-    cat(paste0('# The obtained taxonomy file can be found in "', paste0(output,"/", name,"_", dbname,"_assignation.rds"), '"\n\n'))
-    cat(paste0('# Although we always recommend you to work directly in R with .rds files, we created a .tsv in "',paste0(output,"/", name,"_", dbname,"_table.tsv"),'" with tax and counts tables merged\n\n'))
-    # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further .\n\n'))
+      # Saving rds object
+      saveRDS(taxid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
+      
+      # Create a merged table with counts and tax
+      taxid <- as_tibble(taxid, rownames = 'ASV')
+      merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
+        left_join(taxid, by = 'ASV') %>%
+        mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
+        select(ASV_id, everything())
+      
+      write_tsv(x = merged_table,
+                file = paste0(taxa_path,"/",dbname,"_table.tsv"))
+      
+      cat(paste0('# The obtained taxonomy file can be found in "', paste0(output,"/", name,"_", dbname,"_assignation.rds"), '"\n\n'))
+      cat(paste0('# Although we always recommend you to work directly in R with .rds files, we created a .tsv in "',paste0(output,"/", name,"_", dbname,"_table.tsv"),'" with tax and counts tables merged\n\n'))
+      # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further .\n\n'))
     }
   }
   
@@ -958,15 +994,15 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
         
         if (export == TRUE){
           
-        write_tsv(x = merged_table,
-                  file = paste0(taxa_path,"/", dbname,"_table.tsv"))
-        
-        saveRDS(taxaid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
-        
-        cat(paste0('\n# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-        cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(taxa_path,"/", dbname,"*"),'." and go further ... \n\n'))
+          write_tsv(x = merged_table,
+                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
+          
+          saveRDS(taxaid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
+          
+          cat(paste0('\n# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
+          cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(taxa_path,"/", dbname,"*"),'." and go further ... \n\n'))
         }
-        }
+      }
       
       if(file.exists(db_species))
       {
@@ -987,15 +1023,15 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
         
         if (export == TRUE){
           
-        write_tsv(x = merged_table,
-                  file = paste0(taxa_path,"/", dbname,"_table.tsv"))
-        
-        saveRDS(as_tibble(taxa_Species, rownames = 'ASV')
-                , paste0(taxa_path,"/", dbname,"_assignation.rds"))
-        
-        cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-        cat(paste0('# Mutliple species assignments can be returned if you set allowMultiple = TRUE. \n'))
-        # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
+          write_tsv(x = merged_table,
+                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
+          
+          saveRDS(as_tibble(taxa_Species, rownames = 'ASV')
+                  , paste0(taxa_path,"/", dbname,"_assignation.rds"))
+          
+          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
+          cat(paste0('# Mutliple species assignments can be returned if you set allowMultiple = TRUE. \n'))
+          # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
         }
       }
       
@@ -1025,23 +1061,23 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
         
         if (export == TRUE){
           
-        write_tsv(x = merged_table,
-                  file = paste0(taxa_path,"/", dbname,"_table.tsv"))
-        
-        # saveRDS(as_tibble(boot_taxa, rownames = 'ASV'), 
-        #         paste0(output,"/", name,"_", dbname,"_boot.rds"))
-        
-        # saveRDS(as_tibble(taxa_Species, rownames = 'ASV'), 
-        #         paste0(output,"/", name,"_", dbname,"_assignation.rds"))
-        
-        saveRDS(list(as_tibble(taxa_Species, rownames = 'ASV'),
-                     as_tibble(boot_taxa, rownames = 'ASV')),
-                paste0(taxa_path,"/", dbname,"_assignation.rds"))
-        
-        cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-        # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
+          write_tsv(x = merged_table,
+                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
+          
+          # saveRDS(as_tibble(boot_taxa, rownames = 'ASV'), 
+          #         paste0(output,"/", name,"_", dbname,"_boot.rds"))
+          
+          # saveRDS(as_tibble(taxa_Species, rownames = 'ASV'), 
+          #         paste0(output,"/", name,"_", dbname,"_assignation.rds"))
+          
+          saveRDS(list(as_tibble(taxa_Species, rownames = 'ASV'),
+                       as_tibble(boot_taxa, rownames = 'ASV')),
+                  paste0(taxa_path,"/", dbname,"_assignation.rds"))
+          
+          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
+          # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
         }
-        }
+      }
       
       if(!file.exists(db_species))
       {
@@ -1062,19 +1098,20 @@ run_dada_DECIPHER_taxonomy <- function(raw_files_path,
         
         if (export == TRUE){
           
-        write_tsv(x = merged_table,
-                  file = paste0(taxa_path,"/", dbname,"_table.tsv"))
-        
-        saveRDS(as_tibble(taxa, rownames = 'ASV'), 
-                paste0(taxa_path,"/", dbname,"_assignation.rds"))
-        
-        cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-       } # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
+          write_tsv(x = merged_table,
+                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
+          
+          saveRDS(as_tibble(taxa, rownames = 'ASV'), 
+                  paste0(taxa_path,"/", dbname,"_assignation.rds"))
+          
+          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
+        } # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
       }
     }
   }
   
-return("merged_table" = merged_table)
+  # merge_phyloseq()
+  return("merged_table" = merged_table)
 }
 
 
@@ -1194,7 +1231,7 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
 #' @param .
 #' @param ..
 #' @author Florentin Constancias
-#' @note .
+#' @note Need to arrange when Species column is not present...also test with other possible databases/ taxonomic assignments methods.
 #' @note .
 #' @note .
 #' @return .
@@ -1208,7 +1245,9 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
 #'
 #'
 
-run_merge_phyloseq <- function(raw_files_path,
+run_merge_phyloseq <- function(merged_table = NULL,
+                               track = NULL,
+                               raw_files_path,
                                metadata,
                                taxa_dir = "04_dada2_taxonomy",
                                phylo,
@@ -1217,7 +1256,7 @@ run_merge_phyloseq <- function(raw_files_path,
                                rooted_tree = TRUE,
                                output = "dada2",
                                collapseNoMis = TRUE,
-                               clean = FALSE)
+                               export = TRUE)
 {
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2); require(phyloseq)
@@ -1228,13 +1267,23 @@ run_merge_phyloseq <- function(raw_files_path,
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
-  setwd(raw_files_path)
-  setwd("./..")
+  if(is.null(merged_table)){
+    setwd(raw_files_path)
+    setwd("./..")
+    
+    list.files(file.path(output, merged_run_dir),
+               pattern = glob2rx("track_analysis.tsv"),
+               full.names = TRUE,
+               recursive = TRUE) %>% read_tsv() -> track
+    
+    list.files(file.path(output, taxa_dir),
+               pattern = glob2rx("*.tsv"),
+               full.names = TRUE,
+               recursive = TRUE) %>% read_tsv() -> tmp
+  }else{
+    tmp <- merged_table
+  }
   
-  list.files(file.path(output, taxa_dir),
-             pattern = glob2rx("*.tsv"),
-             full.names = TRUE,
-             recursive = TRUE) %>% read_tsv() -> tmp
   
   tmp %>%
     column_to_rownames("ASV") %>%
@@ -1259,50 +1308,49 @@ run_merge_phyloseq <- function(raw_files_path,
   
   # prune_samples(sample_sums(physeq) > 0, physeq) -> physeq
   
-
-  ## ------------------------------------------------------------------------
-  if(phylo == TRUE){
-    if(rooted_tree == TRUE){
-      list.files(file.path(output, phylo_dir),
-                 pattern = glob2rx("rooted_tree.rds"),
-                 full.names = TRUE,
-                 recursive = TRUE) %>% readRDS() -> tree
-      # physeq@phy_tree = tree
-      
-    }
-    if(rooted_tree == FALSE){
-      list.files(file.path(output, phylo_dir),
-                 pattern = glob2rx("*unrooted_tree.rds"),
-                 full.names = TRUE,
-                 recursive = TRUE) %>% readRDS() -> tree
-      # physeq@phy_tree = tree
-    }
-    physeq <- merge_phyloseq(physeq,
-                             tree %>% phy_tree())
-    # merge_phyloseq(otu_table(physeq),
-    #                tax_table(physeq),
-    #                # sample_data(physeq),
-    #                # refseq(physeq),
-    #                tree)
-  }
   
+  ## ------------------------------------------------------------------------
+  if(is.null(merged_table)){
+    if(phylo == TRUE){
+      if(rooted_tree == TRUE){
+        list.files(file.path(output, phylo_dir),
+                   pattern = glob2rx("rooted_tree.rds"),
+                   full.names = TRUE,
+                   recursive = TRUE) %>% readRDS() -> tree
+        # physeq@phy_tree = tree
+        
+      }
+      if(rooted_tree == FALSE){
+        list.files(file.path(output, phylo_dir),
+                   pattern = glob2rx("*unrooted_tree.rds"),
+                   full.names = TRUE,
+                   recursive = TRUE) %>% readRDS() -> tree
+        # physeq@phy_tree = tree
+      }
+      physeq <- merge_phyloseq(physeq,
+                               tree %>% phy_tree())
+      # merge_phyloseq(otu_table(physeq),
+      #                tax_table(physeq),
+      #                # sample_data(physeq),
+      #                # refseq(physeq),
+      #                tree)
+    }
+  }
   ## ------------------------------------------------------------------------
   ## add ASV as refseq part of the phyloseq object
   
   physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq)) # https://github.com/benjjneb/dada2/issues/613
   
   ## ------------------------------------------------------------------------
-
+  
   taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
                                               nchar(ntaxa(physeq)),
                                               pad = "0"))
   
   # ifelse(collapseNoMis == TRUE, track_file = "*track_analysis.tsv", track_file = "uncollapsed_track_analysis.tsv")
   
-  list.files(file.path(output, merged_run_dir),
-             pattern = glob2rx("track_analysis.tsv"),
-             full.names = TRUE,
-             recursive = TRUE) %>% read_tsv() -> track
+  
+  
   
   if(file.exists(metadata))
   {
@@ -1323,10 +1371,10 @@ run_merge_phyloseq <- function(raw_files_path,
     
   }
   
-  
-  saveRDS(physeq, 
-          paste0(output,"/","physeq.RDS"))
-  
+  if(export == TRUE){
+    saveRDS(physeq, 
+            paste0(output,"/","physeq.RDS"))
+  }
   return(physeq)
 }
 
@@ -1349,26 +1397,26 @@ run_merge_phyloseq <- function(raw_files_path,
 #'
 
 run_16S_pipe <- function(raw_files_path,
-                     atropos_bin = "atropos",
-                     out_dir = "dada2",
-                     V = "V4",
-                     PRIMER_F,
-                     PRIMER_R,
-                     tax_threshold = 60,
-                     nbases = 20000000,
-                     pool = "pseudo",
-                     trim_length = c(240,400),
-                     trunclen = c(260,250),
-                     maxee = c(3,4),
-                     minLen = 100,
-                     minover = 15,
-                     run_phylo = FALSE,
-                     tryRC = FALSE,
-                     tax_method = "dada",
-                     metadata,
-                     db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
-                     db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
-                     SLOTS = 6){
+                         atropos_bin = "atropos",
+                         out_dir = "dada2",
+                         V = "V4",
+                         PRIMER_F,
+                         PRIMER_R,
+                         tax_threshold = 60,
+                         nbases = 20000000,
+                         pool = "pseudo",
+                         trim_length = c(240,400),
+                         trunclen = c(260,250),
+                         maxee = c(3,4),
+                         minLen = 100,
+                         minover = 15,
+                         run_phylo = FALSE,
+                         tryRC = FALSE,
+                         tax_method = "dada",
+                         metadata,
+                         db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
+                         db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
+                         SLOTS = 6){
   if(V == "V4") {
     
     PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
@@ -1491,7 +1539,7 @@ run_16S_pipe <- function(raw_files_path,
                        output = out_dir) -> physeq
   }
   
-return(physeq)
+  return(physeq)
 }
 
 
@@ -1517,6 +1565,7 @@ return(physeq)
 add_phylogeny_to_phyloseq <- function(phyloseq_path,
                                       method = "R",
                                       nthreads = 6,
+                                      export = TRUE,
                                       output_phyloseq = "dada2_phylo"){
   
   ## ------------------------------------------------------------------------
@@ -1530,9 +1579,13 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
-  
-  phyloseq_path %>%
-    readRDS() -> physeq
+  if(is.character(phyloseq_path)){
+    phyloseq_path %>%
+      readRDS() -> physeq
+  }else{
+    phyloseq_path -> physeq
+  }
+
   
   ## ------------------------------------------------------------------------
   if(method=="R"){
@@ -1580,255 +1633,12 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   physeq <- merge_phyloseq(physeq,
                            phangorn::midpoint(fitGTR$tree) %>% phyloseq::phy_tree())
   
-  physeq %>%
-    saveRDS(file = paste0(output_phyloseq, ".RDS"))
+  if (export == TRUE){
+    physeq %>%
+      saveRDS(file = paste0(output_phyloseq, ".RDS"))
+  }
+
   
   return(physeq)
   
 }
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-
-
-add_taxonomy_to_phyloseq <- function(phyloseq_path,
-                                     method = "dada", # method = "DECIPHER" or "dada" 
-                                     threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
-                                     tryRC = FALSE,
-                                     db,
-                                     db_species,
-                                     nthreads = 6,
-                                     outputBootstraps = TRUE, #3 only for dada2 method# outputBootstraps <- TRUE 
-                                     allowMultiple = TRUE,
-                                     seed_value = 123){
-  
-  ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2); require(DECIPHER)
-  cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
-  cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
-  cat(paste0('\n##',"You are using DECIPHER version ", packageVersion('DECIPHER'),'\n\n'))
-  cat('################################\n\n')
-  
-  ## ------------------------------------------------------------------------
-  
-  phyloseq_path %>%
-    readRDS() -> physeq
-
-  ## ------------------------------------------------------------------------
-  
-    dbname <- str_extract(basename(db), "[^.]+")
-    
-    set.seed(seed_value) #random  generator necessary for reproducibility
-    
-    seqtab.nochim <- readRDS(seqtab.nochim)
-    # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
-    ## ------------------------------------------------------------------------
-    cat(paste0('\n# You have decided to use : ',method ,' method against : ', dbname), ' database \n')
-    
-    ## ------------------------------------------------------------------------
-    if(method=="DECIPHER"){
-      
-      
-      dna <- DNAStringSet(physeq@refseq)
-      names(dna) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
-      
-
-      load(db)
-      
-      ids <- IdTaxa(dna,
-                    trainingSet,
-                    strand = if_else(tryRC == TRUE, "both", "top"),
-                    processors = nthreads,
-                    verbose = TRUE,
-                    threshold = threshold)
-      
-      ranks <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species") # ranks of interest
-      # need to check if this work for GTDB also...
-      
-      # Convert the output object of class "Taxa" to a matrix analogous to the output from assignTaxonomy
-      taxid <- t(sapply(ids, function(x) {
-        m <- match(ranks, x$rank)
-        taxa <- x$taxon[m]
-        taxa[startsWith(taxa, "unclassified_")] <- NA
-        taxa
-      }))
-      
-      colnames(taxid) <- ranks; rownames(taxid) <- getSequences(seqtab.nochim)
-      
-      # Saving rds object
-      saveRDS(taxid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
-      
-      # Create a merged table with counts and tax
-      taxid <- as_tibble(taxid, rownames = 'ASV')
-      merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
-        left_join(taxid, by = 'ASV') %>%
-        mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
-        select(ASV_id, everything())
-      
-      write_tsv(x = merged_table,
-                file = paste0(taxa_path,"/",dbname,"_table.tsv"))
-      
-      cat(paste0('# The obtained taxonomy file can be found in "', paste0(output,"/", name,"_", dbname,"_assignation.rds"), '"\n\n'))
-      cat(paste0('# Although we always recommend you to work directly in R with .rds files, we created a .tsv in "',paste0(output,"/", name,"_", dbname,"_table.tsv"),'" with tax and counts tables merged\n\n'))
-      # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further .\n\n'))
-      
-    }
-    
-    if(method=="dada"){
-      
-      # physeq@refseq
-        
-      taxa <- assignTaxonomy(seqtab.nochim, db,
-                             outputBootstraps = as.logical(outputBootstraps),
-                             multithread = nthreads,
-                             verbose = TRUE,
-                             minBoot = threshold,
-                             tryRC = as.logical(tryRC),
-                             taxLevels = c("Kingdom", "Phylum", "Class",
-                                           "Order", "Family", "Genus", "Species"))
-      
-      if(outputBootstraps==FALSE)
-      {
-        
-        if(!file.exists(db_species))
-        {
-          if(str_extract(basename(db), "[^.]+")=="hitdb_v1")
-          {  
-            taxa %>% mutate(Kingdom = "Bacteria")
-            colnames(taxa) = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-            
-          }
-          # Create a merged table with counts and tax
-          taxaid <- as_tibble(taxa, rownames = 'ASV')
-          
-          merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
-            left_join(taxaid, by = 'ASV') %>%
-            mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
-            select(ASV_id, everything())
-          
-          write_tsv(x = merged_table,
-                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
-          
-          saveRDS(taxaid, paste0(taxa_path,"/", dbname,"_assignation.rds"))
-          
-          cat(paste0('\n# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-          cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(taxa_path,"/", dbname,"*"),'." and go further ... \n\n'))
-        }
-        
-        if(file.exists(db_species))
-        {
-          taxa_Species <- addSpecies(taxa, db_species,
-                                     verbose = TRUE,
-                                     allowMultiple = as.logical(allowMultiple),
-                                     tryRC = as.logical(tryRC))
-          
-          
-          # Create a merged table with counts and tax
-          taxa_full <- as_tibble(taxa_Species, rownames = 'ASV')  %>% 
-            unite("Species",Species:tail(names(.), 1), na.rm = TRUE, remove = TRUE, sep = "|")
-          
-          merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
-            left_join(taxa_full, by = 'ASV') %>%
-            mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
-            select(ASV_id, everything())
-          
-          write_tsv(x = merged_table,
-                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
-          
-          saveRDS(as_tibble(taxa_Species, rownames = 'ASV')
-                  , paste0(taxa_path,"/", dbname,"_assignation.rds"))
-          
-          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-          cat(paste0('# Mutliple species assignments can be returned if you set allowMultiple = TRUE. \n'))
-          # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
-          
-        }
-        
-      }
-      if(outputBootstraps==TRUE)
-      {
-        
-        if(file.exists(db_species))
-        {
-          boot_taxa <- taxa$boot
-          
-          taxa_Species <- addSpecies(taxa$tax, db_species,
-                                     verbose = TRUE,
-                                     allowMultiple = as.logical(allowMultiple),
-                                     tryRC = as.logical(tryRC))
-          
-          # Create a merged table with counts and tax
-          taxa_full <- left_join(as_tibble(taxa_Species, rownames = 'ASV') %>% 
-                                   unite("Species",Species:tail(names(.), 1), na.rm = TRUE, sep = "|"), # because / sometimes already Pseudomonas_koreensis(AF468452)/koreensis
-                                 (as_tibble(taxa$boot, rownames = 'ASV')),
-                                 by = 'ASV', suffix = c("", "_Boot"))
-          
-          merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
-            left_join(taxa_full, by = 'ASV') %>%
-            mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
-            select(ASV_id, everything())
-          
-          write_tsv(x = merged_table,
-                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
-          
-          # saveRDS(as_tibble(boot_taxa, rownames = 'ASV'), 
-          #         paste0(output,"/", name,"_", dbname,"_boot.rds"))
-          
-          # saveRDS(as_tibble(taxa_Species, rownames = 'ASV'), 
-          #         paste0(output,"/", name,"_", dbname,"_assignation.rds"))
-          
-          saveRDS(list(as_tibble(taxa_Species, rownames = 'ASV'),
-                       as_tibble(boot_taxa, rownames = 'ASV')),
-                  paste0(taxa_path,"/", dbname,"_assignation.rds"))
-          
-          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-          # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
-        }
-        
-        if(!file.exists(db_species))
-        {
-          if(str_extract(basename(db), "[^.]+") == "hitdb_v1")
-          {  
-            taxa$tax %>% mutate(Kingdom = "Bacteria")
-            colnames(taxa$tax) = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")
-            
-            boot_taxa %>% mutate(Kingdom_Boot = 100)
-          }
-          # Create a merged table with counts and tax
-          taxaid <- left_join(as_tibble(taxa$tax, rownames = 'ASV'),(as_tibble(taxa$boot, rownames = 'ASV')),by = 'ASV', suffix = c("", "_Boot"))
-          
-          merged_table <- as_tibble(t(seqtab.nochim), rownames = 'ASV') %>%
-            left_join(taxaid, by = 'ASV') %>%
-            mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
-            select(ASV_id, everything())
-          
-          write_tsv(x = merged_table,
-                    file = paste0(taxa_path,"/", dbname,"_table.tsv"))
-          
-          saveRDS(as_tibble(taxa, rownames = 'ASV'), 
-                  paste0(taxa_path,"/", dbname,"_assignation.rds"))
-          
-          cat(paste0('# The obtained taxonomy file can be found in "', paste0(taxa_path,"/", dbname,"_assignation.rds"), '"\n'))
-          # cat(paste0('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',paste0(output,"/", name,"_", dbname,"*"),'." and go further ... \n\n'))
-        }
-      }
-    }
-    
-    #return(phyloseq_object)
-  }
-  

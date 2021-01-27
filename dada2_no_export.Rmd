@@ -1,0 +1,146 @@
+---
+title: "dada2 functions - no export `r Sys.Date()`"
+author: "Florentin CONSTANCIAS"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 4
+---
+
+
+```{r setup, include=FALSE}
+rm(list = ls())
+
+knitr::opts_chunk$set(echo = TRUE)
+DT::datatable(matrix())
+
+
+```
+
+```{r install, include=TRUE}
+# install.packages("devtools")
+# 
+# devtools::install_github("KlausVigo/phangorn")
+# 
+# devtools::install_github("benjjneb/dada2", ref="v1.16") # change the ref argument to get other versions
+# 
+# devtools::install_github("tidyverse/tidyverse")
+# 
+# 
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+# 
+# BiocManager::install("ShortRead")
+# 
+# BiocManager::install("DECIPHER")
+
+```
+
+```{r packages, results=FALSE, warning=FALSE, include=FALSE}
+require(tidyverse); packageVersion("tidyverse")
+require(dada2); packageVersion('dada2')
+require(ShortRead); packageVersion('ShortRead')
+require(Biostrings); packageVersion('Biostrings')
+require(phyloseq); packageVersion("phyloseq")
+require(DECIPHER); packageVersion("DECIPHER")
+require(phangorn); packageVersion("phangorn")
+
+source(here::here("scripts/functions_export.R"))
+```
+
+```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
+# run_atropos(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+#             atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
+#             PRIMER_F = "CCTACGGGNGGCWGCAG",
+#             PRIMER_R = "GACTACHVGGGTATCTAATCC")
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+run_dada2_qplot(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                output = "dada2",
+                export = FALSE) -> qplot
+
+qplot
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+run_dada2_filter_denoise_merge_reads(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+                                     trunclen = c(240,230),
+                                     minLen = 180,
+                                     maxee = c(2,3),
+                                     nbases = 10, # testing purpose only!!
+                                     minover = 15,
+                                     nthreads = 6,
+                                     remove_input_fastq = FALSE,
+                                     export = FALSE) -> filtered
+
+filtered$track %>% 
+  bind_rows() %>% 
+  DT::datatable()
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+filtered$plot
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+filtered$out_fwd
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+filtered$out_rev
+```
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+# filtered$seqtab
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+run_dada2_mergeRuns_removeBimeraDenovo(trim_length = c(300,450),
+                                       seqtab = filtered$seqtab,
+                                       track = filtered$track,
+                                       collapseNoMis = TRUE,
+                                       export = FALSE) -> merge
+
+merge$track %>%
+  DT::datatable()
+```
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+merge$plot
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+run_dada_DECIPHER_taxonomy(seqtab = merge$collapsed_seqtab,
+                           method = "dada", # "DECIPHER" or "dada"
+                           threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
+                           tryRC = FALSE,
+                           output = "dada2",
+                           db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
+                           db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz", # only for dada2 method #~/db/DADA2/silva_species_assignment_v138.fa.gz
+                           export = FALSE
+) -> tax
+
+tax %>% 
+  head()
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+
+run_merge_phyloseq(merged_table = tax,
+                   metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx", #"none",
+                   track = merge$track, export = FALSE) -> ps
+
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+add_phylogeny_to_phyloseq(ps) -> ps_phylo
+
+ps_phylo
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+sessionInfo()
+```
+
