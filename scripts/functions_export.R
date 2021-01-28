@@ -25,7 +25,8 @@ run_atropos <- function(raw_files_path,
                         NSLOTS = 6,
                         raw_file_pattern = c("*_R1_*.gz","*_R2_*.gz"),
                         cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
-                        MIN_L = 100){
+                        MIN_L = 100,
+                        sep = "[^_]+"){
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2); require(ShortRead); require(Biostrings)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
@@ -68,7 +69,7 @@ run_atropos <- function(raw_files_path,
     if(length(fnRs) != length(fnFs)) stop("Forward and reverse files do not match.")
     
     sample.names <- basename(fnFs) %>%
-      str_extract("[^_]+")
+      str_extract(paste0(sep))
     
     cat(paste0('\n# sample names list starts with : \n'))
     head(sample.names)
@@ -120,7 +121,7 @@ run_dada2_qplot <- function(raw_files_path,
                             output = "dada2",
                             cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
                             seed_value = 123,
-                            sep = "_",
+                            sep = "[^_]+",
                             export = TRUE){
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2)
@@ -174,7 +175,7 @@ run_dada2_qplot <- function(raw_files_path,
     if(length(fnRs) != length(fnFs)) stop ("Forward and reverse files do not match.")
     
     sample.names <- basename(fnFs) %>%
-      str_extract(paste0("[^",sep,".]+"))
+      str_extract(paste0(sep))
     
     cat(paste0('\n# sample names list starts with : \n'))
     head(sample.names)
@@ -278,7 +279,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
                                                  output = "dada2",
                                                  cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
                                                  filt_pattern = c("_R1_filtered.fastq.gz","_R2_filtered.fastq.gz"),
-                                                 sep = "_",
+                                                 sep = "[^_]+",
                                                  seed_value = 123,
                                                  remove_input_fastq = TRUE,
                                                  export = TRUE)
@@ -346,7 +347,7 @@ run_dada2_filter_denoise_merge_reads <- function(raw_files_path,
     if(length(fnRs) != length(fnFs)) stop ("Forward and reverse files do not match.")
     
     sample.names <- basename(fnFs) %>%
-      str_extract(paste0("[^",sep,".]+"))
+      str_extract(paste0(sep))
     
     cat(paste0('\n# sample names list starts with : \n'))
     head(sample.names)
