@@ -135,7 +135,8 @@ run_merge_phyloseq(merged_table = tax,
 
 
 ```{r, message = FALSE, warning = FALSE, results = TRUE}
-add_phylogeny_to_phyloseq(ps) -> ps_phylo
+add_phylogeny_to_phyloseq(ps,
+                          export = FALSE) -> ps_phylo
 
 ps_phylo
 ```
