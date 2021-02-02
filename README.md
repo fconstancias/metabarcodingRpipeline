@@ -79,7 +79,10 @@ By default, based on <https://f1000research.com/articles/5-1492>. It might take 
 - add https://zenodo.org/account/settings/github/ -> DOI
 - Faster method for phylogenetic reconstruction (e.g., MAFFT + FastTree)
 - add possibility to skip primer removal: skipping run_atropos() or changing atropos parameter?
-- replace taxonomic assignments of a phyloseq object using alternative approach/ database
+- <s>replace taxonomic assignments of a phyloseq object using alternative approach/ database</s>
+- <s>cluster ASV using DECIPHER</s>
+- <s>cluster ASV using vsearch lulu</s>
+- <s>run picrust2 from a phyloseq object</s>
 
 ## Help:
 
