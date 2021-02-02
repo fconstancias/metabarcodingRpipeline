@@ -9,7 +9,6 @@ cat("############################################################\n\n")
 ## ------------------------------------------------------------------------
 
 require("optparse")
-source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/master/scripts/functions.R")
 
 ## ------------------------------------------------------------------------
 suppressPackageStartupMessages(library("optparse"))
