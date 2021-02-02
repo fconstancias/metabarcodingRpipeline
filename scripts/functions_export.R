@@ -2327,3 +2327,114 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
   }
 }
 
+
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#'
+#'
+#'
+#'
+#'phyloseq_picrust2(physeq = NULL,
+#'                  picrust2 = "picrust2_pipeline.py",
+#'                  fasta_file = "seqs.fna",
+#'                  input_dir = ("/Users/fconstan/Desktop/picrust_test/chemerin_16S/"),
+#'                  output_dir = ("/Users/fconstan/Desktop/picrust_test/chemerin_16S/picrust2R/"),# should not exist
+#'                  count_table = "table.biom",
+#'                  in_traits = c("COG,EC,TIGRFAM"),
+#'                  min_reads = 10,
+#'                  min_samples = 10)
+#'
+#'phyloseq_picrust2(physeq = readRDS("/Users/fconstan/Documents/GitHub/amchick/data/processed/physeq_update_11_1_21.RDS"),
+#'                  input_dir = ("/Users/fconstan/Desktop/picrust_test/AP-picrust/"),
+#'                  output_dir = ("/Users/fconstan/Desktop/picrust_test/AP-picrust/results"),# should not exist
+#'                  in_traits = c("COG,EC,KO,PFAM,TIGRFAM"),
+#'                  min_reads = 2,
+#'                  min_samples = 3)
+#'
+phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_update_11_1_21.RDS") -> physeq
+                              picrust2 = "picrust2_pipeline.py",
+                              conda_env = "picrust2",
+                              input_dir = ("~/"),
+                              output_dir = ("~/picrust2/"),# should not exist
+                              fasta_file = "ASV.fna",
+                              count_table = "ASV_table.tsv",
+                              in_traits = c("EC,KO"), #  #default: EC,KO c("COG,EC,KO,PFAM,TIGRFAM")
+                              min_reads = 1,
+                              min_samples = 1,
+                              ref_dir = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/prokaryotic/pro_ref",
+                              pathway_map = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/pathway_mapfiles/metacyc_path2rxn_struc_filt_pro.txt",
+                              regroup_map = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/pathway_mapfiles/ec_level4_to_metacyc_rxn.tsv",
+                              nthreads = 6,
+                              m = "mp",
+                              no_gap_fill = FALSE,
+                              int_rm = FALSE){
+  
+  ## ------------------------------------------------------------------------
+  require(tidyverse); require(phyloseq)#; require(reticulate)
+  
+  
+  dss2df <- function(dss) data.frame(width = BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
+  ## ------------------------------------------------------------------------
+  
+  # reticulate::use_condaenv(condaenv = conda_env,
+  #                          conda = "auto",
+  #                          required = FALSE)
+  # system2("conda activate",
+  #         args = c(conda_env)
+  # )
+  ## ------------------------------------------------------------------------
+  paste0(input_dir, "/", fasta_file) -> fasta_path
+  paste0(input_dir, "/", count_table) -> count_table_path
+  
+  ## ------------------------------------------------------------------------
+  if(!is.null(physeq)){
+  
+    dir.create(input_dir, showWarnings = TRUE, recursive = TRUE)
+    
+    refseq(physeq) %>%
+      dss2df() %>%
+      dplyr::rename(sequence = seq) %>%
+      dplyr::mutate(abundance = taxa_sums(physeq)) %>%
+      dplyr::select(-names) %>%
+      dada2::uniquesToFasta(fasta_path,
+                            ids=taxa_names(physeq))
+    
+    as(otu_table(physeq), "matrix") %>%
+      data.frame() %>%
+      rownames_to_column('ASV') %>%
+      # column_to_rownames('ASV') %>%
+      write_tsv(count_table_path)
+  }
+  ## ------------------------------------------------------------------------
+  
+  ## run picrust2_pipeline.py
+  system2(picrust2, 
+          args = c("-s ", fasta_path, 
+                   "-i ", count_table_path,
+                   "-o ", output_dir,
+                   "--processes ", nthreads,
+                   "--stratified --per_sequence_contrib --verbose ",
+                   "--in_traits ", in_traits,
+                   "--min_reads", min_reads, "--min_samples", min_samples,
+                   ifelse(pathway_map != FALSE, print("--pathway_map " , pathway_map), ""),
+                   ifelse(ref_dir != FALSE, print("--ref_dir ", ref_dir), ""),
+                   ifelse(regroup_map != FALSE, print("--regroup_map ", regroup_map), ""),
+                   "--hsp_method ", m, ifelse(no_gap_fill == TRUE, print("--no_gap_fill"), ""),
+                   ifelse(int_rm == TRUE, print("--remove_intermediate"), ""))
+  )
+  # https://github.com/picrust/picrust2/wiki/PICRUSt2-Tutorial-(v2.3.0-beta)#add-functional-descriptions
+  # picrust2_pipeline.py -s study_seqs.fna -i seqabun.biom -o picrust2_out --processes 10 --stratified --per_sequence_contrib 
+  
+  ## ------------------------------------------------------------------------
+  
+}
+
