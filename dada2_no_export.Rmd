@@ -46,27 +46,26 @@ require(phyloseq); packageVersion("phyloseq")
 require(DECIPHER); packageVersion("DECIPHER")
 require(phangorn); packageVersion("phangorn")
 
-source(here::here("scripts/functions_export.R"))
+source(here::here("scripts/functions_export_simplified.R"))
 ```
 
 ```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
-# run_atropos(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
-#             atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
-#             PRIMER_F = "CCTACGGGNGGCWGCAG",
-#             PRIMER_R = "GACTACHVGGGTATCTAATCC")
+run_atropos(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+            atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
+            PRIMER_F = "CCTACGGGNGGCWGCAG",
+            PRIMER_R = "GACTACHVGGGTATCTAATCC")
 ```
 
 
 ```{r, message = FALSE, warning = FALSE, results = TRUE}
-run_dada2_qplot(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
-                output = "dada2",
+run_dada2_qplot(cut_dir = "dada2/00_atropos_primer_removed",
                 export = FALSE) -> qplot
 
 qplot
 ```
 
 ```{r, message = FALSE, warning = FALSE, results = TRUE}
-run_dada2_filter_denoise_merge_reads(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+run_dada2_filter_denoise_merge_reads(cut_dir = "dada2/00_atropos_primer_removed",
                                      trunclen = c(240,230),
                                      minLen = 180,
                                      maxee = c(2,3),
@@ -100,7 +99,7 @@ filtered$out_rev
 run_dada2_mergeRuns_removeBimeraDenovo(trim_length = c(300,450),
                                        seqtab = filtered$seqtab,
                                        track = filtered$track,
-                                       collapseNoMis = TRUE,
+                                       collapseNoMis = FALSE,
                                        export = FALSE) -> merge
 
 merge$track %>%
@@ -112,10 +111,9 @@ merge$plot
 
 ```{r, message = FALSE, warning = FALSE, results = TRUE}
 run_dada_DECIPHER_taxonomy(seqtab = merge$collapsed_seqtab,
-                           method = "dada", # "DECIPHER" or "dada"
                            threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
                            tryRC = FALSE,
-                           output = "dada2",
+                           merged_run_dir = "dada2/03_dada2_merged_runs_chimera_removed",
                            db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
                            db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz", # only for dada2 method #~/db/DADA2/silva_species_assignment_v138.fa.gz
                            export = FALSE
@@ -129,16 +127,125 @@ tax %>%
 
 run_merge_phyloseq(merged_table = tax,
                    metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx", #"none",
-                   track = merge$track, export = FALSE) -> ps
+                   track = merge$track,
+                   export = FALSE) -> ps
 
+ps
 ```
 
 
 ```{r, message = FALSE, warning = FALSE, results = TRUE}
 add_phylogeny_to_phyloseq(ps,
-                          export = FALSE) -> ps_phylo
+                          export = "dada2/phyloseq_phylogeny") -> ps_phylo
 
 ps_phylo
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+ps_phylo %>%
+  phyloseq_DECIPHER_tax(physeq = .,
+                        threshold = 60, # 60 (very high),  50 (high), PB = 10
+                        db ="~/db/DADA2/SILVA_SSU_r132_March2018.RData", # db ="~/db/DADA2/GTDB_r95-mod_August2020.RData"
+                        nthreads = 8,
+                        return = TRUE) -> ps_phylo_GTDB_decipher
+
+ps_phylo_GTDB_decipher
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+# 
+ps_phylo_GTDB_decipher %>%
+  phloseq_export_otu_tax() %>%
+  select(-ASV_sequence) %>%
+  DT::datatable()
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+ps_phylo %>%
+  phyloseq_dada2_tax(physeq = .,
+                     threshold = 60,
+                     db ="~/db/DADA2/silva_nr99_v138_train_set.fa.gz",
+                     db_species ="~/db/DADA2/silva_species_assignment_v138.fa.gz",
+                     full_return = TRUE) -> ps_phylo_dada_silva_138
+
+ps_phylo_dada_silva_138$full_table %>%
+  DT::datatable()
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+ps_phylo_dada_silva_138$physeq %>% 
+  phloseq_export_otu_tax() %>%
+  select(-ASV_sequence) %>%
+  DT::datatable()
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+ps_phylo_dada_silva_138$physeq %>% 
+  phloseq_export_otu_tax() %>% 
+  select(-ASV_sequence) %>%
+  dplyr::select(-sample_names(ps_phylo_dada_silva_138$physeq)) %>%
+  left_join(
+    ps_phylo_GTDB_decipher %>%
+        phloseq_export_otu_tax(),
+    by = "ASV" ,
+    suffix = c("_d_s", "_D_g")) %>% 
+  select(-contains(c("Kingdom", "Phylum", "Class", "length"))) %>%
+  # select(-ASV_sequence) %>% 
+  DT::datatable()
+
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+ps_phylo %>%
+  phyloseq_DECIPHER_cluster_ASV(threshold = 97,
+                                showPlot = TRUE) -> ps_phylo_clust97
+
+ps_phylo_clust97$physeq_clustered
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+
+ps_phylo_clust97$physeq_clustered %>%
+  phloseq_export_otu_tax() %>%
+  DT::datatable()
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+ps_phylo %>%
+  phyloseq_DECIPHER_cluster_ASV(threshold = 100,
+                                showPlot = TRUE) -> ps_phylo_clust100
+
+ps_phylo_clust100$physeq_clustered
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+
+ps_phylo_clust100$physeq_clustered %>%
+  phloseq_export_otu_tax() %>%
+  DT::datatable()
+```
+
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+ps_phylo %>%
+  phyloseq_vsearch_lulu_cluster_ASV(return = TRUE,
+                                    full_return = TRUE) -> lulu_out
+
+lulu_out$physeq_curated
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+lulu_out$curated_result %>%
+  str()
+```
+
+```{r, message = FALSE, warning = FALSE, results = TRUE}
+lulu_out$curated_result$otu_map %>%
+  DT::datatable()
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
