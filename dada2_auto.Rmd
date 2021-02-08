@@ -50,33 +50,59 @@ require(DECIPHER); packageVersion("DECIPHER")
 require(phangorn); packageVersion("phangorn")
 
 
-source("scripts/functions.R")
+source("scripts/functions_export_simplified.R")
 ```
 
 
 ```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
-run_16S_pipe(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
-                                atropos = "/Users/fconstan/miniconda3/envs/qiime2-2020.6/bin/atropos",
-                                V = "V3V4",
-                                run_phylo = TRUE,
-                                metadata = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/metadata.xlsx",
-                                db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
-                                db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz") -> phyloseq
+run_dada2_pipe(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+               atropos = "/Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/atropos",
+               V = "V3V4",
+               tryRC = TRUE,
+               metadata = "test-data/metadata.xlsx",
+               db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
+               db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
+               run_phylo = FALSE,
+               collapseNoMis = TRUE,
+               save_out = "dada2/dada2_pipe_out.RDS",
+               SLOTS = 8,
+               seed_value = 123) -> out
+
 
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
-phyloseq
+out$qplot
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+out$filtering_denoising$out_fwd
+```
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+out$filtering_denoising$out_rev
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+out$merging$plot
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+out$merging$track %>%
+  DT::datatable()
+```
+
+```{r, message = TRUE, warning = FALSE, results = TRUE}
+out$physeq
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
 source("https://raw.githubusercontent.com/fconstancias/DivComAnalyses/master/R/phyloseq_normalisation.R")
 
-phyloseq %>%
+out$physeq %>%
   phyloseq_check_lib_size(data_color = "varA",
-                        data_facet = "varB",
-                        nreads_display = 100,
-                        first_n = 5)
+                          data_facet = "varB",
+                          nreads_display = 100,
+                          first_n = 5)
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}

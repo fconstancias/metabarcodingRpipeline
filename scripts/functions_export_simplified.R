@@ -521,7 +521,7 @@ run_dada2_filter_denoise_merge_reads <- function(trunclen,
       mutate(input_merged_pc = round(merged/input, 3)) -> track[[i]]
     
     if( export ==TRUE){
-      write_tsv(as.data.frame(track),str_c(filt_path,"/",run_list[i],"_track_analysis.tsv"))
+      write_tsv(as.data.frame(track[[i]]),str_c(filt_path,"/",run_list[i],"_track_analysis.tsv"))
       
       save(track, 
            seqtab,
@@ -693,7 +693,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     geom_vline(xintercept = trim_length[1], size = 0.1, colour = "red", alpha = 0.8, linetype = 2, show.legend = "min") + geom_vline(xintercept = trim_length[2], size = 0.1, colour = "red", alpha = 0.8, linetype = 2 )
   
   if (export == TRUE){
-    ggsave(str_c(merged_run_path,"/","seqtab_distrib",".pdf"),plot=plot, width = 9, height = 8)
+    ggsave(str_c(merged_run_dir,"/","seqtab_distrib",".pdf"),plot=plot, width = 9, height = 8)
   }
   ## ------------------------------------------------------------------------
   # Trim the unespecific amplifications from our dataset
@@ -726,13 +726,13 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     cat(str_c('\n# Saving uncollapsed .rds and fasta files as well as summary .tsv \n'))
     
     if (export == TRUE){
-      saveRDS(seqtab, str_c(merged_run_path,"/uncollapsed_no-chim-seqtab.rds"))
+      saveRDS(seqtab, str_c(merged_run_dir,"/uncollapsed_no-chim-seqtab.rds"))
       
       uniquesToFasta(seqtab,
-                     str_c(merged_run_path,"/uncollapsed_no-chim-seqtab.fasta"),
+                     str_c(merged_run_dir,"/uncollapsed_no-chim-seqtab.fasta"),
                      ids= str_c("asv",c(1:ncol(seqtab)), ";size=", colSums(seqtab)))
       
-      write_tsv(track, str_c(merged_run_path,"/uncollapsed_track_analysis.tsv"))
+      write_tsv(track, str_c(merged_run_dir,"/uncollapsed_track_analysis.tsv"))
     }
     cat('\n# You have decided to run collapseNoMismatch on your dataset. Please note that it is only helpful IF you are working with several sequencing runs and it might take a long time to run. You might want to go further (taxonomy, ...) on your uncollapsed seqtable while it is running \n')
     
@@ -743,10 +743,10 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     cat(str_c('\n# Saving collapsed .rds and fasta files as well as summary .tsv  \n'))
     
     if (export == TRUE){
-      saveRDS(collapsed_100, str_c(merged_run_path,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.rds"))
+      saveRDS(collapsed_100, str_c(merged_run_dir,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.rds"))
       
       uniquesToFasta(collapsed_100,
-                     str_c(merged_run_path,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.fasta"),
+                     str_c(merged_run_dir,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.fasta"),
                      ids= str_c("asv",c(1:ncol(collapsed_100)), ";size=", colSums(collapsed_100)))
     }
     track %>% 
@@ -755,12 +755,12 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     
     if (export == TRUE){
       
-      write_tsv(track.final, str_c(merged_run_path,"/track_analysis.tsv"))
+      write_tsv(track.final, str_c(merged_run_dir,"/track_analysis.tsv"))
       
-      cat(str_c('# Your final 100% clustered ASV table can be found in "', paste0(merged_run_path,"/seqtab.rds"),'"\n'))
-      cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_path,"/seqtab.fasta"), '"\n'))
+      cat(str_c('# Your final 100% clustered ASV table can be found in "', paste0(merged_run_dir,"/seqtab.rds"),'"\n'))
+      cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_dir,"/seqtab.fasta"), '"\n'))
       
-      cat(str_c('# In "',paste0(merged_run_path,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
+      cat(str_c('# In "',paste0(merged_run_dir,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
       # cat(str_c('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',str_c(output,"/",name,"_track_analysis.tsv "),'." and go further.\n'))
     }
   }
@@ -770,18 +770,18 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     if (export == TRUE){
       cat(str_c('\n# Saving .rds and fasta files as well as summary .tsv \n'))
       
-      saveRDS(seqtab, str_c(merged_run_path,"/no-chim-seqtab.rds"))
+      saveRDS(seqtab, str_c(merged_run_dir,"/no-chim-seqtab.rds"))
       
       uniquesToFasta(seqtab,
-                     str_c(merged_run_path,"/no-chim-seqtab.fasta"),
+                     str_c(merged_run_dir,"/no-chim-seqtab.fasta"),
                      ids= str_c("asv",c(1:ncol(seqtab)), ";size=", colSums(seqtab)))
       
-      write_tsv(track, str_c(merged_run_path,"/track_analysis.tsv"))
+      write_tsv(track, str_c(merged_run_dir,"/track_analysis.tsv"))
       
-      cat(str_c('# Your final ASV table can be found in "', paste0(merged_run_path,"/seqtab.rds"),'"\n'))
-      cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_path,"/seqtab.fasta"), '"\n'))
+      cat(str_c('# Your final ASV table can be found in "', paste0(merged_run_dir,"/seqtab.rds"),'"\n'))
+      cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_dir,"/seqtab.fasta"), '"\n'))
       
-      cat(str_c('# In "',paste0(merged_run_path,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
+      cat(str_c('# In "',paste0(merged_run_dir,"/track_analysis.tsv"),"\" you will find a table where you can check the loss of reads in each step. Check it out to see if everything's correct!",'\n'))
       # cat(str_c('# You have to copy them to your local computer using "scp [your.user.id]@euler.ethz.ch:',str_c(output,"/",name,"_track_analysis.tsv "),'." and go further.\n'))
     }
     cat('\n# chimera removal step is done. You can go further into the analysis (taxonomy, phylogeny) or explore collapseNoMismatch IF you are dealing with multiple runs ... it might take very long \n\n')
@@ -789,10 +789,9 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   ## ------------------------------------------------------------------------
   
   if(collapseNoMis==TRUE){
-    return(list("seqtab" = seqtab,
+    return(list("seqtab" = collapsed_100,
                 "track" = track,
-                "plot" = plot,
-                "collapsed_seqtab" = collapsed_100))
+                "plot" = plot))
   }else{
     return(list("seqtab" = seqtab,
                 "track" = track,
@@ -822,7 +821,6 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
 
 run_dada_DECIPHER_taxonomy <- function(seqtab = NULL,
                                        taxa_dir = "dada2/04_dada2_taxonomy",
-                                       method = "dada", # method = "DECIPHER" or "dada" 
                                        threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
                                        tryRC = FALSE,
                                        collapseNoMis = FALSE,
@@ -830,7 +828,6 @@ run_dada_DECIPHER_taxonomy <- function(seqtab = NULL,
                                        db_species,
                                        nthreads = 6,
                                        merged_run_dir = "dada2/03_dada2_merged_runs_chimera_removed",
-                                       output = "dada2",
                                        export = TRUE,
                                        seed_value = 123)
 {
@@ -883,7 +880,7 @@ run_dada_DECIPHER_taxonomy <- function(seqtab = NULL,
   
   # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
   ## ------------------------------------------------------------------------
-  cat(paste0('\n# You have decided to use : ',method ,' method against : ', dbname), ' database \n')
+  cat(paste0('\n# You have decided to use: ', dbname), ' database \n')
   
   ## ------------------------------------------------------------------------
   
@@ -1218,27 +1215,36 @@ run_merge_phyloseq <- function(merged_table = NULL,
 #'
 #'
 
-run_16S_pipe <- function(raw_files_path,
-                         atropos_bin = "atropos",
-                         out_dir = "dada2",
-                         V = "V4",
-                         PRIMER_F,
-                         PRIMER_R,
-                         tax_threshold = 60,
-                         nbases = 20000000,
-                         pool = "pseudo",
-                         trim_length = c(240,400),
-                         trunclen = c(260,250),
-                         maxee = c(3,4),
-                         minLen = 100,
-                         minover = 15,
-                         run_phylo = FALSE,
-                         tryRC = FALSE,
-                         tax_method = "dada",
-                         metadata,
-                         db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
-                         db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
-                         SLOTS = 6){
+run_dada2_pipe <- function(raw_files_path,
+                           atropos_bin = "atropos",
+                           raw_file_pattern = c("*_R1_*.gz","*_R2_*.gz"),
+                           cut_dir = "dada2/00_atropos_primer_removed",
+                           cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
+                           sep = "[^_]+",
+                           V = "V4",
+                           PRIMER_F,
+                           PRIMER_R,
+                           tax_threshold = 60,
+                           nbases = 20000000,
+                           pool = "pseudo",
+                           trim_length = c(240,400),
+                           trunclen = c(260,250),
+                           maxee = c(3,4),
+                           minLen = 100,
+                           minover = 15,
+                           collapseNoMis = FALSE,
+                           tryRC = TRUE,
+                           metadata = "none",
+                           db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
+                           db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
+                           merge_phyloseq_export = "dada2/phyloseq.RDS",
+                           run_phylo = FALSE,
+                           output_phyloseq_phylo = "dada2/phyloseq_phylo.RDS",
+                           save_out = "dada2/dada2_pipe_out.RDS",
+                           export = FALSE,
+                           remove_input_fastq = TRUE,
+                           SLOTS = 6,
+                           seed_value = 123){
   if(V == "V4") {
     
     PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
@@ -1295,945 +1301,806 @@ run_16S_pipe <- function(raw_files_path,
     
   }
   cat(paste0('\n##',"running run_atropos() '\n\n'"))
+  # 
+  # run_atropos(raw_files_path = raw_files_path,
+  #             atropos = atropos_bin,
+  #             PRIMER_F = PRIMER_F,
+  #             PRIMER_R = PRIMER_R,
+  #             output = out_dir,
+  #             NSLOTS = SLOTS)
   
   run_atropos(raw_files_path = raw_files_path,
               atropos = atropos_bin,
               PRIMER_F = PRIMER_F,
               PRIMER_R = PRIMER_R,
-              output = out_dir,
-              NSLOTS = SLOTS)   
+              NSLOTS = SLOTS,
+              cut_dir = cut_dir,
+              raw_file_pattern = raw_file_pattern,
+              MIN_L = 80,
+              sep = sep
+              
+  )
+  
   
   cat(paste0('\n##',"running run_dada2_qplot() '\n\n'"))
   
-  run_dada2_qplot(raw_files_path = raw_files_path,
-                  output = out_dir)
+  run_dada2_qplot(prop.sample = 20,
+                  aggregate = TRUE,
+                  cut_dir = cut_dir,
+                  cut_file_pattern = cut_file_pattern,
+                  seed_value = seed_value,
+                  sep = sep,
+                  export = export) -> qplot
+  
+  
+  # run_dada2_qplot(raw_files_path = raw_files_path,
+  #                 output = out_dir)
   
   cat(paste0('\n##',"running run_dada2_filter_denoise_merge_reads() '\n\n'"))
   
-  run_dada2_filter_denoise_merge_reads(raw_files_path = raw_files_path,
+  run_dada2_filter_denoise_merge_reads(cut_dir = cut_dir,
+                                       sep = sep,
+                                       filt_dir = "dada2/02_dada2_filtered_denoised_merged",
                                        trunclen = trunclen,
-                                       maxee = maxee,
                                        minLen = minLen,
+                                       maxee = maxee,
+                                       maxLen = Inf,
+                                       nbases = nbases, # testing purpose only!!
                                        minover = minover,
-                                       output = out_dir,
-                                       nbases = nbases,
                                        pool = pool,
-                                       nthreads = ifelse(SLOTS > 6, 6, SLOTS))
+                                       nthreads = ifelse(SLOTS > 6, 6, SLOTS),
+                                       remove_input_fastq = remove_input_fastq,
+                                       export = export,
+                                       seed_value = seed_value) -> filtered
+  
   
   cat(paste0('\n##',"running run_dada2_mergeRuns_removeBimeraDenovo() '\n\n'"))
   
-  run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = raw_files_path,
-                                         trim_length = trim_length,
-                                         output = out_dir,
-                                         nthreads = SLOTS)
+  run_dada2_mergeRuns_removeBimeraDenovo(trim_length = trim_length,
+                                         seqtab = filtered$seqtab,
+                                         track = filtered$track,
+                                         collapseNoMis = collapseNoMis,
+                                         export = export,
+                                         nthreads = SLOTS) -> merge
+  
+  
+  # run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = raw_files_path,
+  #                                        trim_length = trim_length,
+  #                                        output = out_dir,
+  #                                        nthreads = SLOTS)
   
   cat(paste0('\n##',"running run_dada_DECIPHER_taxonomy() '\n\n'"))
   
-  run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
-                             method = tax_method, # "DECIPHER" or "dada" 
-                             nthreads = SLOTS,
+  # run_dada_DECIPHER_taxonomy(raw_files_path = raw_files_path,
+  #                            method = tax_method, # "DECIPHER" or "dada" 
+  #                            nthreads = SLOTS,
+  #                            threshold = tax_threshold,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
+  #                            tryRC = tryRC,
+  #                            collapseNoMis = TRUE,
+  #                            db = db, # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
+  #                            db_species = db_species, # only for dada2 method
+  #                            output = out_dir)
+  
+  run_dada_DECIPHER_taxonomy(seqtab = merge$collapsed_seqtab,
                              threshold = tax_threshold,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
                              tryRC = tryRC,
-                             collapseNoMis = TRUE,
-                             db = db, # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
-                             db_species = db_species, # only for dada2 method
-                             output = out_dir
-  )
+                             merged_run_dir = "dada2/03_dada2_merged_runs_chimera_removed",
+                             db = db, #"~/db/DADA2/silva_nr_v138_train_set.fa.gz", # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
+                             db_species = db_species, #"~/db/DADA2/silva_species_assignment_v138.fa.gz", # only for dada2 method #~/db/DADA2/silva_species_assignment_v138.fa.gz
+                             export = export,
+                             nthreads = SLOTS
+  ) -> tax
+  
+  run_merge_phyloseq(merged_table = tax,
+                     metadata = metadata, #"none",
+                     track = merge$track,
+                     export = merge_phyloseq_export) -> ps
+  
+  ps
+  
+  
+  # run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
+  #                                 method = "R",
+  #                                 nthreads = SLOTS,
+  #                                 output = out_dir) -> phylo
+  # 
+  # run_merge_phyloseq(raw_files_path = raw_files_path,
+  #                    metadata = metadata,
+  #                    phylo = TRUE,
+  #                    output = out_dir) -> physeq
   
   if(run_phylo == TRUE) {
     cat(paste0('\n##',"running run_DECIPHER_phangorn_phylogeny() '\n\n'"))
     
-    run_DECIPHER_phangorn_phylogeny(raw_files_path = raw_files_path,
-                                    method = "R",
-                                    nthreads = SLOTS,
-                                    output = out_dir) -> phylo
+    ps %>%
+      add_phylogeny_to_phyloseq(nthreads = SLOTS,
+                                export = TRUE,
+                                output_phyloseq = output_phyloseq_phylo) -> ps
+  }
+    out <- list("qplot" = qplot,
+                "filtering_denoising" = filtered,
+                "merging" = merge,
+                "taxo" = tax,
+                "physeq" = ps)
     
-    run_merge_phyloseq(raw_files_path = raw_files_path,
-                       metadata = metadata,
-                       phylo = TRUE,
-                       output = out_dir) -> physeq
-  }
-  
-  if(run_phylo == FALSE) {
-    run_merge_phyloseq(raw_files_path = raw_files_path,
-                       metadata = metadata,
-                       phylo = FALSE,
-                       output = out_dir) -> physeq
-  }
-  
-  return(physeq)
-}
-
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-
-
-add_phylogeny_to_phyloseq <- function(phyloseq_path,
-                                      method = "R",
-                                      nthreads = 6,
-                                      export = TRUE,
-                                      output_phyloseq = "dada2_phylo"){
-  
-  ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2); require(DECIPHER); require(phangorn); require(phyloseq)
-  
-  ## ------------------------------------------------------------------------
-  if(is.character(phyloseq_path)){
-    phyloseq_path %>%
-      readRDS() -> physeq
-  }else{
-    phyloseq_path -> physeq
-  }
-  
-  
-  ## ------------------------------------------------------------------------
-  if(method=="R"){
+    if(save_out != FALSE) {
+      out %>%
+        saveRDS(save_out)
+    }
     
+    
+    return(out)
+  }
+  
+  
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note .
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'
+  
+  
+  add_phylogeny_to_phyloseq <- function(phyloseq_path,
+                                        method = "R",
+                                        nthreads = 6,
+                                        export = TRUE,
+                                        output_phyloseq = "dada2_phylo"){
+    
+    ## ------------------------------------------------------------------------
+    require(tidyverse); require(dada2); require(DECIPHER); require(phangorn); require(phyloseq)
+    
+    ## ------------------------------------------------------------------------
+    if(is.character(phyloseq_path)){
+      phyloseq_path %>%
+        readRDS() -> physeq
+    }else{
+      phyloseq_path -> physeq
+    }
+    
+    
+    ## ------------------------------------------------------------------------
+    if(method=="R"){
+      
+      sequences <- DNAStringSet(physeq@refseq)
+      # names(sequences) <- sequences  # this propagates to the tip labels of the tree
+      names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
+      
+      alignment <- AlignSeqs(DNAStringSet(sequences),
+                             anchor = NA,
+                             processors = nthreads)
+      
+      phang_align <- phyDat(as(alignment, 'matrix'), type='DNA')
+      
+      dm <- dist.ml(phang_align)
+      
+      treeNJ <- NJ(dm)  # note, tip order != sequence order
+      
+      fit = pml(treeNJ, data=phang_align)
+      
+      ## negative edges length changed to 0!
+      fitGTR <- update(fit, k = 4, inv = 0.2)
+      
+      fitGTR <- optim.pml(fitGTR, model = 'GTR', optInv = TRUE, optGamma = TRUE,
+                          rearrangement = 'stochastic',
+                          control = pml.control(trace = 0))
+      
+      detach('package:phangorn', unload = TRUE)
+      detach('package:DECIPHER', unload = TRUE)
+      
+    }
+    ## ------------------------------------------------------------------------
+    if(method=="MAFFT_Fastree"){
+      # TODO
+    }
+    # physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq))# https://github.com/benjjneb/dada2/issues/613
+    # 
+    # taxa_names(physeq)  <- paste0("ASV", str_pad(seq(ntaxa(physeq)), 
+    #                       nchar(ntaxa(physeq)), 
+    #                       pad = "0"))
+    
+    ## ------------------------------------------------------------------------
+    # physeq@phy_tree <- 
+    
+    physeq <- merge_phyloseq(physeq,
+                             phangorn::midpoint(fitGTR$tree) %>% phyloseq::phy_tree())
+    
+    if (export == TRUE){
+      physeq %>%
+        saveRDS(file = paste0(output_phyloseq))
+    }
+    
+    
+    return(physeq)
+    
+  }
+  
+  
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note Would be worth checking again confidence score vs taxonomy.
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'
+  
+  phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 100000) -> physeq
+                                    threshold = 60, # 60 (very high),  50 (high), PB = 10
+                                    db, # db ="~/db/DADA2/SILVA_SSU_r132_March2018.RData" db ="~/db/DADA2/Databases_pbHITdb_pbHITdb_v1.0.0_20180919_IDTAXA.RData" db ="~/db/DADA2/GTDB_r95-mod_August2020.RData" db ="~/db/DADA2/SILVA_SSU_r138_2019.RData" db ="~/db/DADA2/Fungal_LSU_v11_March2018.RData"
+                                    nthreads = 6,
+                                    tryRC = FALSE,
+                                    export = FALSE,
+                                    seed_value = 123,
+                                    bootlabel = "_Confidence",
+                                    tax_ranks = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"),
+                                    return = TRUE)
+  {
+    
+    ## ------------------------------------------------------------------------
+    require(tidyverse); require(dada2); require(DECIPHER); require(phyloseq)
+    
+    ## ------------------------------------------------------------------------
+    
+    dbname <- str_extract(basename(db), "[^.]+")
+    
+    set.seed(seed_value) #random  generator necessary for reproducibility
+    
+    
+    # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
+    ## ------------------------------------------------------------------------
+    cat(paste0('\n# Running DECIPHER method against : ', dbname), ' database with threshold value = ', threshold,' \n')
+    
+    ## ------------------------------------------------------------------------
     sequences <- DNAStringSet(physeq@refseq)
-    # names(sequences) <- sequences  # this propagates to the tip labels of the tree
+    
     names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
     
-    alignment <- AlignSeqs(DNAStringSet(sequences),
-                           anchor = NA,
-                           processors = nthreads)
+    dna <- DNAStringSet(getSequences(sequences)) # Create a DNAStringSet from the ASVs
     
-    phang_align <- phyDat(as(alignment, 'matrix'), type='DNA')
+    load(db)
     
-    dm <- dist.ml(phang_align)
+    # trainingSet$ranks %>% unique() # get all tax ranks
     
-    treeNJ <- NJ(dm)  # note, tip order != sequence order
+    ids <- IdTaxa(dna,
+                  trainingSet,
+                  strand = if_else(tryRC == TRUE, "both", "top"),
+                  processors = nthreads,
+                  verbose = TRUE,
+                  threshold = threshold)
     
-    fit = pml(treeNJ, data=phang_align)
+    # if(grepl("pbHITdb", str_extract(basename(db), "[^.]+"), fixed = TRUE) == TRUE)
+    # {  
+    #   for(i in c(1:length(ids))) { # go through each row and take out the taxonomy information
+    #     if(i == 1) {
+    #       new_matrix <- data.frame(matrix(nrow=0, ncol=0)) 
+    #     }
+    #     new_line <- as.data.frame(t(as.data.frame(ids[[i]]$taxon))) 
+    #     new_matrix <- plyr::rbind.fill(new_matrix,
+    #                                    new_line) 
+    #     
+    #     if(i == length(ids)) {
+    #       taxid <- as.matrix(new_matrix)
+    #       taxid <- taxid[,-1]
+    #       
+    #     }
+    #   }
+    #   taxid %>%
+    #     data.frame() -> taxid
+    #   
+    #   ranks <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species") # ranks of interest
+    #   
+    #   colnames(taxid) <- ranks
+    #   rownames(taxid) <- physeq %>% 
+    #     taxa_names()
+    # 
+    # }else{
     
-    ## negative edges length changed to 0!
-    fitGTR <- update(fit, k = 4, inv = 0.2)
     
-    fitGTR <- optim.pml(fitGTR, model = 'GTR', optInv = TRUE, optGamma = TRUE,
-                        rearrangement = 'stochastic',
-                        control = pml.control(trace = 0))
+    ranks <- c("domain", "phylum", "class", "order", "family", "genus", "species") # ranks of interest
     
-    detach('package:phangorn', unload = TRUE)
-    detach('package:DECIPHER', unload = TRUE)
+    # Convert the output object of class "Taxa" to a matrix analogous to the output from assignTaxonomy
+    taxid <- t(sapply(ids, function(x) {
+      m <- match(ranks, x$rank)
+      taxa <- x$taxon[m]
+      taxa[startsWith(taxa, "unclassified_")] <- NA
+      taxa
+    }))
     
-  }
-  ## ------------------------------------------------------------------------
-  if(method=="MAFFT_Fastree"){
-    # TODO
-  }
-  # physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq))# https://github.com/benjjneb/dada2/issues/613
-  # 
-  # taxa_names(physeq)  <- paste0("ASV", str_pad(seq(ntaxa(physeq)), 
-  #                       nchar(ntaxa(physeq)), 
-  #                       pad = "0"))
-  
-  ## ------------------------------------------------------------------------
-  # physeq@phy_tree <- 
-  
-  physeq <- merge_phyloseq(physeq,
-                           phangorn::midpoint(fitGTR$tree) %>% phyloseq::phy_tree())
-  
-  if (export == TRUE){
-    physeq %>%
-      saveRDS(file = paste0(output_phyloseq, ".RDS"))
-  }
-  
-  
-  return(physeq)
-  
-}
-
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note Would be worth checking again confidence score vs taxonomy.
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-
-phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 100000) -> physeq
-                                  threshold = 60, # 60 (very high),  50 (high), PB = 10
-                                  db, # db ="~/db/DADA2/SILVA_SSU_r132_March2018.RData" db ="~/db/DADA2/Databases_pbHITdb_pbHITdb_v1.0.0_20180919_IDTAXA.RData" db ="~/db/DADA2/GTDB_r95-mod_August2020.RData" db ="~/db/DADA2/SILVA_SSU_r138_2019.RData" db ="~/db/DADA2/Fungal_LSU_v11_March2018.RData"
-                                  nthreads = 6,
-                                  tryRC = FALSE,
-                                  export = FALSE,
-                                  seed_value = 123,
-                                  bootlabel = "_Confidence",
-                                  tax_ranks = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"),
-                                  return = TRUE)
-{
-  
-  ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2); require(DECIPHER); require(phyloseq)
-  
-  ## ------------------------------------------------------------------------
-  
-  dbname <- str_extract(basename(db), "[^.]+")
-  
-  set.seed(seed_value) #random  generator necessary for reproducibility
-  
-  
-  # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
-  ## ------------------------------------------------------------------------
-  cat(paste0('\n# Running DECIPHER method against : ', dbname), ' database with threshold value = ', threshold,' \n')
-  
-  ## ------------------------------------------------------------------------
-  sequences <- DNAStringSet(physeq@refseq)
-  
-  names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
-  
-  dna <- DNAStringSet(getSequences(sequences)) # Create a DNAStringSet from the ASVs
-  
-  load(db)
-  
-  # trainingSet$ranks %>% unique() # get all tax ranks
-  
-  ids <- IdTaxa(dna,
-                trainingSet,
-                strand = if_else(tryRC == TRUE, "both", "top"),
-                processors = nthreads,
-                verbose = TRUE,
-                threshold = threshold)
-  
-  # if(grepl("pbHITdb", str_extract(basename(db), "[^.]+"), fixed = TRUE) == TRUE)
-  # {  
-  #   for(i in c(1:length(ids))) { # go through each row and take out the taxonomy information
-  #     if(i == 1) {
-  #       new_matrix <- data.frame(matrix(nrow=0, ncol=0)) 
-  #     }
-  #     new_line <- as.data.frame(t(as.data.frame(ids[[i]]$taxon))) 
-  #     new_matrix <- plyr::rbind.fill(new_matrix,
-  #                                    new_line) 
-  #     
-  #     if(i == length(ids)) {
-  #       taxid <- as.matrix(new_matrix)
-  #       taxid <- taxid[,-1]
-  #       
-  #     }
-  #   }
-  #   taxid %>%
-  #     data.frame() -> taxid
-  #   
-  #   ranks <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species") # ranks of interest
-  #   
-  #   colnames(taxid) <- ranks
-  #   rownames(taxid) <- physeq %>% 
-  #     taxa_names()
-  # 
-  # }else{
-  
-  
-  ranks <- c("domain", "phylum", "class", "order", "family", "genus", "species") # ranks of interest
-  
-  # Convert the output object of class "Taxa" to a matrix analogous to the output from assignTaxonomy
-  taxid <- t(sapply(ids, function(x) {
-    m <- match(ranks, x$rank)
-    taxa <- x$taxon[m]
-    taxa[startsWith(taxa, "unclassified_")] <- NA
-    taxa
-  }))
-  
-  colnames(taxid) <- tax_ranks
-  # }  
-  taxid %>% 
-    replace_na("unknown") -> taxid
-  
-  physeq@tax_table = NULL
-  
-  taxid %>% 
-    as.matrix() %>%
-    tax_table() ->  physeq@tax_table
-  
-  # Create a merged table with counts and tax and confidence
-  
-  as(tax_table(physeq), "matrix") %>% 
-    data.frame() %>%
-    rownames_to_column('ASV') -> tax_table
-  
-  as(otu_table(physeq), "matrix") %>% 
-    as.data.frame() %>%
-    rownames_to_column('ASV') -> otu_table
-  
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
-  
-  dss2df(physeq@refseq) %>%
-    rownames_to_column('ASV') %>%
-    dplyr::select(-names) %>%
-    dplyr::rename(ASV_length = width,
-                  ASV_sequence = seq)-> refseq_df
-  
-  tax_score <- sapply(ids, function(x) {
-    m <- match(ranks, x$rank)
-    taxa <- x$confidence[m]
-  }) %>%
-    t() %>% 
-    data.frame() 
-  
-  colnames(tax_score) <- paste0(colnames(taxid), 
-                                bootlabel)
-  
-  otu_table %>%
-    left_join(tax_table, by = 'ASV') %>%
-    left_join(tax_score    %>%
-                rownames_to_column('ASV')) %>%
-    left_join(refseq_df, by = 'ASV') %>%
-    dplyr::select(ASV, everything()) -> merged_table
-  # 
-  # 
-  # otu_table %>%
-  #   left_join(tax_table, by = 'ASV') %>%
-  #   left_join(tax_score    %>%
-  #               rownames_to_column('ASV') %>%
-  #               mutate_at(
-  #                 vars(ends_with(bootlabel)),
-  #                 funs(case_when(
-  #                   . < threshold ~ "unknown", #       . == 21.0 ~ 5,
-  #                   TRUE ~ .
-  #                 ))
-  #               ))
-  # # dplyr::replace(vars(contains("_Confidence")) > thresold)) %>%
-  # 
-  # tax_score    %>%
-  #   rownames_to_column('ASV') %>%
-  #   mutate_at(
-  #     vars(ends_with(bootlabel)),
-  #     funs(case_when(
-  #       . == "1+1" | . == "1+2" ~ 1,
-  #       . == "1+3" | . == "1+4" ~ 2,
-  #       . == "1+5" | . == "1+6" ~ 3)))
-  # 
-  # dat %>%
-  #   mutate(var = case_when(var == 'Candy' ~ 'Candy',
-  #                          var == 'Water' ~ 'Water',
-  #                          TRUE ~ 'Neither-Water-Nor-Candy'))
-  
-  
-  # mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
-  # mutate(threshold = threshold) %>%
-  
-  if(export != FALSE)
-  {
-    write_tsv(x = merged_table,
-              file = paste0(export,"/","DECIPHER_threshold_",threshold,"_",dbname,"merged_tax_table.tsv"))
-    cat(paste0("saved object and output to ", export))
-    saveRDS(merged_table,
-            file = paste0(export,"/","DECIPHER_threshold_",threshold,"_",dbname,"_physeq.RDS"))
+    colnames(taxid) <- tax_ranks
+    # }  
+    taxid %>% 
+      replace_na("unknown") -> taxid
+    
+    physeq@tax_table = NULL
+    
+    taxid %>% 
+      as.matrix() %>%
+      tax_table() ->  physeq@tax_table
+    
+    # Create a merged table with counts and tax and confidence
+    
+    as(tax_table(physeq), "matrix") %>% 
+      data.frame() %>%
+      rownames_to_column('ASV') -> tax_table
+    
+    as(otu_table(physeq), "matrix") %>% 
+      as.data.frame() %>%
+      rownames_to_column('ASV') -> otu_table
+    
+    dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
+    
+    dss2df(physeq@refseq) %>%
+      rownames_to_column('ASV') %>%
+      dplyr::select(-names) %>%
+      dplyr::rename(ASV_length = width,
+                    ASV_sequence = seq)-> refseq_df
+    
+    tax_score <- sapply(ids, function(x) {
+      m <- match(ranks, x$rank)
+      taxa <- x$confidence[m]
+    }) %>%
+      t() %>% 
+      data.frame() 
+    
+    colnames(tax_score) <- paste0(colnames(taxid), 
+                                  bootlabel)
+    
+    otu_table %>%
+      left_join(tax_table, by = 'ASV') %>%
+      left_join(tax_score    %>%
+                  rownames_to_column('ASV')) %>%
+      left_join(refseq_df, by = 'ASV') %>%
+      dplyr::select(ASV, everything()) -> merged_table
+    # 
+    # 
+    # otu_table %>%
+    #   left_join(tax_table, by = 'ASV') %>%
+    #   left_join(tax_score    %>%
+    #               rownames_to_column('ASV') %>%
+    #               mutate_at(
+    #                 vars(ends_with(bootlabel)),
+    #                 funs(case_when(
+    #                   . < threshold ~ "unknown", #       . == 21.0 ~ 5,
+    #                   TRUE ~ .
+    #                 ))
+    #               ))
+    # # dplyr::replace(vars(contains("_Confidence")) > thresold)) %>%
+    # 
+    # tax_score    %>%
+    #   rownames_to_column('ASV') %>%
+    #   mutate_at(
+    #     vars(ends_with(bootlabel)),
+    #     funs(case_when(
+    #       . == "1+1" | . == "1+2" ~ 1,
+    #       . == "1+3" | . == "1+4" ~ 2,
+    #       . == "1+5" | . == "1+6" ~ 3)))
+    # 
+    # dat %>%
+    #   mutate(var = case_when(var == 'Candy' ~ 'Candy',
+    #                          var == 'Water' ~ 'Water',
+    #                          TRUE ~ 'Neither-Water-Nor-Candy'))
+    
+    
+    # mutate(ASV_id = paste0("asv",c(1:nrow(.)))) %>%
+    # mutate(threshold = threshold) %>%
+    
+    if(export != FALSE)
+    {
+      write_tsv(x = merged_table,
+                file = paste0(export,"/","DECIPHER_threshold_",threshold,"_",dbname,"merged_tax_table.tsv"))
+      cat(paste0("saved object and output to ", export))
+      saveRDS(merged_table,
+              file = paste0(export,"/","DECIPHER_threshold_",threshold,"_",dbname,"_physeq.RDS"))
+    }
+    
+    if(return == TRUE){
+      return(physeq)
+    }
   }
   
-  if(return == TRUE){
-    return(physeq)
-  }
-}
-
-
-
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 100000) -> physeq
-#'physeq %>%
-#'  phyloseq_dada2_tax(db ="~/db/DADA2/silva_nr99_v138_train_set.fa.gz",
-#'                     db_species = "none") -> p_test
-
-phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 100000) -> physeq
-                               threshold = 60,
-                               db, # db ="~/db/DADA2/silva_nr99_v138_train_set.fa.gz"
-                               db_species, # db_species ="~/db/DADA2/silva_species_assignment_v138.fa.gz"
-                               nthreads = 6,
-                               tryRC = FALSE,
-                               seed_value = 123,
-                               bootlabel = "_Boot",
-                               tax_ranks = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"),
-                               export = FALSE,
-                               return = TRUE,
-                               full_return = TRUE){
-  
-  ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2); require(phyloseq)
-  
-  ## ------------------------------------------------------------------------
-  
-  dbname <- str_extract(basename(db), "[^.]+")
-  
-  set.seed(seed_value) #random  generator necessary for reproducibility
   
   
-  # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
-  ## ------------------------------------------------------------------------
   
-  # Create a merged table with counts taxa and sequences
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note .
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 100000) -> physeq
+  #'physeq %>%
+  #'  phyloseq_dada2_tax(db ="~/db/DADA2/silva_nr99_v138_train_set.fa.gz",
+  #'                     db_species = "none") -> p_test
   
-  # as(otu_table(physeq), "matrix") %>% 
-  #   data.frame() %>%
-  #   rownames_to_column('ASV') -> otu_table
-  # 
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
-  
-  dss2df(physeq@refseq) %>%
-    rownames_to_column('ASV') %>%
-    dplyr::select(-names) %>%
-    dplyr::rename(ASV_length = width,
-                  ASV_sequence = seq)-> refseq_df
-  # 
-  # 
-  # 
-  # 
-  # # if(!is.null(tax_table(physeq))){
-  # as(tax_table(physeq), "matrix") %>% 
-  #   data.frame() %>%
-  #   rownames_to_column('ASV') -> tax_table
-  # colnames(tax_table)[-1] <- paste0("input_taxonomy_", 
-  #                                   colnames(tax_table)[-1])
-  # 
-  # otu_table %>%
-  #   left_join(tax_table, by = 'ASV') %>%
-  #   left_join(refseq_df, by = 'ASV') %>%
-  #   dplyr::select(ASV, everything()) -> merged_table_pre
-  # }else{
-  #   
-  #   otu_table %>%
-  #     left_join(refseq_df, by = 'ASV') %>%
-  #     dplyr::select(ASV, everything()) -> merged_table_pre
-  # }
-  
-  ## ------------------------------------------------------------------------
-  
-  cat(paste0('\n# Running dada2 method against : ', dbname), ' database with threshold value = ', threshold,' \n')
-  
-  ## ------------------------------------------------------------------------
-  sequences <- DNAStringSet(physeq@refseq)
-  
-  names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
-  
-  dna <- DNAStringSet(getSequences(sequences)) # Create a DNAStringSet from the ASVs
-  
-  if(str_extract(basename(db), "[^.]+") == "hitdb_v1")
-  {  
-    tax_ranks <-  c("Phylum", "Class", "Order", "Family", "Genus", "Species")
-  }
-  
-  taxa <- assignTaxonomy(dna, 
-                         db,
-                         outputBootstraps = TRUE,
-                         multithread = nthreads,
-                         verbose = TRUE,
-                         minBoot = threshold,
-                         tryRC = as.logical(tryRC),
-                         taxLevels = tax_ranks)
-  
-  if(!file.exists(db_species))
-  {
+  phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 100000) -> physeq
+                                 threshold = 60,
+                                 db, # db ="~/db/DADA2/silva_nr99_v138_train_set.fa.gz"
+                                 db_species, # db_species ="~/db/DADA2/silva_species_assignment_v138.fa.gz"
+                                 nthreads = 6,
+                                 tryRC = FALSE,
+                                 seed_value = 123,
+                                 bootlabel = "_Boot",
+                                 tax_ranks = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"),
+                                 export = FALSE,
+                                 return = TRUE,
+                                 full_return = TRUE){
     
-    # left_join(merged_table_pre,
-    #           left_join(as_tibble(taxa$tax, rownames = 'ASV'),
-    #                     (as_tibble(taxa$boot, rownames = 'ASV')),
-    #                     by = 'ASV', suffix = c("", "_Boot")) ,
-    #           by = c('ASV_sequence' = 'ASV')) -> merged_table
+    ## ------------------------------------------------------------------------
+    require(tidyverse); require(dada2); require(phyloseq)
     
-    left_join(refseq_df,
-              left_join(as_tibble(taxa$tax, rownames = 'ASV'),
-                        (as_tibble(taxa$boot, rownames = 'ASV')),
-                        by = 'ASV', suffix = c("", "_Boot")) ,
-              by = c('ASV_sequence' = 'ASV')) -> merged_table
+    ## ------------------------------------------------------------------------
+    
+    dbname <- str_extract(basename(db), "[^.]+")
+    
+    set.seed(seed_value) #random  generator necessary for reproducibility
+    
+    
+    # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
+    ## ------------------------------------------------------------------------
+    
+    # Create a merged table with counts taxa and sequences
+    
+    # as(otu_table(physeq), "matrix") %>% 
+    #   data.frame() %>%
+    #   rownames_to_column('ASV') -> otu_table
+    # 
+    dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
+    
+    dss2df(physeq@refseq) %>%
+      rownames_to_column('ASV') %>%
+      dplyr::select(-names) %>%
+      dplyr::rename(ASV_length = width,
+                    ASV_sequence = seq)-> refseq_df
+    # 
+    # 
+    # 
+    # 
+    # # if(!is.null(tax_table(physeq))){
+    # as(tax_table(physeq), "matrix") %>% 
+    #   data.frame() %>%
+    #   rownames_to_column('ASV') -> tax_table
+    # colnames(tax_table)[-1] <- paste0("input_taxonomy_", 
+    #                                   colnames(tax_table)[-1])
+    # 
+    # otu_table %>%
+    #   left_join(tax_table, by = 'ASV') %>%
+    #   left_join(refseq_df, by = 'ASV') %>%
+    #   dplyr::select(ASV, everything()) -> merged_table_pre
+    # }else{
+    #   
+    #   otu_table %>%
+    #     left_join(refseq_df, by = 'ASV') %>%
+    #     dplyr::select(ASV, everything()) -> merged_table_pre
+    # }
+    
+    ## ------------------------------------------------------------------------
+    
+    cat(paste0('\n# Running dada2 method against : ', dbname), ' database with threshold value = ', threshold,' \n')
+    
+    ## ------------------------------------------------------------------------
+    sequences <- DNAStringSet(physeq@refseq)
+    
+    names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
+    
+    dna <- DNAStringSet(getSequences(sequences)) # Create a DNAStringSet from the ASVs
     
     if(str_extract(basename(db), "[^.]+") == "hitdb_v1")
     {  
-      merged_table %>%
-        dplyr::mutate(Kingdom = "Bacteria") -> merged_table
+      tax_ranks <-  c("Phylum", "Class", "Order", "Family", "Genus", "Species")
     }
-  }  
-  if(file.exists(db_species))
-  {
-    taxa_Species <- addSpecies(taxa$tax, 
-                               db_species,
-                               verbose = TRUE,
-                               allowMultiple = TRUE,
-                               tryRC = as.logical(tryRC))
-  }
-  if(file.exists(db_species) || str_extract(basename(db), "[^.]+") == "hitdb_v1")
-  {
-    # Create a merged table with counts and tax
-    taxa_full <- as_tibble(taxa_Species, 
-                           rownames = 'ASV')  %>% 
-      unite("Species",Species:tail(names(.), 1), na.rm = TRUE, remove = TRUE, sep = "|")
     
-    left_join(taxa_full,
-              as_tibble(taxa$boot, rownames = 'ASV'),
-              by = 'ASV', suffix = c("", "_Boot")) -> merged_table
+    taxa <- assignTaxonomy(dna, 
+                           db,
+                           outputBootstraps = TRUE,
+                           multithread = nthreads,
+                           verbose = TRUE,
+                           minBoot = threshold,
+                           tryRC = as.logical(tryRC),
+                           taxLevels = tax_ranks)
     
-    # if(!is.null(tax_table(physeq))){
-    # merged_table %>%
-    #   dplyr::select(-starts_with("input_taxonomy_")) -> merged_table
-    # }
-    merged_table %>%
-      dplyr::select_if(is.character) %>%
-      # dplyr::select(-ASV) %>%    
-      mutate(Species = str_replace_all(Species, "[/]", replacement = NA_character_)) %>% # maybe something like multi assignments could be more precise
-      mutate_all(funs(str_replace_all(., c("unclassified|unidentified|Ambiguous_taxa"), replacement = NA_character_))) %>% # not sure this is working but that's the idea
-      mutate_all(funs(str_replace_all(., c("metagenome|unidentified|uncultured"), replacement = "uncultured"))) %>%
-      dplyr::mutate_all(na_if,"") %>%
-      replace(is.na(.), "unknown") %>%
-      column_to_rownames("ASV") -> tax_table
+    if(!file.exists(db_species))
+    {
+      
+      # left_join(merged_table_pre,
+      #           left_join(as_tibble(taxa$tax, rownames = 'ASV'),
+      #                     (as_tibble(taxa$boot, rownames = 'ASV')),
+      #                     by = 'ASV', suffix = c("", "_Boot")) ,
+      #           by = c('ASV_sequence' = 'ASV')) -> merged_table
+      
+      left_join(refseq_df,
+                left_join(as_tibble(taxa$tax, rownames = 'ASV'),
+                          (as_tibble(taxa$boot, rownames = 'ASV')),
+                          by = 'ASV', suffix = c("", "_Boot")) ,
+                by = c('ASV_sequence' = 'ASV')) -> merged_table
+      
+      if(str_extract(basename(db), "[^.]+") == "hitdb_v1")
+      {  
+        merged_table %>%
+          dplyr::mutate(Kingdom = "Bacteria") -> merged_table
+      }
+    }  
+    if(file.exists(db_species))
+    {
+      taxa_Species <- addSpecies(taxa$tax, 
+                                 db_species,
+                                 verbose = TRUE,
+                                 allowMultiple = TRUE,
+                                 tryRC = as.logical(tryRC))
+    }
+    if(file.exists(db_species) || str_extract(basename(db), "[^.]+") == "hitdb_v1")
+    {
+      # Create a merged table with counts and tax
+      taxa_full <- as_tibble(taxa_Species, 
+                             rownames = 'ASV')  %>% 
+        unite("Species",Species:tail(names(.), 1), na.rm = TRUE, remove = TRUE, sep = "|")
+      
+      left_join(taxa_full,
+                as_tibble(taxa$boot, rownames = 'ASV'),
+                by = 'ASV', suffix = c("", "_Boot")) -> merged_table
+      
+      # if(!is.null(tax_table(physeq))){
+      # merged_table %>%
+      #   dplyr::select(-starts_with("input_taxonomy_")) -> merged_table
+      # }
+      merged_table %>%
+        dplyr::select_if(is.character) %>%
+        # dplyr::select(-ASV) %>%    
+        mutate(Species = str_replace_all(Species, "[/]", replacement = NA_character_)) %>% # maybe something like multi assignments could be more precise
+        mutate_all(funs(str_replace_all(., c("unclassified|unidentified|Ambiguous_taxa"), replacement = NA_character_))) %>% # not sure this is working but that's the idea
+        mutate_all(funs(str_replace_all(., c("metagenome|unidentified|uncultured"), replacement = "uncultured"))) %>%
+        dplyr::mutate_all(na_if,"") %>%
+        replace(is.na(.), "unknown") %>%
+        column_to_rownames("ASV") -> tax_table
+      
+    }else{
+      merged_table %>%
+        dplyr::select_if(is.character) %>%
+        # dplyr::select(-ASV_sequence) %>%
+        # dplyr::select(-starts_with("input_taxonomy_"), -ASV_sequence) %>%      
+        mutate_all(funs(str_replace_all(., c("unclassified|unidentified|Ambiguous_taxa"), replacement = NA_character_))) %>% # not sure this is working but that's the idea
+        mutate_all(funs(str_replace_all(., c("metagenome|unidentified|uncultured"), replacement = "uncultured"))) %>%
+        dplyr::mutate_all(na_if,"") %>%
+        replace(is.na(.), "unknown") %>%
+        column_to_rownames("ASV") -> tax_table
+      
+    }
     
-  }else{
-    merged_table %>%
-      dplyr::select_if(is.character) %>%
-      # dplyr::select(-ASV_sequence) %>%
-      # dplyr::select(-starts_with("input_taxonomy_"), -ASV_sequence) %>%      
-      mutate_all(funs(str_replace_all(., c("unclassified|unidentified|Ambiguous_taxa"), replacement = NA_character_))) %>% # not sure this is working but that's the idea
-      mutate_all(funs(str_replace_all(., c("metagenome|unidentified|uncultured"), replacement = "uncultured"))) %>%
-      dplyr::mutate_all(na_if,"") %>%
-      replace(is.na(.), "unknown") %>%
-      column_to_rownames("ASV") -> tax_table
+    tax_table %>%
+      rownames_to_column("ASV_sequence") %>%
+      # as.data.frame() %>%
+      left_join(refseq_df) %>%
+      column_to_rownames('ASV') %>%
+      dplyr::select(-ASV_length, -ASV_sequence) -> tmp
     
-  }
-  
-  tax_table %>%
-    rownames_to_column("ASV_sequence") %>%
-    # as.data.frame() %>%
-    left_join(refseq_df) %>%
-    column_to_rownames('ASV') %>%
-    dplyr::select(-ASV_length, -ASV_sequence) -> tmp
-  
-  physeq@tax_table = NULL
-  
+    physeq@tax_table = NULL
+    
     merge_phyloseq(physeq,
                    tmp %>% 
-                   as.matrix() %>%
-                   tax_table()) -> physeq
-  
-  if(export != FALSE){
+                     as.matrix() %>%
+                     tax_table()) -> physeq
     
-    write_tsv(x = merged_table,
-              file = paste0(export,"/","dada2_threshold",threshold,"_",dbname,"merged_tax_table.tsv"))
-    cat(paste0("saved object and output to ", export))
-    
-    saveRDS(physeq,
-            file = paste0(export,"/","dada2_threshold",threshold,"_",dbname,"_physeq.RDS"))
-    
-  }
-  if(return == TRUE)
-  {
-    if(full_return == TRUE){
-      out <- list("physeq" = physeq,
-                  "full_table" = merged_table)
-    }else{
-      out <- physeq
+    if(export != FALSE){
+      
+      write_tsv(x = merged_table,
+                file = paste0(export,"/","dada2_threshold",threshold,"_",dbname,"merged_tax_table.tsv"))
+      cat(paste0("saved object and output to ", export))
+      
+      saveRDS(physeq,
+              file = paste0(export,"/","dada2_threshold",threshold,"_",dbname,"_physeq.RDS"))
+      
     }
-    return(out)
-  }
-}
-
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-# readRDS("data/processed/physeq_update_11_1_21.RDS") %>% 
-#   phyloseq_DECIPHER_cluster_ASV(threshold = 99) -> test_99
-#'
-# test_99$cluster_table %>%
-#  arrange(-cluster_size) %>% 
-# select(ASV, contains("cluster_"), c("Phylum", "Class", "Family", "Genus", "Species"))
-#'
-#'
-
-
-phyloseq_DECIPHER_cluster_ASV <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 1000) -> physeq
-                                          threshold = 97,
-                                          nthreads = 6,
-                                          method = "complete",
-                                          showPlot = FALSE,
-                                          export = FALSE,
-                                          return = TRUE,
-                                          full_return = TRUE){
-  
-  ## ------------------------------------------------------------------------
-  require(tidyverse); require(speedyseq); require(DECIPHER)
-  
-  ## ------------------------------------------------------------------------
-  
-  # Create a merged table with counts taxa and sequences
-  as(tax_table(physeq), "matrix") %>% 
-    data.frame() %>%
-    rownames_to_column('ASV') -> tax_table
-  
-  
-  as(otu_table(physeq), "matrix") %>% 
-    as.data.frame() %>%
-    rownames_to_column('ASV') -> otu_table
-  
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
-  
-  dss2df(physeq@refseq) %>%
-    rownames_to_column('ASV') %>%
-    dplyr::select(-names) %>%
-    dplyr::rename(ASV_length = width,
-                  ASV_sequence = seq)-> refseq_df
-  
-  
-  otu_table %>%
-    left_join(tax_table, by = 'ASV') %>%
-    left_join(refseq_df, by = 'ASV') %>%
-    dplyr::select(ASV, everything()) -> merged_table_pre
-  
-  
-  ## ------------------------------------------------------------------------
-  dna <- refseq(physeq)
-  
-  aln <- DECIPHER::AlignSeqs(dna, 
-                             processors = nthreads)
-  
-  d <- DECIPHER::DistanceMatrix(aln, 
-                                processors = nthreads)
-  ## ------------------------------------------------------------------------
-  
-  clusters <- DECIPHER::IdClusters(
-    d, 
-    showPlot = showPlot,
-    method = method,
-    cutoff = (100-threshold) / 100, # corresponds to 97% OTUs
-    processors = nthreads,
-    verbose = TRUE)
-  
-  ## ------------------------------------------------------------------------
-  
-  clusters %>%
-    rownames_to_column('ASV') %>%
-    group_by(cluster) %>%
-    add_count() %>%
-    dplyr::rename(!!paste0("cluster_", (100-threshold) / 100) := cluster,
-                  cluster_size = n) %>%
-    full_join(merged_table_pre) -> full_table
-  
-  
-  ## ------------------------------------------------------------------------
-  
-  physeq_clustered <- speedyseq::merge_taxa_vec(
-    physeq,
-    group = clusters$cluster,
-    tax_adjust = 2)
-  
-  ## ------------------------------------------------------------------------
-  
-  if(export != FALSE){
-    
-    write_tsv(x = full_table,
-              file = paste0(export,"/","physeq_ASV_clust_thresold_",(100-threshold) / 100,"_table.tsv"))
-    
-    cat(paste0("saved object and output to ", export))
-    
-    saveRDS(physeq_clustered,
-            file = paste0(export,"/","physeq_ASV_clust_thresold_",(100-threshold) / 100,"_physeq.RDS"))
-    
-  }
-  ## ------------------------------------------------------------------------
-  
-  if(return == TRUE)
-  {
-    if(full_return == TRUE){
-      out <- list("physeq_clustered" = physeq_clustered,
-                  "cluster_table" = full_table)
-    }else{
-      out <- physeq_clustered
+    if(return == TRUE)
+    {
+      if(full_return == TRUE){
+        out <- list("physeq" = physeq,
+                    "full_table" = merged_table)
+      }else{
+        out <- physeq
+      }
+      return(out)
     }
-    return(out)
-  }
-}
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-#'phyloseq_vsearch_lulu_cluster_ASV(readRDS("data/processed/physeq_update_11_1_21.RDS"),
-#'                               vsearch = "/Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/vsearch",
-#'                                 dir = ("~/"), int_rm = TRUE) -> out
-
-phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") -> physeq
-                                              vsearch = "/Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/vsearch",
-                                              dir = ("~/"),
-                                              fasta_file = "pre_lulu.fasta",
-                                              match_list_file = "pre_lulu_vsearch.list.txt",
-                                              threshold = 80,
-                                              nthreads = 6,
-                                              int_rm = TRUE,
-                                              seed_value = 123,
-                                              minimum_ratio_type = "min",
-                                              minimum_match = 84,
-                                              minimum_relative_cooccurence = 0.95,
-                                              minimum_ratio = 1, # only if minimum_ratio_type = "avg"
-                                              return = TRUE,
-                                              full_return = TRUE){
-  
-  ## ------------------------------------------------------------------------
-  require(tidyverse); require(phloseq); require(lulu)
-  
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
-  
-  ## ------------------------------------------------------------------------
-  paste0(dir, "/", fasta_file) -> fasta_path
-  paste0(dir, "/", match_list_file) -> match_list_file_path
-  
-  ## ------------------------------------------------------------------------
-  
-  refseq(physeq) %>%
-    dss2df() %>%
-    dplyr::rename(sequence = seq) %>%
-    dplyr::mutate(abundance = taxa_sums(physeq)) %>%
-    dplyr::select(-names) %>%
-    dada2::uniquesToFasta(fasta_path,
-                          ids=taxa_names(physeq))
-  
-  as(otu_table(physeq), "matrix") %>%
-    as.data.frame()  -> otu_tab
-  ## ------------------------------------------------------------------------
-  
-  ## run vsearch
-  system2(vsearch, args = c("--usearch_global ", fasta_path, 
-                            "--db", fasta_path,
-                            "--self --id", threshold/100,
-                            "--iddef 1 --userout ", match_list_file_path, 
-                            "--threads ", nthreads,
-                            "-userfields query+target+id --maxaccepts 0 --query_cov 0.9 --maxhits 10")
-  )
-  # vsearch --usearch_global OTU_sequences.fasta --db OTU_sequences.fasta --self --id .84 --iddef 1 --userout match_list.txt -userfields query+target+id --maxaccepts 0 --query_cov .9 --maxhits 10
-  
-  ## ------------------------------------------------------------------------
-  match_list_file_path %>%
-    read_tsv(col_names = c("ASVa", 
-                           "ASVb", 
-                           "id")) -> match_list_file
-  
-  if(int_rm == TRUE){
-    file.remove(fasta_path, match_list_file_path)
-    
-  }
-  ## ------------------------------------------------------------------------
-  
-  if (minimum_ratio_type == "avg")
-  {
-    curated_result <- lulu(otu_tab, 
-                           match_list_file, 
-                           minimum_ratio_type = minimum_ratio_type, 
-                           minimum_match = minimum_match, 
-                           minimum_ratio = minimum_ratio, 
-                           minimum_relative_cooccurence = minimum_relative_cooccurence)
-  }
-  if (minimum_ratio_type == "min")
-  {
-    curated_result <- lulu(otu_tab, 
-                           match_list_file, 
-                           minimum_ratio_type = minimum_ratio_type, 
-                           minimum_match = minimum_match, 
-                           minimum_relative_cooccurence = minimum_relative_cooccurence)
   }
   
-  ## ------------------------------------------------------------------------
   
-  # Function lulu returns a list of results based on the input OTU table and match list.
-  # 
-  # curated_table - a curated OTU table with daughters merged with their matching parents.
-  # 
-  # curated_count - number of curated (parent) OTUs.
-  # 
-  # curated_otus - ids of the OTUs that were accepted as valid OTUs.
-  # 
-  # discarded_count - number of discarded (merged with parent) OTUs.
-  # 
-  # discarded_otus - ids of the OTUs that were identified as errors (daughters) and merged with respective parents.
-  # 
-  # runtime - time used by the script.
-  # 
-  # minimum_match - the id threshold (minimum match % between parent and daughter) for evaluating co-occurence (set by user).
-  # 
-  # minimum_relative_cooccurence - minimum ratio of daughter-occurences explained by co-occurence with parent (set by user).
-  # 
-  # otu_map - information of which daughters were mapped to which parents.
-  # 
-  # original_table - original OTU table.
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note .
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% 
+  #   phyloseq_DECIPHER_cluster_ASV(threshold = 99) -> test_99
+  #'
+  # test_99$cluster_table %>%
+  #  arrange(-cluster_size) %>% 
+  # select(ASV, contains("cluster_"), c("Phylum", "Class", "Family", "Genus", "Species"))
+  #'
+  #'
   
   
-  ## ------------------------------------------------------------------------
-  colnames(curated_result$curated_table) <- sample_names(physeq)
-  colnames(curated_result$original_table) <- sample_names(physeq)
-  
-  curated_result$curated_table %>%
-    rownames_to_column('ASV') %>%
-    pull("ASV") -> curated_asv
-  
-  
-  physeq_curated <- prune_taxa(curated_asv, physeq)
-  
-  curated_result$curated_table %>% 
-    #   dplyr::mutate_all(funs(str_replace(., " ", "")))
-    # # stringr::str_replace_all()
-    as.matrix() -> new_otu_tab
-  
-  otu_table(physeq_curated) <- otu_table(new_otu_tab, taxa_are_rows = TRUE)
-  
-  ## ------------------------------------------------------------------------
-  
-  if(dir != FALSE){
+  phyloseq_DECIPHER_cluster_ASV <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 1000) -> physeq
+                                            threshold = 97,
+                                            nthreads = 6,
+                                            method = "complete",
+                                            showPlot = FALSE,
+                                            export = FALSE,
+                                            return = TRUE,
+                                            full_return = TRUE){
     
-    # write_tsv(x = curated_result$curated_table,
-    #           file = paste0(dir,"/","lulu_curated_table.tsv"))
+    ## ------------------------------------------------------------------------
+    require(tidyverse); require(speedyseq); require(DECIPHER)
     
-    openxlsx::write.xlsx(curated_result, 
-                         paste0(dir,"/","lulu_curated_table.xlsx"))
+    ## ------------------------------------------------------------------------
     
-    write_tsv(x = curated_result$curated_table,
-              file = paste0(dir,"/","lulu_curated_table.tsv"))
+    # Create a merged table with counts taxa and sequences
+    as(tax_table(physeq), "matrix") %>% 
+      data.frame() %>%
+      rownames_to_column('ASV') -> tax_table
     
-    cat(paste0("saved object and output to ", dir))
     
-    saveRDS(physeq_curated,
-            file = paste0(dir,"/","lulu_curated_physeq.RDS"))
+    as(otu_table(physeq), "matrix") %>% 
+      as.data.frame() %>%
+      rownames_to_column('ASV') -> otu_table
     
-  }
-  ## ------------------------------------------------------------------------
-  
-  if(return == TRUE)
-  {
-    if(full_return == TRUE){
-      out <- list("physeq_curated" = physeq_curated,
-                  "curated_result" = curated_result)
-    }else{
-      out <- physeq_curated
+    dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
+    
+    dss2df(physeq@refseq) %>%
+      rownames_to_column('ASV') %>%
+      dplyr::select(-names) %>%
+      dplyr::rename(ASV_length = width,
+                    ASV_sequence = seq)-> refseq_df
+    
+    
+    otu_table %>%
+      left_join(tax_table, by = 'ASV') %>%
+      left_join(refseq_df, by = 'ASV') %>%
+      dplyr::select(ASV, everything()) -> merged_table_pre
+    
+    
+    ## ------------------------------------------------------------------------
+    dna <- refseq(physeq)
+    
+    aln <- DECIPHER::AlignSeqs(dna, 
+                               processors = nthreads)
+    
+    d <- DECIPHER::DistanceMatrix(aln, 
+                                  processors = nthreads)
+    ## ------------------------------------------------------------------------
+    
+    clusters <- DECIPHER::IdClusters(
+      d, 
+      showPlot = showPlot,
+      method = method,
+      cutoff = (100-threshold) / 100, # corresponds to 97% OTUs
+      processors = nthreads,
+      verbose = TRUE)
+    
+    ## ------------------------------------------------------------------------
+    
+    clusters %>%
+      rownames_to_column('ASV') %>%
+      group_by(cluster) %>%
+      add_count() %>%
+      dplyr::rename(!!paste0("cluster_", (100-threshold) / 100) := cluster,
+                    cluster_size = n) %>%
+      full_join(merged_table_pre) -> full_table
+    
+    
+    ## ------------------------------------------------------------------------
+    
+    physeq_clustered <- speedyseq::merge_taxa_vec(
+      physeq,
+      group = clusters$cluster,
+      tax_adjust = 2)
+    
+    ## ------------------------------------------------------------------------
+    
+    if(export != FALSE){
+      
+      write_tsv(x = full_table,
+                file = paste0(export,"/","physeq_ASV_clust_thresold_",(100-threshold) / 100,"_table.tsv"))
+      
+      cat(paste0("saved object and output to ", export))
+      
+      saveRDS(physeq_clustered,
+              file = paste0(export,"/","physeq_ASV_clust_thresold_",(100-threshold) / 100,"_physeq.RDS"))
+      
     }
-    return(out)
-  }
-}
-
-
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-#'
-#'phyloseq_picrust2(physeq = NULL,
-#'                  picrust2 = "picrust2_pipeline.py",
-#'                  fasta_file = "seqs.fna",
-#'                  input_dir = ("/Users/fconstan/Desktop/picrust_test/chemerin_16S/"),
-#'                  output_dir = ("/Users/fconstan/Desktop/picrust_test/chemerin_16S/picrust2R/"),# should not exist
-#'                  count_table = "table.biom",
-#'                  in_traits = c("COG,EC,TIGRFAM"),
-#'                  min_reads = 10,
-#'                  min_samples = 10)
-#'
-#'phyloseq_picrust2(physeq = readRDS("/Users/fconstan/Documents/GitHub/amchick/data/processed/physeq_update_11_1_21.RDS"),
-#'                  input_dir = ("/Users/fconstan/Desktop/picrust_test/AP-picrust/"),
-#'                  output_dir = ("/Users/fconstan/Desktop/picrust_test/AP-picrust/results"),# should not exist
-#'                  in_traits = c("COG,EC,KO,PFAM,TIGRFAM"),
-#'                  min_reads = 2,
-#'                  min_samples = 3)
-#'
-phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_update_11_1_21.RDS") -> physeq
-                              picrust2 = "picrust2_pipeline.py",
-                              conda_env = "picrust2",
-                              input_dir = ("~/"),
-                              output_dir = ("~/picrust2/"),# should not exist
-                              fasta_file = "ASV.fna",
-                              count_table = "ASV_table.tsv",
-                              in_traits = c("EC,KO"), #  #default: EC,KO c("COG,EC,KO,PFAM,TIGRFAM")
-                              min_reads = 1,
-                              min_samples = 1,
-                              ref_dir = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/prokaryotic/pro_ref",
-                              pathway_map = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/pathway_mapfiles/metacyc_path2rxn_struc_filt_pro.txt",
-                              regroup_map = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/pathway_mapfiles/ec_level4_to_metacyc_rxn.tsv",
-                              nthreads = 6,
-                              m = "mp",
-                              no_gap_fill = FALSE,
-                              int_rm = FALSE){
-  
-  ## ------------------------------------------------------------------------
-  require(tidyverse); require(phyloseq)#; require(reticulate)
-  
-  
-  dss2df <- function(dss) data.frame(width = BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
-  ## ------------------------------------------------------------------------
-  
-  # reticulate::use_condaenv(condaenv = conda_env,
-  #                          conda = "auto",
-  #                          required = FALSE)
-  # system2("conda activate",
-  #         args = c(conda_env)
-  # )
-  ## ------------------------------------------------------------------------
-  paste0(input_dir, "/", fasta_file) -> fasta_path
-  paste0(input_dir, "/", count_table) -> count_table_path
-  
-  ## ------------------------------------------------------------------------
-  if(!is.null(physeq)){
+    ## ------------------------------------------------------------------------
     
-    dir.create(input_dir, showWarnings = TRUE, recursive = TRUE)
+    if(return == TRUE)
+    {
+      if(full_return == TRUE){
+        out <- list("physeq_clustered" = physeq_clustered,
+                    "cluster_table" = full_table)
+      }else{
+        out <- physeq_clustered
+      }
+      return(out)
+    }
+  }
+  
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note .
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  #'
+  #'phyloseq_vsearch_lulu_cluster_ASV(readRDS("data/processed/physeq_update_11_1_21.RDS"),
+  #'                               vsearch = "/Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/vsearch",
+  #'                                 dir = ("~/"), int_rm = TRUE) -> out
+  
+  phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") -> physeq
+                                                vsearch = "/Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/vsearch",
+                                                dir = ("~/"),
+                                                fasta_file = "pre_lulu.fasta",
+                                                match_list_file = "pre_lulu_vsearch.list.txt",
+                                                threshold = 80,
+                                                nthreads = 6,
+                                                int_rm = TRUE,
+                                                seed_value = 123,
+                                                minimum_ratio_type = "min",
+                                                minimum_match = 84,
+                                                minimum_relative_cooccurence = 0.95,
+                                                minimum_ratio = 1, # only if minimum_ratio_type = "avg"
+                                                return = TRUE,
+                                                full_return = TRUE){
+    
+    ## ------------------------------------------------------------------------
+    require(tidyverse); require(phloseq); require(lulu)
+    
+    dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
+    
+    ## ------------------------------------------------------------------------
+    paste0(dir, "/", fasta_file) -> fasta_path
+    paste0(dir, "/", match_list_file) -> match_list_file_path
+    
+    ## ------------------------------------------------------------------------
     
     refseq(physeq) %>%
       dss2df() %>%
@@ -2244,76 +2111,278 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
                             ids=taxa_names(physeq))
     
     as(otu_table(physeq), "matrix") %>%
-      as.data.frame() %>%
+      as.data.frame()  -> otu_tab
+    ## ------------------------------------------------------------------------
+    
+    ## run vsearch
+    system2(vsearch, args = c("--usearch_global ", fasta_path, 
+                              "--db", fasta_path,
+                              "--self --id", threshold/100,
+                              "--iddef 1 --userout ", match_list_file_path, 
+                              "--threads ", nthreads,
+                              "-userfields query+target+id --maxaccepts 0 --query_cov 0.9 --maxhits 10")
+    )
+    # vsearch --usearch_global OTU_sequences.fasta --db OTU_sequences.fasta --self --id .84 --iddef 1 --userout match_list.txt -userfields query+target+id --maxaccepts 0 --query_cov .9 --maxhits 10
+    
+    ## ------------------------------------------------------------------------
+    match_list_file_path %>%
+      read_tsv(col_names = c("ASVa", 
+                             "ASVb", 
+                             "id")) -> match_list_file
+    
+    if(int_rm == TRUE){
+      file.remove(fasta_path, match_list_file_path)
+      
+    }
+    ## ------------------------------------------------------------------------
+    
+    if (minimum_ratio_type == "avg")
+    {
+      curated_result <- lulu(otu_tab, 
+                             match_list_file, 
+                             minimum_ratio_type = minimum_ratio_type, 
+                             minimum_match = minimum_match, 
+                             minimum_ratio = minimum_ratio, 
+                             minimum_relative_cooccurence = minimum_relative_cooccurence)
+    }
+    if (minimum_ratio_type == "min")
+    {
+      curated_result <- lulu(otu_tab, 
+                             match_list_file, 
+                             minimum_ratio_type = minimum_ratio_type, 
+                             minimum_match = minimum_match, 
+                             minimum_relative_cooccurence = minimum_relative_cooccurence)
+    }
+    
+    ## ------------------------------------------------------------------------
+    
+    # Function lulu returns a list of results based on the input OTU table and match list.
+    # 
+    # curated_table - a curated OTU table with daughters merged with their matching parents.
+    # 
+    # curated_count - number of curated (parent) OTUs.
+    # 
+    # curated_otus - ids of the OTUs that were accepted as valid OTUs.
+    # 
+    # discarded_count - number of discarded (merged with parent) OTUs.
+    # 
+    # discarded_otus - ids of the OTUs that were identified as errors (daughters) and merged with respective parents.
+    # 
+    # runtime - time used by the script.
+    # 
+    # minimum_match - the id threshold (minimum match % between parent and daughter) for evaluating co-occurence (set by user).
+    # 
+    # minimum_relative_cooccurence - minimum ratio of daughter-occurences explained by co-occurence with parent (set by user).
+    # 
+    # otu_map - information of which daughters were mapped to which parents.
+    # 
+    # original_table - original OTU table.
+    
+    
+    ## ------------------------------------------------------------------------
+    colnames(curated_result$curated_table) <- sample_names(physeq)
+    colnames(curated_result$original_table) <- sample_names(physeq)
+    
+    curated_result$curated_table %>%
       rownames_to_column('ASV') %>%
-      # column_to_rownames('ASV') %>%
-      write_tsv(count_table_path)
+      pull("ASV") -> curated_asv
+    
+    
+    physeq_curated <- prune_taxa(curated_asv, physeq)
+    
+    curated_result$curated_table %>% 
+      #   dplyr::mutate_all(funs(str_replace(., " ", "")))
+      # # stringr::str_replace_all()
+      as.matrix() -> new_otu_tab
+    
+    otu_table(physeq_curated) <- otu_table(new_otu_tab, taxa_are_rows = TRUE)
+    
+    ## ------------------------------------------------------------------------
+    
+    if(dir != FALSE){
+      
+      # write_tsv(x = curated_result$curated_table,
+      #           file = paste0(dir,"/","lulu_curated_table.tsv"))
+      
+      openxlsx::write.xlsx(curated_result, 
+                           paste0(dir,"/","lulu_curated_table.xlsx"))
+      
+      write_tsv(x = curated_result$curated_table,
+                file = paste0(dir,"/","lulu_curated_table.tsv"))
+      
+      cat(paste0("saved object and output to ", dir))
+      
+      saveRDS(physeq_curated,
+              file = paste0(dir,"/","lulu_curated_physeq.RDS"))
+      
+    }
+    ## ------------------------------------------------------------------------
+    
+    if(return == TRUE)
+    {
+      if(full_return == TRUE){
+        out <- list("physeq_curated" = physeq_curated,
+                    "curated_result" = curated_result)
+      }else{
+        out <- physeq_curated
+      }
+      return(out)
+    }
   }
-  ## ------------------------------------------------------------------------
   
-  ## run picrust2_pipeline.py
-  system2(picrust2, 
-          args = c("-s ", fasta_path, 
-                   "-i ", count_table_path,
-                   "-o ", output_dir,
-                   "--processes ", nthreads,
-                   "--stratified --per_sequence_contrib --verbose ",
-                   "--in_traits ", in_traits,
-                   "--min_reads", min_reads, "--min_samples", min_samples,
-                   ifelse(pathway_map != FALSE, print("--pathway_map " , pathway_map), ""),
-                   ifelse(ref_dir != FALSE, print("--ref_dir ", ref_dir), ""),
-                   ifelse(regroup_map != FALSE, print("--regroup_map ", regroup_map), ""),
-                   "--hsp_method ", m, ifelse(no_gap_fill == TRUE, print("--no_gap_fill"), ""),
-                   ifelse(int_rm == TRUE, print("--remove_intermediate"), ""))
-  )
-  # https://github.com/picrust/picrust2/wiki/PICRUSt2-Tutorial-(v2.3.0-beta)#add-functional-descriptions
-  # picrust2_pipeline.py -s study_seqs.fna -i seqabun.biom -o picrust2_out --processes 10 --stratified --per_sequence_contrib 
   
-  ## ------------------------------------------------------------------------
   
-}
-
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-
-phloseq_export_otu_tax <- function(physeq = NULL){
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note .
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  #'
+  #'
+  #'phyloseq_picrust2(physeq = NULL,
+  #'                  picrust2 = "picrust2_pipeline.py",
+  #'                  fasta_file = "seqs.fna",
+  #'                  input_dir = ("/Users/fconstan/Desktop/picrust_test/chemerin_16S/"),
+  #'                  output_dir = ("/Users/fconstan/Desktop/picrust_test/chemerin_16S/picrust2R/"),# should not exist
+  #'                  count_table = "table.biom",
+  #'                  in_traits = c("COG,EC,TIGRFAM"),
+  #'                  min_reads = 10,
+  #'                  min_samples = 10)
+  #'
+  #'phyloseq_picrust2(physeq = readRDS("/Users/fconstan/Documents/GitHub/amchick/data/processed/physeq_update_11_1_21.RDS"),
+  #'                  input_dir = ("/Users/fconstan/Desktop/picrust_test/AP-picrust/"),
+  #'                  output_dir = ("/Users/fconstan/Desktop/picrust_test/AP-picrust/results"),# should not exist
+  #'                  in_traits = c("COG,EC,KO,PFAM,TIGRFAM"),
+  #'                  min_reads = 2,
+  #'                  min_samples = 3)
+  #'
+  phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_update_11_1_21.RDS") -> physeq
+                                picrust2 = "picrust2_pipeline.py",
+                                conda_env = "picrust2",
+                                input_dir = ("~/"),
+                                output_dir = ("~/picrust2/"),# should not exist
+                                fasta_file = "ASV.fna",
+                                count_table = "ASV_table.tsv",
+                                in_traits = c("EC,KO"), #  #default: EC,KO c("COG,EC,KO,PFAM,TIGRFAM")
+                                min_reads = 1,
+                                min_samples = 1,
+                                ref_dir = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/prokaryotic/pro_ref",
+                                pathway_map = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/pathway_mapfiles/metacyc_path2rxn_struc_filt_pro.txt",
+                                regroup_map = FALSE, #"/Users/fconstan/miniconda3/envs/picrust2/lib/python3.6/site-packages/picrust2/default_files/pathway_mapfiles/ec_level4_to_metacyc_rxn.tsv",
+                                nthreads = 6,
+                                m = "mp",
+                                no_gap_fill = FALSE,
+                                int_rm = FALSE){
+    
+    ## ------------------------------------------------------------------------
+    require(tidyverse); require(phyloseq)#; require(reticulate)
+    
+    
+    dss2df <- function(dss) data.frame(width = BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
+    ## ------------------------------------------------------------------------
+    
+    # reticulate::use_condaenv(condaenv = conda_env,
+    #                          conda = "auto",
+    #                          required = FALSE)
+    # system2("conda activate",
+    #         args = c(conda_env)
+    # )
+    ## ------------------------------------------------------------------------
+    paste0(input_dir, "/", fasta_file) -> fasta_path
+    paste0(input_dir, "/", count_table) -> count_table_path
+    
+    ## ------------------------------------------------------------------------
+    if(!is.null(physeq)){
+      
+      dir.create(input_dir, showWarnings = TRUE, recursive = TRUE)
+      
+      refseq(physeq) %>%
+        dss2df() %>%
+        dplyr::rename(sequence = seq) %>%
+        dplyr::mutate(abundance = taxa_sums(physeq)) %>%
+        dplyr::select(-names) %>%
+        dada2::uniquesToFasta(fasta_path,
+                              ids=taxa_names(physeq))
+      
+      as(otu_table(physeq), "matrix") %>%
+        as.data.frame() %>%
+        rownames_to_column('ASV') %>%
+        # column_to_rownames('ASV') %>%
+        write_tsv(count_table_path)
+    }
+    ## ------------------------------------------------------------------------
+    
+    ## run picrust2_pipeline.py
+    system2(picrust2, 
+            args = c("-s ", fasta_path, 
+                     "-i ", count_table_path,
+                     "-o ", output_dir,
+                     "--processes ", nthreads,
+                     "--stratified --per_sequence_contrib --verbose ",
+                     "--in_traits ", in_traits,
+                     "--min_reads", min_reads, "--min_samples", min_samples,
+                     ifelse(pathway_map != FALSE, print("--pathway_map " , pathway_map), ""),
+                     ifelse(ref_dir != FALSE, print("--ref_dir ", ref_dir), ""),
+                     ifelse(regroup_map != FALSE, print("--regroup_map ", regroup_map), ""),
+                     "--hsp_method ", m, ifelse(no_gap_fill == TRUE, print("--no_gap_fill"), ""),
+                     ifelse(int_rm == TRUE, print("--remove_intermediate"), ""))
+    )
+    # https://github.com/picrust/picrust2/wiki/PICRUSt2-Tutorial-(v2.3.0-beta)#add-functional-descriptions
+    # picrust2_pipeline.py -s study_seqs.fna -i seqabun.biom -o picrust2_out --processes 10 --stratified --per_sequence_contrib 
+    
+    ## ------------------------------------------------------------------------
+    
+  }
   
-  require(phyloseq); require(tidyverse)
   
-  as(tax_table(physeq), "matrix") %>% 
-    as.data.frame() %>%
-    rownames_to_column('ASV') -> tax_table
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note .
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  #'
   
-  as(otu_table(physeq), "matrix") %>% 
-    as.data.frame() %>%
-    rownames_to_column('ASV') -> otu_table
+  phloseq_export_otu_tax <- function(physeq = NULL){
+    
+    require(phyloseq); require(tidyverse)
+    
+    as(tax_table(physeq), "matrix") %>% 
+      as.data.frame() %>%
+      rownames_to_column('ASV') -> tax_table
+    
+    as(otu_table(physeq), "matrix") %>% 
+      as.data.frame() %>%
+      rownames_to_column('ASV') -> otu_table
+    
+    # colnames(otu_table) <- c('ASV', sample_names(physeq))
+    
+    dss2df <- function(dss) data.frame(width=BiocGenerics:width(dss), seq=as.character(dss), names=names(dss))
+    
+    dss2df(physeq@refseq) %>%
+      rownames_to_column('ASV') %>%
+      dplyr::select(-names) %>%
+      dplyr::rename(ASV_length = width,
+                    ASV_sequence = seq)-> refseq_df
+    
+    otu_table %>%
+      left_join(refseq_df, by = 'ASV') %>%
+      left_join(tax_table, by = c("ASV" = "ASV")) %>%
+      dplyr::select(ASV, everything()) -> merged_table
+    
+    return(merged_table)
+  }
   
-  # colnames(otu_table) <- c('ASV', sample_names(physeq))
-  
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
-  
-  dss2df(physeq@refseq) %>%
-    rownames_to_column('ASV') %>%
-    dplyr::select(-names) %>%
-    dplyr::rename(ASV_length = width,
-                  ASV_sequence = seq)-> refseq_df
-  
-  otu_table %>%
-    left_join(refseq_df, by = 'ASV') %>%
-    left_join(tax_table, by = c("ASV" = "ASV")) %>%
-    dplyr::select(ASV, everything()) -> merged_table
-  
-  return(merged_table)
-}
