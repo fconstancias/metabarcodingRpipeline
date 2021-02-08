@@ -46,3 +46,4 @@ fasta
 *.utf8.md
 *.knit.md
 *.gz
+*.fasta

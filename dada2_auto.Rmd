@@ -14,8 +14,6 @@ rm(list = ls())
 
 knitr::opts_chunk$set(echo = TRUE)
 DT::datatable(matrix())
-
-
 ```
 
 ```{r install, include=TRUE}
@@ -42,13 +40,6 @@ DT::datatable(matrix())
 
 ```{r packages, results=FALSE, warning=FALSE, include=FALSE}
 require(tidyverse); packageVersion("tidyverse")
-require(dada2); packageVersion('dada2')
-require(ShortRead); packageVersion('ShortRead')
-require(Biostrings); packageVersion('Biostrings')
-require(phyloseq); packageVersion("phyloseq")
-require(DECIPHER); packageVersion("DECIPHER")
-require(phangorn); packageVersion("phangorn")
-
 
 source("scripts/functions_export_simplified.R")
 ```
@@ -58,12 +49,13 @@ source("scripts/functions_export_simplified.R")
 run_dada2_pipe(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
                atropos = "/Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/atropos",
                V = "V3V4",
+               nbases = 10,
                tryRC = TRUE,
                metadata = "test-data/metadata.xlsx",
                db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
                db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
                run_phylo = FALSE,
-               collapseNoMis = TRUE,
+               collapseNoMis = FALSE,
                save_out = "dada2/dada2_pipe_out.RDS",
                SLOTS = 8,
                seed_value = 123) -> out
