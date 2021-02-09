@@ -856,10 +856,9 @@ run_dada_taxonomy <- function(seqtab = NULL,
 {
   
   ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2); require(DECIPHER)
+  require(tidyverse); require(dada2)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
-  cat(paste0('\n##',"You are using DECIPHER version ", packageVersion('DECIPHER'),'\n\n'))
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
