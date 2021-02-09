@@ -75,13 +75,11 @@ run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = "/Users/fconstan/Documen
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
-run_dada_DECIPHER_taxonomy(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+run_dada_taxonomy(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
                                         taxa_dir = "04_dada2_taxonomy",
-                                        method = "dada", # "DECIPHER" or "dada" 
                                         threshold = 60,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
                                         tryRC = FALSE,
                                         collapseNoMis = TRUE,
-                                        output = "dada2",
                                         db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
                                         db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz" # only for dada2 method
                                         )

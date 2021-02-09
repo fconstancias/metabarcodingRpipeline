@@ -589,9 +589,10 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
                                                    seed_value = 123,
                                                    return = TRUE){
   ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2)
+  require(tidyverse); require(dada2); require(phyloseq)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
+  cat(paste0('\n##',"You are using phyloseq version ", packageVersion('phyloseq'),'\n\n'))
   
   cat('################################\n\n')
   
@@ -743,9 +744,11 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
 
   ## ------------------------------------------------------------------------
   if(collapseNoMis==TRUE){
-    cat(str_c('\n# Saving uncollapsed .rds and fasta files as well as summary .tsv \n'))
     
     if (export == TRUE){
+      cat(str_c('\n# Saving uncollapsed .rds and fasta files as well as summary .tsv \n'))
+      
+      
       saveRDS(seqtab, str_c(merged_run_dir,"/uncollapsed_no-chim-seqtab.rds"))
       
       uniquesToFasta(seqtab,
@@ -762,8 +765,13 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     
     cat(str_c('\n# Saving collapsed .rds and fasta files as well as summary .tsv  \n'))
     
+    physeq <- merge_phyloseq(otu_table(t(collapsed_100), taxa_are_rows=TRUE))
+    
+    
     if (export == TRUE){
       saveRDS(collapsed_100, str_c(merged_run_dir,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.rds"))
+      
+      saveRDS(physeq, str_c(merged_run_dir,"/physeq.rds"))
       
       uniquesToFasta(collapsed_100,
                      str_c(merged_run_dir,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.fasta"),
@@ -787,6 +795,9 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   ## ------------------------------------------------------------------------
   if(collapseNoMis==FALSE){
     
+    physeq <- merge_phyloseq(otu_table(t(seqtab), taxa_are_rows=TRUE))
+    
+    
     if (export == TRUE){
       cat(str_c('\n# Saving .rds and fasta files as well as summary .tsv \n'))
       
@@ -797,6 +808,8 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
                      ids= str_c("asv",c(1:ncol(seqtab)), ";size=", colSums(seqtab)))
       
       write_tsv(track, str_c(merged_run_dir,"/track_analysis.tsv"))
+      
+      saveRDS(physeq, str_c(merged_run_dir,"/physeq.rds"))
       
       cat(str_c('# Your final ASV table can be found in "', paste0(merged_run_dir,"/seqtab.rds"),'"\n'))
       cat(str_c('# A FASTA file with your final ASVs was written in "',paste0(merged_run_dir,"/seqtab.fasta"), '"\n'))
@@ -810,15 +823,19 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   
   if (return == TRUE){
     if(collapseNoMis==TRUE){
+
       return(list("seqtab" = collapsed_100,
                   "track" = track,
-                  "plot" = plot))
+                  "plot" = plot,
+                  "physeq" = physeq))
     }else{
       return(list("seqtab" = seqtab,
                   "track" = track,
-                  "plot" = plot))
+                  "plot" = plot,
+                  "physeq" = physeq))
     }
   }
+  
 
 }
 

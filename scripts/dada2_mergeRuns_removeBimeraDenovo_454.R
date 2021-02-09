@@ -197,10 +197,14 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
                                         minOverlap = minOverlap,
                                         identicalOnly = FALSE)
     
+    physeq <- merge_phyloseq(otu_table(t(collapsed_100), taxa_are_rows=TRUE))
+    
     cat(str_c('\n# Saving collapsed .rds and fasta files as well as summary .tsv  \n'))
     
     if (export == TRUE){
       saveRDS(collapsed_100, str_c(merged_run_dir,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.rds"))
+      
+      saveRDS(physeq, str_c(merged_run_dir,"/physeq.rds"))
       
       uniquesToFasta(collapsed_100,
                      str_c(merged_run_dir,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.fasta"),
@@ -224,10 +228,15 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   ## ------------------------------------------------------------------------
   if(collapseNoMis==FALSE){
     
+    physeq <- merge_phyloseq(otu_table(t(seqtab), taxa_are_rows=TRUE))
+    
+    
     if (export == TRUE){
       cat(str_c('\n# Saving .rds and fasta files as well as summary .tsv \n'))
       
       saveRDS(seqtab, str_c(merged_run_dir,"/no-chim-seqtab.rds"))
+      
+      saveRDS(physeq, str_c(merged_run_dir,"/physeq.rds"))
       
       uniquesToFasta(seqtab,
                      str_c(merged_run_dir,"/no-chim-seqtab.fasta"),
