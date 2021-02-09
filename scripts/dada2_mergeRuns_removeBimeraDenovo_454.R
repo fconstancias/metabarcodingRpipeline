@@ -56,11 +56,8 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     summary <- map(track, 
                    read_tsv) %>% bind_rows()
     
-    ## ------------------------------------------------------------------------
-    
     cat(str_c('\n# removeBimeraDenovo running on ', seqtables, ' file '))
     
-    ## ------------------------------------------------------------------------
     # https://github.com/benjjneb/dada2/issues/345
     
     
@@ -79,6 +76,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
       
     }
   }
+  ## ------------------------------------------------------------------------
   
   if(!is.null(seqtab) == TRUE & !is.null(track) == TRUE){
     
