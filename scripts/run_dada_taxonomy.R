@@ -66,11 +66,8 @@ opt = parse_args(opt_parser)
 #   stop("You must provide path to atropos program (-a)")
 # }
 
-unlist(lapply(strsplit(opt$trunclen, ","), as.numeric)) -> opt$trunclen
-unlist(lapply(strsplit(opt$trim_length, ","), as.numeric)) -> opt$trim_length
-unlist(lapply(strsplit(opt$maxee, ","), as.numeric)) -> opt$maxee
-unlist(lapply(strsplit(opt$cut_pattern, ","), as.character)) -> opt$cut_file_pattern
-unlist(lapply(strsplit(opt$raw_file_pattern, ","), as.character)) -> opt$raw_file_pattern
+# unlist(lapply(strsplit(opt$trunclen, ","), as.numeric)) -> opt$trunclen
+
 
 
 source(opt$fun_dir)
