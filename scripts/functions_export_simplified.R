@@ -565,7 +565,7 @@ run_dada2_filter_denoise_merge_reads <- function(trunclen,
 #' @author Florentin Constancias
 #' @note .
 #' @note .
-#' @note .
+#' @note TODO: directly export phyloseq object at this point...
 #' @return .
 #' @export
 #' @examples
@@ -884,7 +884,7 @@ run_dada_taxonomy <- function(seqtab = NULL,
     }
     if(collapseNoMis==FALSE){
       list.files(merged_run_path,
-                 pattern = glob2rx("*collapse_no_mismatch_no-chim-seqtab.rds"),
+                 pattern = glob2rx("*no-chim-seqtab.rds"),
                  full.names = TRUE,
                  recursive = TRUE) -> seqtab.nochim
       
