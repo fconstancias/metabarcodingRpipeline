@@ -28,9 +28,10 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
                                                    seed_value = 123,
                                                    return = TRUE){
   ## ------------------------------------------------------------------------
-  require(tidyverse); require(dada2)
+  require(tidyverse); require(dada2); require(phyloseq)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
+  cat(paste0('\n##',"You are using phyloseq version ", packageVersion('phyloseq'),'\n\n'))
   
   cat('################################\n\n')
   
