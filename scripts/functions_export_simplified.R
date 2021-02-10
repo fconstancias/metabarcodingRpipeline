@@ -711,21 +711,21 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   }
   ## ------------------------------------------------------------------------
   
-
+  
   # Trim the unespecific amplifications from our dataset
   seqtab <- seqtab.raw[,nchar(colnames(seqtab.raw)) %in% seq(trim_length[1],
                                                              trim_length[2])]
   
-
+  
   cat(paste0('\n# Reads shorter than ',trim_length[1],'bp and longer than ',trim_length[2], 'bp were removed.\n'))
   cat("\n# The variants (ASVs) after length filtering have the following length distribution:\n")
   table(nchar(getSequences(seqtab)))
   
-
+  
   cat(paste0("\n# A total of ", round((sum(colSums(seqtab)) * 100) / sum(colSums(seqtab.raw)), digits = 2), "% reads were kept after length filtering.\n\n"))
   cat(paste0("\n# A total of ", round((dim(seqtab)[2] * 100) / dim(seqtab.raw)[2], digits = 2), "% ASVs were kept after length filtering.\n\n"))
   
-
+  
   ## ------------------------------------------------------------------------
   full_join(summary, 
             data.frame(sample = rownames(st.all),
@@ -737,11 +737,11 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     mutate(length_filtered_pc = round(length_filtered/chimera_out, 2)) -> track
   
   #write_tsv(data.frame(track),str_c(output,"/",name,"_track_analysis.tsv"))
-
+  
   cat("\n# The distribution of chimera reads kept is the following:\n")
   summary(track$chimera_out_pc)
   
-
+  
   ## ------------------------------------------------------------------------
   if(collapseNoMis==TRUE){
     
@@ -840,7 +840,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   
   if (return == TRUE){
     if(collapseNoMis==TRUE){
-
+      
       return(list("seqtab" = collapsed_100,
                   "track" = track,
                   "plot" = plot,
@@ -853,7 +853,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     }
   }
   
-
+  
 }
 
 
@@ -2066,7 +2066,7 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
 #' @param .
 #' @param ..
 #' @author Florentin Constancias
-#' @note .
+#' @note Generetate MIMOSA2 compatible file- <https://borenstein-lab.github.io/MIMOSA2shiny/results.html#>
 #' @note .
 #' @note .
 #' @return .
@@ -2178,282 +2178,401 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
   # picrust2_pipeline.py -s study_seqs.fna -i seqabun.biom -o picrust2_out --processes 10 --stratified --per_sequence_contrib 
   
   ## ------------------------------------------------------------------------
+  # add descriptions <https://github.com/picrust/picrust2/wiki/Add-descriptions>
   
-  ## run picrust2_pipeline.py
-  system2(picrust2, 
-          args = c("-s ", fasta_path, 
-                   "-i ", count_table_path,
-                   "-o ", output_dir,
-                   "--processes ", nthreads,
-                   "--stratified --per_sequence_contrib --verbose ",
-                   "--in_traits ", in_traits,
-                   "--min_reads", min_reads, "--min_samples", min_samples,
-                   ifelse(pathway_map != FALSE, print("--pathway_map " , pathway_map), ""),
-                   ifelse(ref_dir != FALSE, print("--ref_dir ", ref_dir), ""),
-                   ifelse(regroup_map != FALSE, print("--regroup_map ", regroup_map), ""),
-                   "--hsp_method ", m, ifelse(no_gap_fill == TRUE, print("--no_gap_fill"), ""),
-                   ifelse(int_rm == TRUE, print("--remove_intermediate"), ""))
-  )
-  
-}
-
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-
-phloseq_export_otu_tax <- function(physeq = NULL){
-  
-  require(phyloseq); require(tidyverse)
-  
-  as(tax_table(physeq), "matrix") %>% 
-    as.data.frame() %>%
-    rownames_to_column('ASV') -> tax_table
-  
-  as(otu_table(physeq), "matrix") %>% 
-    as.data.frame() %>%
-    rownames_to_column('ASV') -> otu_table
-  
-  # colnames(otu_table) <- c('ASV', sample_names(physeq))
-  
-  dss2df <- function(dss) data.frame(width=BiocGenerics:width(dss), seq=as.character(dss), names=names(dss))
-  
-  dss2df(physeq@refseq) %>%
-    rownames_to_column('ASV') %>%
-    dplyr::select(-names) %>%
-    dplyr::rename(ASV_length = width,
-                  ASV_sequence = seq)-> refseq_df
-  
-  otu_table %>%
-    left_join(refseq_df, by = 'ASV') %>%
-    left_join(tax_table, by = c("ASV" = "ASV")) %>%
-    dplyr::select(ASV, everything()) -> merged_table
-  
-  return(merged_table)
-}
-
-
-#' @title ...
-#' @param .
-#' @param ..
-#' @author Florentin Constancias
-#' @note .
-#' @note .
-#' @note .
-#' @return .
-#' @export
-#' @examples
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-
-run_dada2_pipe <- function(raw_files_path,
-                           raw_file_pattern = c("*_R1_*.gz","*_R2_*.gz"),
-                           atropos_bin = "atropos",
-                           cut_dir = "dada2/00_atropos_primer_removed",
-                           cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
-                           filt_dir = "dada2/02_dada2_filtered_denoised_merged",
-                           merged_run_dir = "dada2/03_dada2_merged_runs_chimera_removed",
-                           taxa_dir = "dada2/04_dada2_taxonomy",
-                           sep = "[^_]+",
-                           V = "V4",
-                           PRIMER_F,
-                           PRIMER_R,
-                           tax_threshold = 60,
-                           nbases = 20000000,
-                           pool = "pseudo",
-                           trim_length = c(240,400),
-                           trunclen = c(260,250),
-                           maxee = c(3,4),
-                           minLen = 100,
-                           minover = 15,
-                           chimera_method = "consensus",
-                           collapseNoMis = FALSE,
-                           tryRC = TRUE,
-                           metadata = "none",
-                           db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
-                           db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
-                           merge_phyloseq_export = "dada2/phyloseq.RDS",
-                           run_phylo = FALSE,
-                           output_phyloseq_phylo = "dada2/phyloseq_phylo.RDS",
-                           save_out = "dada2/dada2_pipe_out.RDS",
-                           export = FALSE,
-                           remove_input_fastq = TRUE,
-                           SLOTS = 6,
-                           seed_value = 123,
-                           return = FALSE){
-  if(V == "V4") {
+  if (add_description == TRUE){
     
-    PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
-    PRIMER_R = "GGACTACHVGGGTWTCTAAT"
-    trim_length = c(220,280)
-    trunclen =  c(170,160)
-    maxee = c(3,4)
-    minLen = 120
-    minover = 40
-  } 
-  if(V == "V3V4"){
+    unlist(lapply(strsplit(in_traits, ","), as.character)) -> in_traits
     
-    PRIMER_F = "CCTAYGGGRBGCASCAG"
-    PRIMER_R = "GGACTACNNGGGTATCTAAT"
-    trim_length = c(240,600)
-    trunclen =  c(260,250)
-    maxee = c(4,5)
-    minLen = 160
-    minover = 10
+    system2("add_descriptions.py", 
+            args = c("-i ", paste0(output_dir, "/", "pathways_out", "/", "path_abun_unstrat.tsv.gz"), 
+                     "-m ", "METACYC",
+                     "-o ", paste0(output_dir, "/", "pathways_out", "/", "path_abun_unstrat_descrip.tsv.gz")))
     
-  }
-  if(V == "V3V4_2x250"){
-    
-    PRIMER_F = "CCTAYGGGRBGCASCAG"
-    PRIMER_R = "GGACTACNNGGGTATCTAAT"
-    trunclen  = c(230,227)
-    trim_length =  c(220,480)
-    maxee = c(3,4)
-    minLen = 160
-    minover = 10
-    
-  }
-  if(V == "ITS2"){
-    
-    PRIMER_F = "GTGAATCATCGAATCTTTGAA"
-    PRIMER_R = "TCCTCCGCTTATTGATATGC"
-    trim_length = c(200,500)
-    trunclen =  c(230,220)
-    maxee = c(4,5)
-    minLen = 120
-    minover = 20
-    
+    if (c("EC") %in% in_traits){
+      
+      system2("add_descriptions.py", 
+              args = c("-i ", paste0(output_dir, "/", "EC_metagenome_out", "/", "pred_metagenome_unstrat.tsv.gz"), 
+                       "-m ", "EC",
+                       "-o ", paste0(output_dir, "/", "EC_metagenome_out", "/", "pred_metagenome_unstrat_descrip.tsv.gz")))
+    }
+    if (c("KO") %in% in_traits){
+      
+      system2("add_descriptions.py", 
+              args = c("-i ", paste0(output_dir, "/", "KO_metagenome_out", "/", "pred_metagenome_unstrat.tsv.gz"), 
+                       "-m ", "KO",
+                       "-o ", paste0(output_dir, "/", "KO_metagenome_out", "/", "pred_metagenome_unstrat_descrip.tsv.gz")))
+    }
   }
   
-  if(V == "V3"){
+  # for (trait in in_traits){
+  #   system2("add_descriptions.py", 
+  #           args = c("-i ", paste0(output_dir,
+  #                                  "/", 
+  #                                  trait,
+  #                                  "_metagenome_out",
+  #                                  "/",
+  #                                  "pred_metagenome_unstrat.tsv.gz"), 
+  #                    "-m ", trait,
+  #                    "-o ", paste0(output_dir,
+  #                                  "/",
+  #                                  trait,
+  #                                  "_metagenome_out",
+  #                                  "/",
+  #                                  "pred_metagenome_unstrat_descrip.tsv.gz")))
+  #   
+  # }
+  ## ------------------------------------------------------------------------
+  
+  if (load_picrust2_data == TRUE){
     
-    PRIMER_F = "ACWCCTACGGGWGGCAGCAG" #388F
-    PRIMER_R = "ATTACCGCGGCTGCTGG"#518R
-    trim_length = c(150,250)
-    trunclen =  c(150,140)
-    maxee = c(2,3)
-    minLen = 120
-    minover = 60
     
-  }
-  cat(paste0('\n##',"running run_atropos() '\n\n'"))
-  
-  run_atropos(raw_files_path = raw_files_path,
-              atropos = atropos_bin,
-              PRIMER_F = PRIMER_F,
-              PRIMER_R = PRIMER_R,
-              NSLOTS = SLOTS,
-              cut_dir = cut_dir,
-              raw_file_pattern = raw_file_pattern,
-              MIN_L = 80,
-              sep = sep
-              
-  )
-  
-  cat(paste0('\n##',"running run_dada2_qplot() '\n\n'"))
-  
-  run_dada2_qplot(prop.sample = 20,
-                  aggregate = TRUE,
-                  cut_dir = cut_dir,
-                  cut_file_pattern = cut_file_pattern,
-                  seed_value = seed_value,
-                  sep = sep,
-                  export = export) -> qplot
-  
-  
-  cat(paste0('\n##',"running run_dada2_filter_denoise_merge_reads() '\n\n'"))
-  
-  run_dada2_filter_denoise_merge_reads(cut_dir = cut_dir,
-                                       sep = sep,
-                                       filt_dir = filt_dir,
-                                       trunclen = trunclen,
-                                       minLen = minLen,
-                                       maxee = maxee,
-                                       maxLen = Inf,
-                                       nbases = nbases, 
-                                       minover = minover,
-                                       pool = pool,
-                                       nthreads = ifelse(SLOTS > 6, 6, SLOTS),
-                                       remove_input_fastq = remove_input_fastq,
-                                       export = export,
-                                       seed_value = seed_value) -> filtered
-  
-  
-  cat(paste0('\n##',"running run_dada2_mergeRuns_removeBimeraDenovo() '\n\n'"))
-  
-  run_dada2_mergeRuns_removeBimeraDenovo(trim_length = trim_length,
-                                         seqtab = filtered$seqtab,
-                                         track = filtered$track,
-                                         collapseNoMis = collapseNoMis,
-                                         filt_dir = filt_dir,
-                                         merged_run_dir = merged_run_dir,
-                                         export = export,
-                                         nthreads = SLOTS,
-                                         return = TRUE) -> merge
-  
-  
-  cat(paste0('\n##',"running run_dada_DECIPHER_taxonomy() '\n\n'"))
-  
-  
-  run_dada_taxonomy(seqtab = merge$seqtab,
-                    threshold = tax_threshold,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
-                    tryRC = tryRC,
-                    merged_run_dir = merged_run_dir,
-                    db = db, #"~/db/DADA2/silva_nr_v138_train_set.fa.gz", # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
-                    db_species = db_species, #"~/db/DADA2/silva_species_assignment_v138.fa.gz", # only for dada2 method #~/db/DADA2/silva_species_assignment_v138.fa.gz
-                    export = export,
-                    nthreads = SLOTS
-  ) -> tax
-  
-  if(!file.exists(db_species)){
-    tax$Species <- "unknown"
-  }
-  run_merge_phyloseq(merged_table = tax,
-                     metadata = metadata, #"none",
-                     track = merge$track,
-                     export = merge_phyloseq_export,
-                     sample_id = "sample_name",
-                     taxa_dir = taxa_dir,
-                     merged_run_dir = merged_run_dir) -> ps
-  
-  
-  if(run_phylo == TRUE) {
-    cat(paste0('\n##',"running run_DECIPHER_phangorn_phylogeny() '\n\n'"))
+    list.files(file.path(output_dir,
+                         "/",
+                         "pathways_out"), 
+               full.names = FALSE,
+               recursive = FALSE,
+               pattern="*.tsv.gz") -> files_to_read
     
-    ps %>%
-      add_phylogeny_to_phyloseq(nthreads = SLOTS,
-                                export = TRUE,
-                                output_phyloseq = output_phyloseq_phylo) -> ps
+    
+    pathway_files <- lapply(files_to_read,function(x) {
+      readr::read_tsv(file = file.path(output_dir,
+                                       "/",
+                                       "pathways_out", x))
+    })
+    
+    names(pathway_files) <- files_to_read %>% str_remove(".tsv.gz")
+    
+    ## ------------------------------------------------------------------------
+    
+    # unstrat_out <- vector("list", length(in_traits) + 1)
+    # names(unstrat_out) <- c(in_traits, dist_unif)
+    # 
+    # strat_out <- vector("list", length(in_traits) + 1)
+    # names(strat_out) <- c(in_traits, dist_unif)
+    # 
+    
+    
+    
+    for (trait in in_traits){
+      
+      tmp_path <-  paste0("/",
+                          trait,
+                          "_metagenome_out")
+      
+      
+      list.files(file.path(output_dir,tmp_path), 
+                 full.names = FALSE,
+                 recursive = FALSE,
+                 pattern="*.tsv.gz") -> files_to_read
+      
+      
+      file_list <- lapply(files_to_read,function(x) {
+        readr::read_tsv(file = file.path(output_dir,tmp_path, x))
+      })
+      
+      names(file_list) <- files_to_read %>% 
+        str_remove(".tsv.gz")
+      # 
+      # paste0(output_dir,
+      #        "/",
+      #        trait,
+      #        "_metagenome_out",
+      #        "/",
+      #        "pred_metagenome_unstrat_descrip.tsv.gz")
+      # readr::read_csv() -> unstrat_out[[trait]]
+      # 
+      # paste0(output_dir,
+      #        "/",
+      #        trait,
+      #        "_metagenome_out",
+      #        "/",
+      #        "pred_metagenome_contrib.tsv.gz")
+      # readr::read_csv() -> strat_out[[trait]]
+      
+      assign(paste0(trait,"list"),
+             file_list)
+    }
   }
-  out <- list("qplot" = qplot,
-              "filtering_denoising" = filtered,
-              "merging" = merge,
-              "taxo" = tax,
-              "physeq" = ps)
   
-  if(save_out != FALSE) {
+  # then crate as many list as in_traits + 1 for pathways and save this
+  out <- list("unstrat_out" = unstrat_out,
+              "strat_out" = strat_out)
+  
+  if (return == TRUE){
+    return(out)
+  }if (is.charater(return)){
     out %>%
-      saveRDS(save_out)
+      saveRDS(paste0(return,"/", "picrust2_R.rds"))
   }
   
-  if(return != FALSE) {
+  
+  
+  
+  dist_methods <- c("bray","bjaccard", "wjaccard", "uunifrac", "wunifrac"); dist_unif <- c("d_0", "d_0.5")
+  
+  dlist <- vector("list", length(dist_methods) + length(dist_unif))
+  names(dlist) = c(dist_methods, dist_unif)
+  
+  
+  
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note .
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  #'
+  
+  phloseq_export_otu_tax <- function(physeq = NULL){
     
-  return(out)
+    require(phyloseq); require(tidyverse)
+    
+    as(tax_table(physeq), "matrix") %>% 
+      as.data.frame() %>%
+      rownames_to_column('ASV') -> tax_table
+    
+    as(otu_table(physeq), "matrix") %>% 
+      as.data.frame() %>%
+      rownames_to_column('ASV') -> otu_table
+    
+    # colnames(otu_table) <- c('ASV', sample_names(physeq))
+    
+    dss2df <- function(dss) data.frame(width=BiocGenerics:width(dss), seq=as.character(dss), names=names(dss))
+    
+    dss2df(physeq@refseq) %>%
+      rownames_to_column('ASV') %>%
+      dplyr::select(-names) %>%
+      dplyr::rename(ASV_length = width,
+                    ASV_sequence = seq)-> refseq_df
+    
+    otu_table %>%
+      left_join(refseq_df, by = 'ASV') %>%
+      left_join(tax_table, by = c("ASV" = "ASV")) %>%
+      dplyr::select(ASV, everything()) -> merged_table
+    
+    return(merged_table)
   }
-}
-
+  
+  
+  #' @title ...
+  #' @param .
+  #' @param ..
+  #' @author Florentin Constancias
+  #' @note .
+  #' @note .
+  #' @note .
+  #' @return .
+  #' @export
+  #' @examples
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'
+  #'
+  
+  run_dada2_pipe <- function(raw_files_path,
+                             raw_file_pattern = c("*_R1_*.gz","*_R2_*.gz"),
+                             atropos_bin = "atropos",
+                             cut_dir = "dada2/00_atropos_primer_removed",
+                             cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
+                             filt_dir = "dada2/02_dada2_filtered_denoised_merged",
+                             merged_run_dir = "dada2/03_dada2_merged_runs_chimera_removed",
+                             taxa_dir = "dada2/04_dada2_taxonomy",
+                             sep = "[^_]+",
+                             V = "V4",
+                             PRIMER_F,
+                             PRIMER_R,
+                             tax_threshold = 60,
+                             nbases = 20000000,
+                             pool = "pseudo",
+                             trim_length = c(240,400),
+                             trunclen = c(260,250),
+                             maxee = c(3,4),
+                             minLen = 100,
+                             minover = 15,
+                             chimera_method = "consensus",
+                             collapseNoMis = FALSE,
+                             tryRC = TRUE,
+                             metadata = "none",
+                             db = "~/db/DADA2/silva_nr_v138_train_set.fa.gz",
+                             db_species = "~/db/DADA2/silva_species_assignment_v138.fa.gz",
+                             merge_phyloseq_export = "dada2/phyloseq.RDS",
+                             run_phylo = FALSE,
+                             output_phyloseq_phylo = "dada2/phyloseq_phylo.RDS",
+                             save_out = "dada2/dada2_pipe_out.RDS",
+                             export = FALSE,
+                             remove_input_fastq = TRUE,
+                             SLOTS = 6,
+                             seed_value = 123,
+                             return = FALSE){
+    if(V == "V4") {
+      
+      PRIMER_F = "GTGCCAGCMGCCGCGGTAA"
+      PRIMER_R = "GGACTACHVGGGTWTCTAAT"
+      trim_length = c(220,280)
+      trunclen =  c(170,160)
+      maxee = c(3,4)
+      minLen = 120
+      minover = 40
+    } 
+    if(V == "V3V4"){
+      
+      PRIMER_F = "CCTAYGGGRBGCASCAG"
+      PRIMER_R = "GGACTACNNGGGTATCTAAT"
+      trim_length = c(240,600)
+      trunclen =  c(260,250)
+      maxee = c(4,5)
+      minLen = 160
+      minover = 10
+      
+    }
+    if(V == "V3V4_2x250"){
+      
+      PRIMER_F = "CCTAYGGGRBGCASCAG"
+      PRIMER_R = "GGACTACNNGGGTATCTAAT"
+      trunclen  = c(230,227)
+      trim_length =  c(220,480)
+      maxee = c(3,4)
+      minLen = 160
+      minover = 10
+      
+    }
+    if(V == "ITS2"){
+      
+      PRIMER_F = "GTGAATCATCGAATCTTTGAA"
+      PRIMER_R = "TCCTCCGCTTATTGATATGC"
+      trim_length = c(200,500)
+      trunclen =  c(230,220)
+      maxee = c(4,5)
+      minLen = 120
+      minover = 20
+      
+    }
+    
+    if(V == "V3"){
+      
+      PRIMER_F = "ACWCCTACGGGWGGCAGCAG" #388F
+      PRIMER_R = "ATTACCGCGGCTGCTGG"#518R
+      trim_length = c(150,250)
+      trunclen =  c(150,140)
+      maxee = c(2,3)
+      minLen = 120
+      minover = 60
+      
+    }
+    cat(paste0('\n##',"running run_atropos() '\n\n'"))
+    
+    run_atropos(raw_files_path = raw_files_path,
+                atropos = atropos_bin,
+                PRIMER_F = PRIMER_F,
+                PRIMER_R = PRIMER_R,
+                NSLOTS = SLOTS,
+                cut_dir = cut_dir,
+                raw_file_pattern = raw_file_pattern,
+                MIN_L = 80,
+                sep = sep
+                
+    )
+    
+    cat(paste0('\n##',"running run_dada2_qplot() '\n\n'"))
+    
+    run_dada2_qplot(prop.sample = 20,
+                    aggregate = TRUE,
+                    cut_dir = cut_dir,
+                    cut_file_pattern = cut_file_pattern,
+                    seed_value = seed_value,
+                    sep = sep,
+                    export = export) -> qplot
+    
+    
+    cat(paste0('\n##',"running run_dada2_filter_denoise_merge_reads() '\n\n'"))
+    
+    run_dada2_filter_denoise_merge_reads(cut_dir = cut_dir,
+                                         sep = sep,
+                                         filt_dir = filt_dir,
+                                         trunclen = trunclen,
+                                         minLen = minLen,
+                                         maxee = maxee,
+                                         maxLen = Inf,
+                                         nbases = nbases, 
+                                         minover = minover,
+                                         pool = pool,
+                                         nthreads = ifelse(SLOTS > 6, 6, SLOTS),
+                                         remove_input_fastq = remove_input_fastq,
+                                         export = export,
+                                         seed_value = seed_value) -> filtered
+    
+    
+    cat(paste0('\n##',"running run_dada2_mergeRuns_removeBimeraDenovo() '\n\n'"))
+    
+    run_dada2_mergeRuns_removeBimeraDenovo(trim_length = trim_length,
+                                           seqtab = filtered$seqtab,
+                                           track = filtered$track,
+                                           collapseNoMis = collapseNoMis,
+                                           filt_dir = filt_dir,
+                                           merged_run_dir = merged_run_dir,
+                                           export = export,
+                                           nthreads = SLOTS,
+                                           return = TRUE) -> merge
+    
+    
+    cat(paste0('\n##',"running run_dada_DECIPHER_taxonomy() '\n\n'"))
+    
+    
+    run_dada_taxonomy(seqtab = merge$seqtab,
+                      threshold = tax_threshold,  # used for DECIPHER and dada2 if outputBootstraps = FALSE
+                      tryRC = tryRC,
+                      merged_run_dir = merged_run_dir,
+                      db = db, #"~/db/DADA2/silva_nr_v138_train_set.fa.gz", # db = "~/db/DADA2/GTDB_r89-mod_June2019.RData"
+                      db_species = db_species, #"~/db/DADA2/silva_species_assignment_v138.fa.gz", # only for dada2 method #~/db/DADA2/silva_species_assignment_v138.fa.gz
+                      export = export,
+                      nthreads = SLOTS
+    ) -> tax
+    
+    if(!file.exists(db_species)){
+      tax$Species <- "unknown"
+    }
+    run_merge_phyloseq(merged_table = tax,
+                       metadata = metadata, #"none",
+                       track = merge$track,
+                       export = merge_phyloseq_export,
+                       sample_id = "sample_name",
+                       taxa_dir = taxa_dir,
+                       merged_run_dir = merged_run_dir) -> ps
+    
+    
+    if(run_phylo == TRUE) {
+      cat(paste0('\n##',"running run_DECIPHER_phangorn_phylogeny() '\n\n'"))
+      
+      ps %>%
+        add_phylogeny_to_phyloseq(nthreads = SLOTS,
+                                  export = TRUE,
+                                  output_phyloseq = output_phyloseq_phylo) -> ps
+    }
+    out <- list("qplot" = qplot,
+                "filtering_denoising" = filtered,
+                "merging" = merge,
+                "taxo" = tax,
+                "physeq" = ps)
+    
+    if(save_out != FALSE) {
+      out %>%
+        saveRDS(save_out)
+    }
+    
+    if(return != FALSE) {
+      
+      return(out)
+    }
+  }
+  
+  
