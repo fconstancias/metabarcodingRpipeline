@@ -1787,6 +1787,10 @@ phyloseq_DECIPHER_cluster_ASV <- function(physeq, # readRDS("data/processed/phys
   require(tidyverse); require(speedyseq); require(DECIPHER)
   
   ## ------------------------------------------------------------------------
+  if (class(physeq) != "phyloseq"){
+    physeq %>% readRDS() -> physeq
+  }
+  ## ------------------------------------------------------------------------
   
   # Create a merged table with counts taxa and sequences
   as(tax_table(physeq), "matrix") %>% 
@@ -1912,9 +1916,17 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
   ## ------------------------------------------------------------------------
   require(tidyverse); require(phloseq); require(lulu)
   
+  
   dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
   
   ## ------------------------------------------------------------------------
+  if (class(physeq) != "phyloseq"){
+    physeq %>% readRDS() -> physeq
+  }
+  
+  ## ------------------------------------------------------------------------
+  
+  
   paste0(dir, "/", fasta_file) -> fasta_path
   paste0(dir, "/", match_list_file) -> match_list_file_path
   
@@ -2080,7 +2092,11 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
 #'                  in_traits = c("COG,EC,KO,PFAM,TIGRFAM"),
 #'                  min_reads = 2,
 #'                  min_samples = 3)
-#'
+#' cd /Users/fconstan/Desktop/picrust_test/chemerin_16S/picrust2_out_pipeline/EC_metagenome_out 
+#' 
+#' zless -S EC_metagenome_out/pred_metagenome_unstrat.tsv.gz
+#' zless -S EC_metagenome_out/pred_metagenome_contrib.tsv.gz 
+
 phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_update_11_1_21.RDS") -> physeq
                               picrust2 = "picrust2_pipeline.py",
                               conda_env = "picrust2",
@@ -2104,6 +2120,12 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
   
   
   dss2df <- function(dss) data.frame(width = BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
+  
+  ## ------------------------------------------------------------------------
+  if (class(physeq) != "phyloseq"){
+    physeq %>% readRDS() -> physeq
+  }
+  
   ## ------------------------------------------------------------------------
   
   # reticulate::use_condaenv(condaenv = conda_env,
@@ -2156,6 +2178,22 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
   # picrust2_pipeline.py -s study_seqs.fna -i seqabun.biom -o picrust2_out --processes 10 --stratified --per_sequence_contrib 
   
   ## ------------------------------------------------------------------------
+  
+  ## run picrust2_pipeline.py
+  system2(picrust2, 
+          args = c("-s ", fasta_path, 
+                   "-i ", count_table_path,
+                   "-o ", output_dir,
+                   "--processes ", nthreads,
+                   "--stratified --per_sequence_contrib --verbose ",
+                   "--in_traits ", in_traits,
+                   "--min_reads", min_reads, "--min_samples", min_samples,
+                   ifelse(pathway_map != FALSE, print("--pathway_map " , pathway_map), ""),
+                   ifelse(ref_dir != FALSE, print("--ref_dir ", ref_dir), ""),
+                   ifelse(regroup_map != FALSE, print("--regroup_map ", regroup_map), ""),
+                   "--hsp_method ", m, ifelse(no_gap_fill == TRUE, print("--no_gap_fill"), ""),
+                   ifelse(int_rm == TRUE, print("--remove_intermediate"), ""))
+  )
   
 }
 
