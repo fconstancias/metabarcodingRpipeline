@@ -767,6 +767,15 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     
     physeq <- merge_phyloseq(otu_table(t(collapsed_100), taxa_are_rows=TRUE))
     
+    ASV_seq <- Biostrings::DNAStringSet(taxa_names(physeq))
+    names(ASV_seq) <- taxa_names(physeq)
+    
+    physeq <- merge_phyloseq(physeq, 
+                             ASV_seq)
+    
+    taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
+                                                nchar(ntaxa(physeq)),
+                                                pad = "0"))
     
     if (export == TRUE){
       saveRDS(collapsed_100, str_c(merged_run_dir,"/minOverlap_",minOverlap,"_collapse_no_mismatch_no-chim-seqtab.rds"))
@@ -796,7 +805,15 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   if(collapseNoMis==FALSE){
     
     physeq <- merge_phyloseq(otu_table(t(seqtab), taxa_are_rows=TRUE))
+    ASV_seq <- Biostrings::DNAStringSet(taxa_names(physeq))
+    names(ASV_seq) <- taxa_names(physeq)
     
+    physeq <- merge_phyloseq(physeq, 
+                             ASV_seq)
+    
+    taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
+                                                nchar(ntaxa(physeq)),
+                                                pad = "0"))
     
     if (export == TRUE){
       cat(str_c('\n# Saving .rds and fasta files as well as summary .tsv \n'))
@@ -2322,7 +2339,7 @@ run_dada2_pipe <- function(raw_files_path,
                                        minLen = minLen,
                                        maxee = maxee,
                                        maxLen = Inf,
-                                       nbases = nbases, # testing purpose only!!
+                                       nbases = nbases, 
                                        minover = minover,
                                        pool = pool,
                                        nthreads = ifelse(SLOTS > 6, 6, SLOTS),

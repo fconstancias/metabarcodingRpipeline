@@ -47,6 +47,8 @@ require(DECIPHER); packageVersion("DECIPHER")
 require(phangorn); packageVersion("phangorn")
 
 source("scripts/functions.R")
+# source("scripts/functions_export_simplified.R")
+
 ```
 
 ```{r, message = FALSE, warning = FALSE, results = FALSE, results='hide'}
@@ -70,8 +72,36 @@ run_dada2_filter_denoise_merge_reads(raw_files_path = "/Users/fconstan/Documents
 ```
 
 ```{r, message = FALSE, warning = FALSE, results = FALSE}
-run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
+run_dada2_mergeRuns_removeBimeraDenovo(filt_dir =  "dada2/02_dada2_filtered_denoised_merged/",
                                        trim_length = c(100,600)) -> test
+
+test$physeq
+
+taxa_names(test$physeq)
+
+  # physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq))# https://github.com/benjjneb/dada2/issues/613
+
+Biostrings::DNAStringSet(taxa_names(test$physeq)) -> asv_seq
+
+ physeq@refseq = Biostrings::DNAStringSet(taxa_names(physeq)) # https://github.com/benjjneb/dada2/issues/613
+  
+  ## ------------------------------------------------------------------------
+  
+  taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
+                                              nchar(ntaxa(physeq)),
+                                              pad = "0"))
+
+phyloseq(test$physeq) -> tmp
+
+merge_phyloseq(tmp,
+               asv_seq)
+
+Biostrings::DNAStringSet(taxa_names(test$physeq))
+
+Biostrings::DNAStringSet(taxa_names(test$physeq))
+
+
+test$physeq@refseq <- taxa_names(test$physeq)
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}

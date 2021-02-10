@@ -198,6 +198,15 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
                                         identicalOnly = FALSE)
     
     physeq <- merge_phyloseq(otu_table(t(collapsed_100), taxa_are_rows=TRUE))
+    ASV_seq <- Biostrings::DNAStringSet(taxa_names(physeq))
+    names(ASV_seq) <- taxa_names(physeq)
+    
+    physeq <- merge_phyloseq(physeq, 
+                             ASV_seq)
+    
+    taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
+                                                nchar(ntaxa(physeq)),
+                                                pad = "0"))
     
     cat(str_c('\n# Saving collapsed .rds and fasta files as well as summary .tsv  \n'))
     
@@ -229,7 +238,15 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   if(collapseNoMis==FALSE){
     
     physeq <- merge_phyloseq(otu_table(t(seqtab), taxa_are_rows=TRUE))
+    ASV_seq <- Biostrings::DNAStringSet(taxa_names(physeq))
+    names(ASV_seq) <- taxa_names(physeq)
     
+    physeq <- merge_phyloseq(physeq, 
+                             ASV_seq)
+    
+    taxa_names(physeq) <- paste0("ASV", str_pad(seq(ntaxa(physeq)),
+                                                nchar(ntaxa(physeq)),
+                                                pad = "0"))    
     
     if (export == TRUE){
       cat(str_c('\n# Saving .rds and fasta files as well as summary .tsv \n'))
@@ -258,11 +275,13 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
     if(collapseNoMis==TRUE){
       return(list("seqtab" = collapsed_100,
                   "track" = track,
-                  "plot" = plot))
+                  "plot" = plot,
+                  "physeq" = physeq))
     }else{
       return(list("seqtab" = seqtab,
                   "track" = track,
-                  "plot" = plot))
+                  "plot" = plot,
+                  "physeq" = physeq))
     }
   }
   
