@@ -1386,6 +1386,10 @@ phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_updat
   cat(paste0('\n# Running DECIPHER method against : ', dbname), ' database with threshold value = ', threshold,' \n')
   
   ## ------------------------------------------------------------------------
+  if (class(physeq) != "phyloseq"){
+    physeq %>% readRDS() -> physeq
+  }
+  ## ------------------------------------------------------------------------
   sequences <- DNAStringSet(physeq@refseq)
   
   names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
@@ -1579,7 +1583,11 @@ phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_1
   
   # seqtab.nochim <- seqtab.nochim[,1:10] # for testing purpose only
   ## ------------------------------------------------------------------------
-  
+  ## ------------------------------------------------------------------------
+  if (class(physeq) != "phyloseq"){
+    physeq %>% readRDS() -> physeq
+  }
+  ## ------------------------------------------------------------------------
   # Create a merged table with counts taxa and sequences
   
   # as(otu_table(physeq), "matrix") %>% 

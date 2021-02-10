@@ -47,3 +47,7 @@ fasta
 *.knit.md
 *.gz
 *.fasta
+dada2/03_dada2_mergerun_collapsenomismatch_NO/no-chim-seqtab.rds
+dada2/03_dada2_mergerun_collapsenomismatch_NO/physeq.rds
+dada2/03_dada2_mergerun_collapsenomismatch_NO/seqtab_distrib.pdf
+dada2/03_dada2_mergerun_collapsenomismatch_NO/track_analysis.tsv
