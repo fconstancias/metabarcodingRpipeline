@@ -71,7 +71,7 @@ run_dada2_filter_denoise_merge_reads(raw_files_path = "/Users/fconstan/Documents
 
 ```{r, message = FALSE, warning = FALSE, results = FALSE}
 run_dada2_mergeRuns_removeBimeraDenovo(raw_files_path = "/Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/",
-                                       trim_length = c(100,400))
+                                       trim_length = c(100,600)) -> test
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
