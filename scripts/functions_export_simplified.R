@@ -2292,7 +2292,8 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
   
   if (return == TRUE){
     return(files_list)
-  }if (is.charater(return)){
+  }
+  if (is.charater(return)){
     files_list %>%
       saveRDS(paste0(return,"/", "picrust2_R.rds"))
   }
