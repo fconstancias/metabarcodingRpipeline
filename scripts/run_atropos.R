@@ -21,7 +21,7 @@ option_list = list(
               sample names must be unambigious and unique e.g., sample-1 = sample-11, sample-01 != sample-10", metavar="character"),
   make_option(c("--atropos_bin"), type="character", default = "atropos", 
               help="atropos binary", metavar="character"),
-   make_option(c("-r", "--primer_removed_directory"), type="character", default = "00_atropos_primer_removed", 
+  make_option(c("-r", "--primer_removed_directory"), type="character", default = "00_atropos_primer_removed", 
               help="Directory to store primer trimmed/demultiplexed samples", metavar="character"),
   make_option(c("-o", "--output_directory"), type="character", default= "dada2", 
               help="Name of the output directory", metavar="character"),
@@ -104,3 +104,220 @@ cat("############################################################\n\n")
 print(Sys.time())
 
 ## ------------------------------------------------------------------------
+
+
+#!/usr/bin/env Rscript
+
+rm(list = ls())
+
+cat("\n############################################################\n")
+cat("Starting \n")
+cat("############################################################\n\n")
+
+## ------------------------------------------------------------------------
+
+require("optparse")
+
+## ------------------------------------------------------------------------
+suppressPackageStartupMessages(library("optparse"))
+
+option_list = list(
+  make_option(c("-i", "--input_directory"), type="character", default=NULL, 
+              help="Path of the input directory containing raw _R1_ and _R2_ raw reads in their respective run sub-directories \n
+              e.g., -i raw [contains raw/run1 and raw/run2]\n
+              N.B.: sample name is extracted from .fastq.gz samples  before the first '_' e.g., XXX-XX \n
+              sample names must be unambigious and unique e.g., sample-1 = sample-11, sample-01 != sample-10", metavar="character"),
+  
+  make_option(c("--raw_file_pattern"), type="character", default= c("*_R1_*.gz","*_R2_*.gz"), 
+              help="Patterns for R1 and R2 for raw files", metavar="character"),
+  
+  make_option(c("-a", "--atropos_binary"), type="character", default = "atropos", 
+              help="Path of atropos program [used for primer removal]", metavar="character"),
+  
+  make_option(c("--cut_dir"), type="character", default = "dada2/00_atropos_primer_removed", 
+              help="Directory for atropos PCR primer removed reads", metavar="character"),
+  
+  make_option(c("--cut_pattern"), type="character", default = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"), 
+              help="Patterns for R1 and R2 of atropos files", metavar="character"),
+  
+  make_option(c("--filt_dir"), type="character", default = "dada2/02_dada2_filtered_denoised_merged", 
+              help="Directory for filtered reads", metavar="character"),
+  
+  make_option(c("--merged_run_dir"), type="character", default = "dada2/02_dada2_filtered_denoised_merged", 
+              help="Directory for run merging, chimera removal", metavar="character"),
+  
+  make_option(c("--taxa_dir"), type="character", default = "dada2/04_dada2_taxonomy", 
+              help="Directory for taxonomy step", metavar="character"),
+  
+  make_option(c("--sep"), type="character", default = "[^_]+", 
+              help="regex pattern to identify sample names  [default: after first _]", metavar="character"),
+  
+  make_option(c("--preset"), type="character", default = "none", 
+              help="Will use default primers and parameters as defined in the run_dada2_pipeline() [primers, trunc, maxee, overlap, expected length, ...]", metavar="character"),
+  
+  make_option(c("--PRIMER_F"), type="character", default = NULL, 
+              help="Sequence of the gene specific Fwd primer to be removed with atropos [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
+  
+  make_option(c("--PRIMER_R"), type="character", default = NULL, 
+              help="Sequence of the gene specific Rev primer to be removed with atropos [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
+  
+  make_option(c("--tax_threshold"), type="numeric", default= 60, 
+              help="Threshold for taxonomic assignments [the minimum bootstrap confidence for assigning a taxonomic level.", metavar="character"),
+  
+  make_option(c("--nbases"), type="numeric", default = 20000000, 
+              help="Number of bases for error learning step", metavar="character"),
+  
+  make_option(c("--pool"), type="character", default = "pseudo", 
+              help="Pooling strategy", metavar="character"),
+  
+  make_option(c("--minover"), type="numeric", default = 15, 
+              help="Minimum overlap for merginf R1 and R2 reads [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
+  
+  make_option(c("--trunclen"), type="character", default = c(260,250), 
+              help="Nucleotide position to truncate the Fwd and Rev reads at [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
+  
+  make_option(c("--trim_length"), type="character", default = c(240,400), 
+              help="ASV of length outside the range will be discarded [i.e., insilco size exclusion of ASV - if using -V V3 or V3V4, this parameter is already set]", metavar="character"),
+  
+  make_option(c("--maxee"), type="character", default = c(3,4), 
+              help="Maximum expected error for Fwd and Rev reads [if using -V V4 or V3V4, this parameter is already set]", metavar="character"),
+  
+  make_option(c("--minLen"), type="numeric", default = 100, 
+              help="Minimul read length [if using -V V3 or V3V4, this parameter is already set]", metavar="character"),
+  
+  make_option(c("--chimera_method"), type="character", default="consensus", 
+              help=" Chimera removal strategy", metavar="character"),
+  
+  make_option(c("--collapseNoMis"), type="logical", default = FALSE, 
+              help=" Perform 100% similarity ASV clustering?", metavar="character"),
+  
+  make_option(c("--tryRC"), type="logical", default = TRUE, 
+              help="Perform taxonomic assignments also on reversed complemented ASV sequence?", metavar="character"),
+  
+  make_option(c("--metadata"), type="character", default="none", 
+              help="Path to excel document containing metadata [Sample identifier column should be sample_name]", metavar="character"),
+  
+  make_option(c("--database"), type="character", default = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", 
+              help="Path to the taxonomic database", metavar="character"),
+  
+  make_option(c("--database_for_species_assignments"), type="character", default = "~/db/DADA2/silva_species_assignment_v138.fa.gz", 
+              help="Path to the speies-level taxonomic database [only for --tax_metod  dada]", metavar="character"),
+  
+  make_option(c("--run_phylo"), type="logical", default = FALSE, 
+              help="Compute phylogenetic tree from the ASV sequence ?", metavar="character"),
+  
+  make_option(c("--merge_phyloseq_export"), type="character", default = "dada2/phyloseq.RDS", 
+              help= "Path fof the phyloseq object", metavar="character"),
+  
+  make_option(c("--output_phyloseq_phylo"), type="character", default = "dada2/phyloseq_phylo.RDS", 
+              help= "Path fof the phyloseq object", metavar="character"),
+  
+  make_option(c("--save_out"), type="character", default = "dada2/dada2_pipe_out.RDS", 
+              help= "Path fof the R object containing all output from the pipeline", metavar="character"),
+  
+  make_option(c("--export"), type="logical", default = FALSE, 
+              help= "Export pdf, table and intermediate RDS files?", metavar="character"),
+  
+  make_option(c("--remove_input_fastq"), type="logical", default = FALSE, 
+              help= "Remove intermediate fastq.gz files", metavar="character"),
+  
+  make_option(c("-T", "--slots"), type="numeric", default = 6, 
+              help="Number of threads to perform the analyses", metavar="numeric"),
+  
+  make_option(c("--seed_value"), type="numeric", default = 123, 
+              help="Seed value for random number generator", metavar="numeric"),
+  
+  make_option(c("-f", "--fun_dir"), type="character", default= NULL, 
+              help="Directory containing the R functions", metavar="character")
+  
+  
+); 
+opt_parser = OptionParser(option_list = option_list);
+opt = parse_args(opt_parser)
+
+## ------------------------------------------------------------------------
+# parse_args(opt_parser, args = c("--help"))
+# 
+# if(is.null(opt$input_directory)) {
+#   print_help(opt_parser)
+#   stop("You must give an input directory (-i)")
+# }
+# 
+# if(is.null(opt$atropos_binary)) {
+#   print_help(opt_parser)
+#   stop("You must provide path to atropos program (-a)")
+# }
+
+
+unlist(lapply(strsplit(opt$cut_pattern, ","), as.character)) -> opt$cut_file_pattern
+unlist(lapply(strsplit(opt$raw_file_pattern, ","), as.character)) -> opt$raw_file_pattern
+
+
+source(opt$fun_dir)
+## ------------------------------------------------------------------------
+cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
+
+cat(paste0('\n# PRIMER_F: ',opt$PRIMER_F,'.\n'))
+cat(paste0('\n# PRIMER_R: ',opt$PRIMER_R,'.\n'))
+
+cat(paste0('\n# atropos binary : ',opt$atropos_binary,'.\n'))
+cat(paste0('\n# Directory for PCR primer removed fastq files: ',opt$cut_dir,'.\n'))
+cat(paste0('\n# Directory for PCR primer removed fastq files: ',opt$cut_dir,'.\n'))
+
+
+cat(paste0('\n# Number of slots used: ',opt$slots,'.\n'))
+
+cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))
+
+## ------------------------------------------------------------------------
+
+
+run_atropos(raw_files_path  = opt$input_directory,
+            atropos = opt$atropos_binary,
+            cut_dir =  opt$cut_dir,
+            PRIMER_F = opt$PRIMER_F,
+            PRIMER_R = opt$PRIMER_R,
+            NSLOTS = opt$slots,
+            raw_file_pattern = opt$raw_file_pattern,
+            cut_file_pattern = opt$cut_pattern,
+            MIN_L = 100,
+            sep = opt$sep)
+
+## ------------------------------------------------------------------------
+
+
+cat("\n\nHere some Info for the record keeping:\n\n")
+print(sessionInfo())
+
+cat("Parameters Used:\n\n")
+
+cat(paste0('\n# PRIMER_F: ',opt$PRIMER_F,'.\n'))
+cat(paste0('\n# PRIMER_R: ',opt$PRIMER_R,'.\n'))
+cat(paste0('\n# trunclen: ',opt$trunclen,'.\n'))
+cat(paste0('\n# trim_length: ',opt$trim_length,'.\n'))
+cat(paste0('\n# maxee: ',opt$maxee,'.\n'))
+cat(paste0('\n# tax_threshold: ',opt$tax_threshold,'.\n'))
+cat(paste0('\n# Number of bases for error learning step: ',opt$nbases,'.\n'))
+cat(paste0('\n# Pooling strategy: ',opt$pool,'.\n'))
+cat(paste0('\n# chimera_method',opt$chimera_method,'.\n'))
+cat(paste0('\n# Perform 100% similarity ASV clustering?',opt$collapseNoMis,'.\n'))
+cat(paste0('\n# Perform taxonomic assignments also on reversed complemented ASV sequence?',opt$tryRC,'.\n'))
+cat(paste0('\n# Path to excel document containing metadata [Sample identifier column should be sample_name]: ',opt$metadata,'.\n'))
+cat(paste0('\n# database: ',opt$database,'.\n'))
+cat(paste0('\n# database_for_species_assignments: ',opt$database_for_species_assignments,'.\n'))
+cat(paste0('\n# Compute phylogenetic tree from the ASV sequence ? ',opt$run_phylo,'.\n'))
+cat(paste0('\n# Path fof the R object containing all output from the pipeline: ',opt$save_out,'.\n'))
+cat(paste0('\n# Export pdf, table and intermediate RDS files? ',opt$export,'.\n'))
+cat(paste0('\n# Remove intermediate fastq.gz files: ',opt$remove_input_fastq,'.\n'))
+cat(paste0('\n# slots: ',opt$slots,'.\n'))
+cat(paste0('\n# Seed value for random number generator: ',opt$seed_value,'.\n'))
+cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))
+
+cat("\n############################################################\n")
+cat("All done \n")
+cat("############################################################\n\n")
+
+print(Sys.time())
+
+## ------------------------------------------------------------------------
+
