@@ -1529,6 +1529,8 @@ phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_updat
               file = paste0(export,"/","DECIPHER_threshold_",threshold,"_",dbname,"merged_tax_table.tsv"))
     cat(paste0("saved object and output to ", export))
     saveRDS(merged_table,
+            file = paste0(export,"/","DECIPHER_threshold_",threshold,"_",dbname,".RDS"))
+    saveRDS(physeq,
             file = paste0(export,"/","DECIPHER_threshold_",threshold,"_",dbname,"_physeq.RDS"))
   }
   
@@ -2293,6 +2295,7 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
   if (return == TRUE){
     return(files_list)
   }
+  
   if (is.charater(return)){
     files_list %>%
       saveRDS(paste0(return,"/", "picrust2_R.rds"))
