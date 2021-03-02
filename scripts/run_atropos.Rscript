@@ -20,6 +20,7 @@ option_list = list(
               e.g., -i raw [contains raw/run1 and raw/run2]\n
               N.B.: sample name is extracted from .fastq.gz samples  before the first '_' e.g., XXX-XX \n
               sample names must be unambigious and unique e.g., sample-1 = sample-11, sample-01 != sample-10", metavar="character"),
+  
   make_option(c("--atropos_bin"), type="character", default = "atropos", 
               help="atropos binary", metavar="character"),
   
@@ -35,7 +36,7 @@ option_list = list(
   make_option(c("--rev_primer"), type="character", default = NULL, 
               help="Sequence of the Rev primer to remove", metavar="character"),
   
-  make_option(c("-c", "--raw_file_pattern"), type="character", default= c("_R1_.fastq.gz","_R2_.fastq.gz"), 
+  make_option(c("-c", "--raw_file_pattern"), type="character", default= c("*_R1_*.gz","*_R2_*.gz"), 
               help="Pattern of raw files", metavar="character"),
   
   make_option(c("--sep"), type="character", default = "[^_]+", 
@@ -84,7 +85,6 @@ run_atropos(raw_files_path = opt$input_directory,
             atropos = opt$atropos_bin,
             cut_dir = opt$primer_removed_directory,
             raw_file_pattern = opt$raw_file_pattern,
-            output  = opt$output_directory,
             PRIMER_F = opt$fwd_primer,
             PRIMER_R = opt$rev_primer,
             NSLOTS = opt$threads,
