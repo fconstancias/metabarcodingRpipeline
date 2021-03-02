@@ -14,6 +14,7 @@ require("optparse")
 suppressPackageStartupMessages(library("optparse"))
 
 option_list = list(
+  
   make_option(c("-i", "--input_directory"), type="character", default=NULL, 
               help="Path of the input directory containing reads in their respective run sub-directories \n
               e.g., -i raw [contains raw/run1 and raw/run2]\n
@@ -21,18 +22,28 @@ option_list = list(
               sample names must be unambigious and unique e.g., sample-1 = sample-11, sample-01 != sample-10", metavar="character"),
   make_option(c("--atropos_bin"), type="character", default = "atropos", 
               help="atropos binary", metavar="character"),
+  
   make_option(c("-r", "--primer_removed_directory"), type="character", default = "00_atropos_primer_removed", 
               help="Directory to store primer trimmed/demultiplexed samples", metavar="character"),
+  
   make_option(c("-o", "--output_directory"), type="character", default= "dada2", 
               help="Name of the output directory", metavar="character"),
+  
   make_option(c("--fwd_primer"), type="character", default = NULL, 
               help="Sequence of the Fwd primer to remove", metavar="character"),
+  
   make_option(c("--rev_primer"), type="character", default = NULL, 
               help="Sequence of the Rev primer to remove", metavar="character"),
+  
   make_option(c("-c", "--raw_file_pattern"), type="character", default= c("_R1_.fastq.gz","_R2_.fastq.gz"), 
               help="Pattern of raw files", metavar="character"),
+  
+  make_option(c("--sep"), type="character", default = "[^_]+", 
+              help="regex pattern to identify sample names  [default: after first _]", metavar="character"),
+  
   make_option(c("-T", "--threads"), type="character", default= NULL, 
               help="Number of threads", metavar="character"),
+  
   make_option(c("-f", "--fun_dir"), type="character", default= NULL, 
               help="Directory containing the R functions", metavar="character")
 ); 
@@ -76,7 +87,8 @@ run_atropos(raw_files_path = opt$input_directory,
             output  = opt$output_directory,
             PRIMER_F = opt$fwd_primer,
             PRIMER_R = opt$rev_primer,
-            NSLOTS = opt$threads)
+            NSLOTS = opt$threads,
+            sep = opt$sep)
 
 ## ------------------------------------------------------------------------
 
