@@ -14,11 +14,15 @@ require("optparse")
 suppressPackageStartupMessages(library("optparse"))
 
 option_list = list(
+  
   make_option(c("--cut_dir"), type="character", default = "dada2/00_atropos_primer_removed", 
               help="Directory including reads to perform quality plot against - not necessary cut_dir", metavar="character"),
   
-  make_option(c("--cut_pattern"), type="character", default = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"), 
+  make_option(c("--cut_pattern"), type="character", default = c("*_R1_*.fastq.gz","*_R2_*.fastq.gz"), 
               help="Patterns for R1 and R2", metavar="character"),
+  
+  make_option(c("--qplot_dir"), type="character", default = "dada2/01_dada2_quality_profiles", 
+              help="Directory for output", metavar="character"),
   
   make_option(c("--prop.sample"), type="numeric", default = 20, 
               help=" % of samples to run qplot against", metavar="character"),
@@ -56,7 +60,7 @@ opt = parse_args(opt_parser)
 #   stop("You must provide path to atropos program (-a)")
 # }
 
-unlist(lapply(strsplit(opt$cut_pattern, ","), as.character)) -> opt$cut_file_pattern
+unlist(lapply(strsplit(opt$cut_pattern, ","), as.character)) -> opt$cut_pattern
 
 
 source(opt$fun_dir)
@@ -64,6 +68,9 @@ source(opt$fun_dir)
 cat(paste0('\n# Input directory: ',opt$cut_dir,'.\n'))
 
 cat(paste0('\n# Export pdf, table and intermediate RDS files? ',opt$export,'.\n'))
+cat(paste0('\n# cut_pattern: ',opt$cut_pattern,'.\n'))
+
+cat(paste0('\n# qplot_dir: ',opt$qplot_dir,'.\n'))
 
 cat(paste0('\n# Seed value for random number generator: ',opt$seed_value,'.\n'))
 cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))
@@ -89,6 +96,9 @@ cat("Parameters Used:\n\n")
 cat(paste0('\n# Input directory: ',opt$cut_dir,'.\n'))
 
 cat(paste0('\n# Export pdf, table and intermediate RDS files? ',opt$export,'.\n'))
+cat(paste0('\n# cut_pattern: ',opt$cut_pattern,'.\n'))
+
+cat(paste0('\n# qplot_dir: ',opt$qplot_dir,'.\n'))
 
 cat(paste0('\n# Seed value for random number generator: ',opt$seed_value,'.\n'))
 cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))

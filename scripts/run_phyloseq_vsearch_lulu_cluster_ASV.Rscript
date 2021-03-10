@@ -16,7 +16,7 @@ suppressPackageStartupMessages(library("optparse"))
 option_list = list(
   make_option(c("-p", "--phyloseq_path"), type="character", default = NULL, 
               help="Path of the input phyloseq object", metavar="character"),
-  make_option(c("--vsearch"), type="character", default= "vsearch", 
+  make_option(c("--vsearch_bin"), type="character", default= "vsearch", 
               help=" Path to the vsearch bin", metavar="character"),
   make_option(c("-o", "--output"), type="character", default= "~/", 
               help="Name of the output directory - If FALSE do not export - which does not make much sense in that context", metavar="character"),
@@ -75,7 +75,7 @@ source(opt$fun_dir)
 
 ## ------------------------------------------------------------------------
 cat(paste0('\n# Input phyloseq object: ',opt$phyloseq_path,'.\n'))
-cat(paste0('\n# Output directory: ',opt$export,'.\n'))
+cat(paste0('\n# Output directory: ',opt$output,'.\n'))
 
 cat(paste0('\n# Intermediate ASV fasta file: ',opt$fasta_file,'.\n'))
 cat(paste0('\n# Intermediate vsearch match_list_file: ',opt$match_list_file,'.\n'))
@@ -122,7 +122,7 @@ phyloseq_vsearch_lulu_cluster_ASV(physeq = opt$phyloseq_path,
   
   ## ------------------------------------------------------------------------
   cat(paste0('\n# Input phyloseq object: ',opt$phyloseq_path,'.\n'))
-  cat(paste0('\n# Output directory: ',opt$export,'.\n'))
+  cat(paste0('\n# Output directory: ',opt$output,'.\n'))
   
   cat(paste0('\n# Intermediate ASV fasta file: ',opt$fasta_file,'.\n'))
   cat(paste0('\n# Intermediate vsearch match_list_file: ',opt$match_list_file,'.\n'))

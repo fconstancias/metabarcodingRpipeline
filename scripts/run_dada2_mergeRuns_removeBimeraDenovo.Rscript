@@ -18,7 +18,7 @@ option_list = list(
   make_option(c("--filt_dir"), type="character", default = "dada2/02_dada2_filtered_denoised_merged", 
               help="Directory for filtered reads", metavar="character"),
   
-  make_option(c("--merged_run_dir"), type="character", default = "dada2/02_dada2_filtered_denoised_merged", 
+  make_option(c("--merged_run_dir"), type="character", default = "dada2/03_dada2_merged_runs_chimera_removed", 
               help="Directory for run merging, chimera removal", metavar="character"),
   
   make_option(c("--trim_length"), type="character", default = "240,400", 
@@ -30,7 +30,7 @@ option_list = list(
   make_option(c("--collapseNoMis"), type="logical", default = FALSE, 
               help=" Perform 100% similarity ASV clustering?", metavar="character"),
   
-  make_option(c("--export"), type="logical", default = FALSE, 
+  make_option(c("--export"), type="logical", default = TRUE, 
               help= "Export pdf, table and intermediate RDS files?", metavar="character"),
   
   make_option(c("-T", "--slots"), type="numeric", default = 6, 

@@ -21,19 +21,32 @@ Use ``git clone`` to clone on your computer the repository including the functio
 	(metabarcodingRpipeline)$ conda install -c conda-forge r-base -y
 	(metabarcodingRpipeline)$ conda install -c conda-forge r-devtools -y
 	(metabarcodingRpipeline)$ conda install -c conda-forge r-optparse -y
-### start R terminal:
+	
+### start the R terminal:
 	(metabarcodingRpipeline)$ R
 
 ### install necessary R packages - within the R terminal:
 	devtools::install_github("tidyverse/tidyverse");devtools::install_github("KlausVigo/phangorn");devtools::install_github("benjjneb/dada2")
-	
+
 	if (!requireNamespace("BiocManager", quietly = TRUE))
 	install.packages("BiocManager")
 	BiocManager::install("ShortRead");BiocManager::install("DECIPHER");BiocManager::install("phyloseq")
 
-	
 ### quit R:
 	quit(save = "no")
+	
+### for additional functionalities (i.e., post ASV clustering using vsearch/lulu & picrust2 functional potential estimation - please install the following tools:
+### R packages - similarly as done before:
+
+	devtools::install_github("tobiasgf/lulu");devtools::install_github("ycphs/openxlsx");devtools::install_github("mikemc/speedyseq")
+### vsearch in the dedicated conda environment:
+	(metabarcodingRpipeline)$ conda install -c bioconda vsearch -y
+	
+### picrust2 in the dedicated conda environment:
+	(metabarcodingRpipeline)$ conda install picrust2 -y
+
+
+
 	
 
 ## Run the pipeline:

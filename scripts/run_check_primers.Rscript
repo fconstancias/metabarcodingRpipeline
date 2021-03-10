@@ -16,16 +16,7 @@ suppressPackageStartupMessages(library("optparse"))
 option_list = list(
   
   make_option(c("-i", "--input_directory"), type="character", default=NULL, 
-              help="Path of the input directory containing reads in their respective run sub-directories \n
-              e.g., -i raw [contains raw/run1 and raw/run2]\n
-              N.B.: sample name is extracted from .fastq.gz samples  before the first '_' e.g., XXX-XX \n
-              sample names must be unambigious and unique e.g., sample-1 = sample-11, sample-01 != sample-10", metavar="character"),
-  
-  make_option(c("--atropos_bin"), type="character", default = "atropos", 
-              help="atropos binary", metavar="character"),
-  
-  make_option(c("-o", "--output_directory"), type="character", default= "00_atropos_primer_removed", 
-              help="Name of the output directory", metavar="character"),
+              help="Path of the input directory containing reads in their respective run sub-directories", metavar="character"),
   
   make_option(c("--fwd_primer"), type="character", default = NULL, 
               help="Sequence of the Fwd primer to remove", metavar="character"),
@@ -33,17 +24,20 @@ option_list = list(
   make_option(c("--rev_primer"), type="character", default = NULL, 
               help="Sequence of the Rev primer to remove", metavar="character"),
   
-  make_option(c("-c", "--raw_file_pattern"), type="character", default= c("*_R1_*.gz","*_R2_*.gz"), 
-              help="Pattern of raw files", metavar="character"),
+  make_option(c("--file_pattern"), type="character", default= c("*_R1_*.gz","*_R2_*.gz"), 
+              help="Pattern to determine R1 and R2 files", metavar="character"),
   
   make_option(c("--sep"), type="character", default = "[^_]+", 
               help="regex pattern to identify sample names  [default: after first _]", metavar="character"),
   
-  make_option(c("-T", "--threads"), type="character", default= NULL, 
-              help="Number of threads", metavar="character"),
+  make_option(c("--n_samples"), type="numeric", default = 1, 
+              help="Number of samples to perform the analysis", metavar="character"),
   
   make_option(c("-f", "--fun_dir"), type="character", default= NULL, 
-              help="Directory containing the R functions", metavar="character")
+              help="Directory containing the R functions", metavar="character"),
+  
+  make_option(c("--export"), type="character", default= FALSE, 
+              help="Path of the the output tsv file", metavar="character")
 ); 
 opt_parser = OptionParser(option_list = option_list);
 opt = parse_args(opt_parser)
@@ -64,28 +58,28 @@ opt = parse_args(opt_parser)
 source(opt$fun_dir)
 
 ## ------------------------------------------------------------------------
-unlist(lapply(strsplit(opt$raw_file_pattern, ","), as.character)) -> opt$raw_file_pattern
+unlist(lapply(strsplit(opt$file_pattern, ","), as.character)) -> opt$file_pattern
 
 
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
-cat(paste0('\n# Directory for primer removed files: ',opt$primer_removed_directory,'.\n'))
-cat(paste0('\n# Output directory: ',opt$output_directory,'.\n'))
+
+
 cat(paste0('\n# Fwd Primer sequence: ',opt$fwd_primer,'.\n'))
 cat(paste0('\n# Rev Primer sequence: ',opt$rev_primer,'.\n'))
-cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
-cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
-cat(paste0('\n# Raw file pattern: ',opt$raw_file_pattern,'.\n'))
+
+cat(paste0('\n# Number of samples: ',opt$n_samples,'.\n'))
+cat(paste0('\n# output will be exported in : ',opt$export,'.\n'))
 
 ## ------------------------------------------------------------------------
 
-run_atropos(raw_files_path = opt$input_directory,
-            atropos = opt$atropos_bin,
-            cut_dir = opt$output_directory,
-            raw_file_pattern = opt$raw_file_pattern,
-            PRIMER_F = opt$fwd_primer,
-            PRIMER_R = opt$rev_primer,
-            NSLOTS = opt$threads,
-            sep = opt$sep)
+check_primers(path_dir = opt$input_directory,
+              file_pattern = opt$file_pattern,
+              n_samples = opt$n_samples,
+              FWD = opt$fwd_primer,
+              REV = opt$rev_primer,
+              sep = opt$sep,
+              export = opt$export)
+
 
 ## ------------------------------------------------------------------------
 
@@ -95,14 +89,15 @@ print(sessionInfo())
 
 cat("Parameters Used:\n\n")
 
+
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
-cat(paste0('\n# Directory for primer removed files: ',opt$primer_removed_directory,'.\n'))
-cat(paste0('\n# Output directory: ',opt$output_directory,'.\n'))
+
+
 cat(paste0('\n# Fwd Primer sequence: ',opt$fwd_primer,'.\n'))
 cat(paste0('\n# Rev Primer sequence: ',opt$rev_primer,'.\n'))
-cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
-cat(paste0('\n# Number of threads: ',opt$threads,'.\n'))
-cat(paste0('\n# Raw file pattern: ',opt$raw_file_pattern,'.\n'))
+
+cat(paste0('\n# Number of samples: ',opt$n_samples,'.\n'))
+cat(paste0('\n# output will be exported in : ',opt$export,'.\n'))
 
 
 

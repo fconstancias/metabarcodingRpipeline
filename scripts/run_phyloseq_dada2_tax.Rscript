@@ -18,7 +18,7 @@ option_list = list(
   make_option(c("-p", "--phyloseq_path"), type="character", default = NULL, 
               help="Path of the input phyloseq object", metavar="character"),
   make_option(c("-o", "--output"), type="character", default= "~/", 
-              help="Name of the output directory - If FALSE do not export - which does not make much sense in that context", metavar="character"),
+              help="Name of the output directory", metavar="character"),
   make_option(c("--tax_threshold"), type="numeric", default = 60, 
               help="Minimum bootstrap value / threshold", metavar="numeric"),
   make_option(c("--db"), type="character", default= NULL, 
@@ -62,7 +62,7 @@ cat(paste0('\n# Bootstrap threshold: ',opt$tax_threshold,'.\n'))
 cat(paste0('\n# database used : ',opt$db,'.\n'))
 cat(paste0('\n# database used for species level assignments: ',opt$db_species,'.\n'))
 
-cat(paste0('\n# Reverse complement? ',opt$reverse_comp,'.\n'))
+cat(paste0('\n# Reverse complement ? ',opt$reverse_comp,'.\n'))
 
 cat(paste0('\n# Threads: ',opt$slots,'.\n'))
 
@@ -99,7 +99,7 @@ cat(paste0('\n# Bootstrap threshold: ',opt$tax_threshold,'.\n'))
 cat(paste0('\n# database used : ',opt$db,'.\n'))
 cat(paste0('\n# database used for species level assignments: ',opt$db_species,'.\n'))
 
-cat(paste0('\n# Reverse complement? ',opt$reverse_comp,'.\n'))
+cat(paste0('\n# Reverse complement ? ',opt$reverse_comp,'.\n'))
 
 cat(paste0('\n# Threads: ',opt$slots,'.\n'))
 

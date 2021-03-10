@@ -15,13 +15,13 @@ suppressPackageStartupMessages(library("optparse"))
 
 option_list = list(
   
-  make_option(c("--physeq_path"), type="character", default= NULL, 
+  make_option(c("--phyloseq_path"), type="character", default= NULL, 
               help="PAth of the phyloseq object to use of taxonomic assignments - must contain a refseq part with ASV sequences", metavar="character"),
   
   make_option(c("--tax_threshold"), type="numeric", default= 50, 
               help="Threshold for taxonomic assignments [the minimum bootstrap confidence for assigning a taxonomic level.", metavar="character"),
   
-  make_option(c("--tryRC"), type="logical", default = TRUE, 
+  make_option(c("--reverse_comp"), type="logical", default = TRUE, 
               help="Perform taxonomic assignments also on reversed complemented ASV sequence?", metavar="character"),
   
   make_option(c("--database"), type="character", default = "~/db/DADA2/GTDB_r95-mod_August2020.RData", 
@@ -65,7 +65,7 @@ opt = parse_args(opt_parser)
 
 source(opt$fun_dir)
 ## ------------------------------------------------------------------------
-cat(paste0('\n# Input physeq path : ',opt$physeq_path,'.\n'))
+cat(paste0('\n# Input physeq path : ',opt$phyloseq_path,'.\n'))
 
 cat(paste0('\n# tax_threshold: ',opt$tax_threshold,'.\n'))
 
@@ -82,11 +82,10 @@ cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))
 
 ## ------------------------------------------------------------------------
 
-
-phyloseq_DECIPHER_tax(physeq = opt$physeq_path,
+phyloseq_DECIPHER_tax(physeq = opt$phyloseq_path,
                       threshold = opt$tax_threshold,
                       nthreads = opt$slots,
-                      tryRC = opt$tryRC,
+                      tryRC = opt$reverse_comp,
                       db = opt$database,
                       export = opt$export,
                       return = opt$return,
@@ -101,7 +100,7 @@ print(sessionInfo())
 
 cat("Parameters Used:\n\n")
 
-cat(paste0('\n# Input physeq path : ',opt$physeq_path,'.\n'))
+cat(paste0('\n# Input physeq path : ',opt$phyloseq_path,'.\n'))
 
 cat(paste0('\n# tax_threshold: ',opt$tax_threshold,'.\n'))
 
@@ -114,6 +113,7 @@ cat(paste0('\n# Return? ',opt$return,'.\n'))
 
 cat(paste0('\n# slots: ',opt$slots,'.\n'))
 cat(paste0('\n# Seed value for random number generator: ',opt$seed_value,'.\n'))
+cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))
 cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))
 
 cat("\n############################################################\n")

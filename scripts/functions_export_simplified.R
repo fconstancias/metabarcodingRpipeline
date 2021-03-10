@@ -15,6 +15,135 @@
 #'
 #'
 #'
+#'check_primers(path = "~/Documents/GitHub/interfaces/data/raw/agro/raw/ERR5194893/", FWD = reverseComplement(DNAString("GTGCCAGCMGCCGCGGTAA")), REV =  (DNAString("GGACTACHVGGGTWTCTAAT")))
+
+check_primers <- function(path_dir,
+                          file_pattern = c("*_R1_*fastq.gz","*_R2_*fastq.gz"),
+                          n_samples = 1,
+                          FWD,
+                          REV,
+                          sep = "[^_]+",
+                          export = FALSE){
+  ## ------------------------------------------------------------------------
+  require(tidyverse); require(dada2); require(ShortRead); require(Biostrings)
+  cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
+  cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
+  cat(paste0('\n##',"You are using ShortRead version ", packageVersion('ShortRead'),'\n\n'))
+  cat(paste0('\n##',"You are using Biostrings version ", packageVersion('Biostrings'),'\n\n'))
+  
+  cat('################################\n\n')
+  
+  
+  ## ------------------------------------------------------------------------
+  # generate com rev comp primer sequences
+  
+  allOrients <- function(primer) {
+    # Create all orientations of the input sequence
+    require(Biostrings)
+    dna <- DNAString(primer)  # The Biostrings works w/ DNAString objects rather than character vectors
+    orients <- c(Forward = dna, Complement = complement(dna), Reverse = reverse(dna), 
+                 RevComp = reverseComplement(dna))
+    return(sapply(orients, toString))  # Convert back to character vector
+  }
+  FWD.orients <- allOrients(FWD)
+  REV.orients <- allOrients(REV)
+  FWD.orients
+  
+  ## ------------------------------------------------------------------------
+  # define function to get promer hits
+  primerHits <- function(primer, fn) {
+    # Counts number of reads in which the primer is found
+    nhits <- vcountPattern(primer, sread(readFastq(fn)), fixed = FALSE)
+    return(sum(nhits > 0))
+  }
+  
+  ## ------------------------------------------------------------------------
+  # get run directories
+  
+  ## get run directories (under the raw_files_path)
+  list.dirs(path = path_dir, 
+            full.names = FALSE, 
+            recursive = FALSE) %>% as.vector() -> run_list  
+  
+  out <- vector("list", length(run_list)) 
+  names(out) <- run_list
+  
+  ## ------------------------------------------------------------------------
+  
+  for(i in seq_along(run_list)) {
+    
+    Fs <- sort(list.files(file.path(path_dir, 
+                                    run_list[i]), 
+                          pattern = glob2rx(as.character(file_pattern[1])), 
+                          full.names = TRUE))
+    
+    Rs <- sort(list.files(file.path(path_dir, 
+                                    run_list[i]), 
+                          pattern = glob2rx(as.character(file_pattern[2])), 
+                          full.names = TRUE))
+    
+    
+    exists <- file.exists(Fs) & file.exists(Rs)
+    
+    Fs <- Fs[exists]
+    Rs <- Rs[exists]
+    
+    # readFastq(fnRs) %>% #idea to filter based on length
+    #   ShortRead::sread()
+    
+    if(length(Rs) != length(Fs)) stop ("Forward and reverse files do not match.")
+    
+    sample.names <- basename(Fs) %>%
+      str_extract(paste0(sep))
+    
+    cat(paste0('\n# sample names list starts with : '))
+    head(sample.names)
+    
+    ## ------------------------------------------------------------------------
+    
+    # set.seed(seed_value) #random  generator necessary for reproducibility
+    # 
+    # ii <- sample(length(sample.names),
+    #              round(length(sample.names) * (prop.sample/100),0) + 1 ) 
+    
+    
+    ## ------------------------------------------------------------------------
+    
+    rbind(FWD.ForwardReads = sapply(FWD.orients, primerHits, fn = Fs[[n_samples]]), 
+          FWD.ReverseReads = sapply(FWD.orients, primerHits, fn = Rs[[n_samples]]), 
+          REV.ForwardReads = sapply(REV.orients, primerHits, fn = Fs[[n_samples]]), 
+          REV.ReverseReads = sapply(REV.orients, primerHits, fn = Rs[[n_samples]])) -> out[[i]]
+    
+  }
+  
+  if(export != FALSE){
+    out %>%
+      do.call(rbind.data.frame, .)  %>%
+      data.frame() %>%
+      rownames_to_column("id") %>%
+      write_tsv(file = export)
+  }
+  return(out)
+}
+
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#'
+#'
+#'
+#'
+#'
+#'
+#'
 
 run_atropos <- function(raw_files_path,
                         atropos,
@@ -32,7 +161,7 @@ run_atropos <- function(raw_files_path,
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
   cat(paste0('\n##',"You are using ShortRead version ", packageVersion('ShortRead'),'\n\n'))
   cat(paste0('\n##',"You are using Biostrings version ", packageVersion('Biostrings'),'\n\n'))
-  cat(paste0('\n##',"You are using atropo version "));  system2(atropos, args = "trim --version")
+  cat(paste0('\n##',"You are using atropos version "));  system2(atropos, args = "trim --version")
   
   cat('################################\n\n')
   
@@ -44,8 +173,9 @@ run_atropos <- function(raw_files_path,
   
   ## ------------------------------------------------------------------------
   ## get run directories (under the raw_files_path)
-  setwd(raw_files_path)
-  setwd("./..")
+  
+  # setwd(raw_files_path)
+  # setwd("./..")
   
   for(i in seq_along(run_list)) {
     
@@ -57,8 +187,12 @@ run_atropos <- function(raw_files_path,
     
     cat(paste0('\n# output dir :  ',cut_path,'\n'))
     
-    fnFs <- sort(list.files(file.path(raw_files_path,run_list[i]), pattern = glob2rx(as.character(raw_file_pattern[1])), full.names = TRUE))
-    fnRs <- sort(list.files(file.path(raw_files_path,run_list[i]), pattern = glob2rx(as.character(raw_file_pattern[2])), full.names = TRUE))
+    fnFs <- sort(list.files(file.path(raw_files_path,run_list[i]), 
+                            pattern = glob2rx(as.character(raw_file_pattern[1])), 
+                            full.names = TRUE))
+    fnRs <- sort(list.files(file.path(raw_files_path,run_list[i]), 
+                            pattern = glob2rx(as.character(raw_file_pattern[2])), 
+                            full.names = TRUE))
     
     exists <- file.exists(fnFs) & file.exists(fnRs)
     fnFs <- fnFs[exists]
@@ -115,7 +249,7 @@ run_dada2_qplot <- function(prop.sample = 20,
                             aggregate = TRUE,
                             cut_dir = "dada2/00_atropos_primer_removed",
                             qplot_dir = "dada2/01_dada2_quality_profiles",
-                            cut_file_pattern = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
+                            cut_file_pattern = c("*_R1_*.fastq.gz","*_R2_*.fastq.gz"),
                             seed_value = 123,
                             sep = "[^_]+",
                             export = TRUE){
@@ -147,13 +281,18 @@ run_dada2_qplot <- function(prop.sample = 20,
     out_qplot <- file.path(qplot_dir, 
                            run_list[i])
     
+    cat(paste0('\n# output dir :  ',out_qplot,'\n'))
+    
     
     dir.create(out_qplot, showWarnings = TRUE, recursive = TRUE)
     
-    cat(paste0('\n# output dir :  ',out_qplot,'\n'))
     
-    fnFs_cut <- sort(list.files(cut_path, pattern = glob2rx(paste0("*", cut_file_pattern[1])), full.names = TRUE))
-    fnRs_cut <- sort(list.files(cut_path, pattern = glob2rx(paste0("*", cut_file_pattern[2])), full.names = TRUE))
+    fnFs_cut <- sort(list.files(cut_path, 
+                                pattern = glob2rx(paste0("*", cut_file_pattern[1])), 
+                                full.names = TRUE))
+    fnRs_cut <- sort(list.files(cut_path, 
+                                pattern = glob2rx(paste0("*", cut_file_pattern[2])), 
+                                full.names = TRUE))
     
     
     exists <- file.exists(fnFs_cut) & file.exists(fnRs_cut)
@@ -893,6 +1032,7 @@ run_dada_taxonomy <- function(seqtab = NULL,
   require(tidyverse); require(dada2)
   cat(paste0('\n##',"You are using DADA2 version ", packageVersion('dada2'),'\n'))
   cat(paste0('\n##',"You are using tidyverse version ", packageVersion('tidyverse'),'\n\n'))
+  
   cat('################################\n\n')
   
   ## ------------------------------------------------------------------------
@@ -1091,10 +1231,10 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
   ## ------------------------------------------------------------------------
   # if(method=="R"){
   
-  sequences <- DNAStringSet(getSequences(seqtab.nochim))
+  sequences <-  Biostrings::DNAStringSet(getSequences(seqtab.nochim))
   names(sequences) <- sequences  # this propagates to the tip labels of the tree
   
-  alignment <- AlignSeqs(DNAStringSet(sequences),
+  alignment <- AlignSeqs( Biostrings::DNAStringSet(sequences),
                          anchor = NA,
                          processors = nthreads)
   
@@ -1273,8 +1413,8 @@ run_merge_phyloseq <- function(merged_table = NULL,
 add_phylogeny_to_phyloseq <- function(phyloseq_path,
                                       method = "R",
                                       nthreads = 6,
-                                      export = TRUE,
-                                      output_phyloseq = "dada2_phylo"){
+                                      export = "05_phylogeny",
+                                      output_phyloseq = "phyloseq_phylo.RDS"){
   
   ## ------------------------------------------------------------------------
   require(tidyverse); require(dada2); require(DECIPHER); require(phangorn); require(phyloseq)
@@ -1291,11 +1431,11 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   ## ------------------------------------------------------------------------
   if(method=="R"){
     
-    sequences <- DNAStringSet(physeq@refseq)
+    sequences <-  Biostrings::DNAStringSet(physeq@refseq)
     # names(sequences) <- sequences  # this propagates to the tip labels of the tree
     names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
     
-    alignment <- AlignSeqs(DNAStringSet(sequences),
+    alignment <- AlignSeqs(Biostrings::DNAStringSet(sequences),
                            anchor = NA,
                            processors = nthreads)
     
@@ -1334,9 +1474,13 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
   physeq <- merge_phyloseq(physeq,
                            phangorn::midpoint(fitGTR$tree) %>% phyloseq::phy_tree())
   
-  if (export == TRUE){
+  if(export != FALSE)
+  {
+    dir.create(export, recursive = TRUE)
+    
     physeq %>%
-      saveRDS(file = paste0(output_phyloseq))
+      saveRDS(file = file.path(export,
+                               output_phyloseq))
   }
   
   
@@ -1390,11 +1534,11 @@ phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_updat
     physeq %>% readRDS() -> physeq
   }
   ## ------------------------------------------------------------------------
-  sequences <- DNAStringSet(physeq@refseq)
+  sequences <-  Biostrings::DNAStringSet(physeq@refseq)
   
   names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
   
-  dna <- DNAStringSet(getSequences(sequences)) # Create a DNAStringSet from the ASVs
+  dna <-  Biostrings::DNAStringSet(getSequences(sequences)) # Create a DNAStringSet from the ASVs
   
   load(db)
   
@@ -1466,7 +1610,7 @@ phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_updat
     as.data.frame() %>%
     rownames_to_column('ASV') -> otu_table
   
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
+  dss2df <- function(dss) data.frame(width=BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
   
   dss2df(physeq@refseq) %>%
     rownames_to_column('ASV') %>%
@@ -1525,6 +1669,8 @@ phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_updat
   
   if(export != FALSE)
   {
+    dir.create(export, recursive = TRUE)
+    
     write_tsv(x = merged_table,
               file = paste0(export,"/","DECIPHER_threshold_",threshold,"_",dbname,"merged_tax_table.tsv"))
     cat(paste0("saved object and output to ", export))
@@ -1538,8 +1684,6 @@ phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_updat
     return(physeq)
   }
 }
-
-
 
 
 #' @title ...
@@ -1596,7 +1740,7 @@ phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_1
   #   data.frame() %>%
   #   rownames_to_column('ASV') -> otu_table
   # 
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
+  dss2df <- function(dss) data.frame(width=BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
   
   dss2df(physeq@refseq) %>%
     rownames_to_column('ASV') %>%
@@ -1630,11 +1774,11 @@ phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_1
   cat(paste0('\n# Running dada2 method against : ', dbname), ' database with threshold value = ', threshold,' \n')
   
   ## ------------------------------------------------------------------------
-  sequences <- DNAStringSet(physeq@refseq)
+  sequences <-  Biostrings::DNAStringSet(physeq@refseq)
   
   names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
   
-  dna <- DNAStringSet(getSequences(sequences)) # Create a DNAStringSet from the ASVs
+  dna <-  Biostrings::DNAStringSet(getSequences(sequences)) # Create a DNAStringSet from the ASVs
   
   if(str_extract(basename(db), "[^.]+") == "hitdb_v1")
   {  
@@ -1732,10 +1876,14 @@ phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_1
                    tax_table()) -> physeq
   
   if(export != FALSE){
+    dir.create(export, recursive = TRUE)
     
     write_tsv(x = merged_table,
               file = paste0(export,"/","dada2_threshold",threshold,"_",dbname,"merged_tax_table.tsv"))
     cat(paste0("saved object and output to ", export))
+    
+    saveRDS(merged_table,
+            file = paste0(export,"/","dada2_threshold",threshold,"_",dbname,".RDS"))
     
     saveRDS(physeq,
             file = paste0(export,"/","dada2_threshold",threshold,"_",dbname,"_physeq.RDS"))
@@ -1804,7 +1952,7 @@ phyloseq_DECIPHER_cluster_ASV <- function(physeq, # readRDS("data/processed/phys
     as.data.frame() %>%
     rownames_to_column('ASV') -> otu_table
   
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
+  dss2df <- function(dss) data.frame(width=BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
   
   dss2df(physeq@refseq) %>%
     rownames_to_column('ASV') %>%
@@ -1827,6 +1975,7 @@ phyloseq_DECIPHER_cluster_ASV <- function(physeq, # readRDS("data/processed/phys
   
   d <- DECIPHER::DistanceMatrix(aln, 
                                 processors = nthreads)
+  
   ## ------------------------------------------------------------------------
   
   clusters <- DECIPHER::IdClusters(
@@ -1858,11 +2007,13 @@ phyloseq_DECIPHER_cluster_ASV <- function(physeq, # readRDS("data/processed/phys
   ## ------------------------------------------------------------------------
   
   if(export != FALSE){
+   
+    dir.create(export, recursive = TRUE) 
     
     write_tsv(x = full_table,
               file = paste0(export,"/","physeq_ASV_clust_thresold_",(100-threshold) / 100,"_table.tsv"))
     
-    cat(paste0("saved object and output to ", export))
+    cat(paste0("saved objects and outputs to ", export))
     
     saveRDS(physeq_clustered,
             file = paste0(export,"/","physeq_ASV_clust_thresold_",(100-threshold) / 100,"_physeq.RDS"))
@@ -1900,7 +2051,7 @@ phyloseq_DECIPHER_cluster_ASV <- function(physeq, # readRDS("data/processed/phys
 #'                                 dir = ("~/"), int_rm = TRUE) -> out
 
 phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") -> physeq
-                                              vsearch = "/Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/vsearch",
+                                              vsearch = "vsearch",
                                               dir = ("~/"),
                                               fasta_file = "pre_lulu.fasta",
                                               match_list_file = "pre_lulu_vsearch.list.txt",
@@ -1916,10 +2067,10 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
                                               full_return = TRUE){
   
   ## ------------------------------------------------------------------------
-  require(tidyverse); require(phloseq); require(lulu)
+  require(tidyverse); require(phyloseq); require(lulu)
   
   
-  dss2df <- function(dss) data.frame(width=width(dss), seq=as.character(dss), names=names(dss))
+  dss2df <- function(dss) data.frame(width=BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
   
   ## ------------------------------------------------------------------------
   if (class(physeq) != "phyloseq"){
@@ -1927,7 +2078,7 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
   }
   
   ## ------------------------------------------------------------------------
-  
+  dir.create(dir, recursive = TRUE)
   
   paste0(dir, "/", fasta_file) -> fasta_path
   paste0(dir, "/", match_list_file) -> match_list_file_path
@@ -1945,6 +2096,7 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
   as(otu_table(physeq), "matrix") %>%
     as.data.frame()  -> otu_tab
   ## ------------------------------------------------------------------------
+  system2(vsearch, args = c("--version"))
   
   ## run vsearch
   system2(vsearch, args = c("--usearch_global ", fasta_path, 
@@ -2037,15 +2189,15 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
     #           file = paste0(dir,"/","lulu_curated_table.tsv"))
     
     openxlsx::write.xlsx(curated_result, 
-                         paste0(dir,"/","lulu_curated_table.xlsx"))
+                         file.path(dir,"lulu_curated_table.xlsx"))
     
     write_tsv(x = curated_result$curated_table,
-              file = paste0(dir,"/","lulu_curated_table.tsv"))
+              file = file.path(dir,"lulu_curated_table.tsv"))
     
     cat(paste0("saved object and output to ", dir))
     
     saveRDS(physeq_curated,
-            file = paste0(dir,"/","lulu_curated_physeq.RDS"))
+            file = file.path(dir,"lulu_curated_physeq.RDS"))
     
   }
   ## ------------------------------------------------------------------------
@@ -2078,15 +2230,6 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
 #'
 #'
 #'
-#'phyloseq_picrust2(physeq = NULL,
-#'                  picrust2 = "picrust2_pipeline.py",
-#'                  fasta_file = "seqs.fna",
-#'                  input_dir = ("/Users/fconstan/Desktop/picrust_test/chemerin_16S/"),
-#'                  output_dir = ("/Users/fconstan/Desktop/picrust_test/chemerin_16S/picrust2R/"),# should not exist
-#'                  count_table = "table.biom",
-#'                  in_traits = c("COG,EC,TIGRFAM"),
-#'                  min_reads = 10,
-#'                  min_samples = 10)
 #'
 #'phyloseq_picrust2(physeq = readRDS("/Users/fconstan/Documents/GitHub/amchick/data/processed/physeq_update_11_1_21.RDS"),
 #'                  input_dir = ("/Users/fconstan/Desktop/picrust_test/AP-picrust/"),
@@ -2101,7 +2244,7 @@ phyloseq_vsearch_lulu_cluster_ASV <- function(physeq, # readRDS("data/processed/
 
 phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_update_11_1_21.RDS") -> physeq
                               picrust2 = "picrust2_pipeline.py",
-                              conda_env = "picrust2",
+                              # conda_env = "picrust2",
                               input_dir = ("~/"),
                               output_dir = ("~/picrust2/"),# should not exist
                               fasta_file = "ASV.fna",
@@ -2140,13 +2283,14 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
   #         args = c(conda_env)
   # )
   ## ------------------------------------------------------------------------
+  
+  dir.create(input_dir, recursive = TRUE)
+  
   paste0(input_dir, "/", fasta_file) -> fasta_path
   paste0(input_dir, "/", count_table) -> count_table_path
   
   ## ------------------------------------------------------------------------
   if(!is.null(physeq)){
-    
-    dir.create(input_dir, showWarnings = TRUE, recursive = TRUE)
     
     refseq(physeq) %>%
       dss2df() %>%
@@ -2297,6 +2441,9 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
   }
   
   if (is.charater(return)){
+    
+    dir.create(return, recursive = TRUE)
+    
     files_list %>%
       saveRDS(paste0(return,"/", "picrust2_R.rds"))
   }

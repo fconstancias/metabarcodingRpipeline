@@ -14,16 +14,13 @@ require("optparse")
 suppressPackageStartupMessages(library("optparse"))
 
 option_list = list(
-  make_option(c("--raw_file_pattern"), type="character", default= c("*_R1_*.gz","*_R2_*.gz"), 
-              help="Patterns for R1 and R2 for raw files", metavar="character"),
-  
-  make_option(c("--cut_dir"), type="character", default = "dada2/00_atropos_primer_removed", 
+make_option(c("-i","--input_dir"), type="character", default = "dada2/00_atropos_primer_removed", 
               help="Directory for atropos PCR primer removed reads", metavar="character"),
   
-  make_option(c("--cut_pattern"), type="character", default = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"), 
+  make_option(c("--file_pattern"), type="character", default = c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"), 
               help="Patterns for R1 and R2 of atropos files", metavar="character"),
   
-  make_option(c("--filt_dir"), type="character", default = "dada2/02_dada2_filtered_denoised_merged", 
+  make_option(c("-o","--output"), type="character", default = "dada2/02_dada2_filtered_denoised_merged", 
               help="Directory for filtered reads", metavar="character"),
   
   make_option(c("--sep"), type="character", default = "[^_]+", 
@@ -78,38 +75,35 @@ opt = parse_args(opt_parser)
 # }
 
 unlist(lapply(strsplit(opt$trunclen, ","), as.numeric)) -> opt$trunclen
-unlist(lapply(strsplit(opt$trim_length, ","), as.numeric)) -> opt$trim_length
 unlist(lapply(strsplit(opt$maxee, ","), as.numeric)) -> opt$maxee
-unlist(lapply(strsplit(opt$cut_pattern, ","), as.character)) -> opt$cut_file_pattern
-unlist(lapply(strsplit(opt$raw_file_pattern, ","), as.character)) -> opt$raw_file_pattern
+unlist(lapply(strsplit(opt$file_pattern, ","), as.character)) -> opt$file_pattern
 
 
 source(opt$fun_dir)
 ## ------------------------------------------------------------------------
-cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
-cat(paste0('\n# Directory containing read without PCR primers: ',opt$primer_removed_director,'.\n'))
+cat(paste0('\n# Input directory ',opt$input_dir,'.\n'))
+cat(paste0('\n# output directory ',opt$output,'.\n'))
+
+cat(paste0('\n# File pattern ',opt$file_pattern,'.\n'))
 cat(paste0('\n# trunclen: ',opt$trunclen,'.\n'))
 cat(paste0('\n# maxee: ',opt$maxee,'.\n'))
 cat(paste0('\n# slots: ',opt$slots,'.\n'))
-cat(paste0('\n# maxLen: ',opt$maxLen,'.\n'))
 
 ## ------------------------------------------------------------------------
 
-run_dada2_filter_denoise_merge_reads(raw_files_path = opt$raw_file_pattern,
-                                     cut_dir = opt$cut_dir,
-                                     cut_file_pattern = opt$cut_pattern,
+run_dada2_filter_denoise_merge_reads(cut_dir = opt$input_dir,
+                                     cut_file_pattern = opt$file_pattern,
                                      trunclen = opt$trunclen,
-                                     maxLen = opt$maxLen,
+                                     maxLen = Inf,
                                      maxee = opt$maxee,
                                      minLen = opt$minLen, #250 #350 in initial analysis which makes sense according to read/ASV distrib and 16S V3V4 distrib
                                      nthreads = opt$slots,
                                      nbases = opt$nbases,
                                      pool = opt$pool,
                                      minover = opt$minover,
-                                     filt_dir = opt$filt_dir,
+                                     filt_dir = opt$output,
                                      seed_value = opt$seed_value,
                                      export = TRUE,
-                                     print_plot = FALSE,
                                      sep = opt$sep,
                                      remove_input_fastq = opt$remove_input_fastq)
 
@@ -121,13 +115,13 @@ print(sessionInfo())
 
 cat("Parameters Used:\n\n")
 
-cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
-cat(paste0('\n# Directory containing read without PCR primers: ',opt$primer_removed_director,'.\n'))
+cat(paste0('\n# Input directory ',opt$input_dir,'.\n'))
+cat(paste0('\n# output directory ',opt$output,'.\n'))
+
+cat(paste0('\n# File pattern ',opt$file_pattern,'.\n'))
 cat(paste0('\n# trunclen: ',opt$trunclen,'.\n'))
-cat(paste0('\n# trim_length: ',opt$trim_length,'.\n'))
 cat(paste0('\n# maxee: ',opt$maxee,'.\n'))
 cat(paste0('\n# slots: ',opt$slots,'.\n'))
-cat(paste0('\n# maxLen: ',opt$maxLen,'.\n'))
 
 cat("\n############################################################\n")
 cat("All done \n")

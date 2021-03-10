@@ -16,10 +16,16 @@ suppressPackageStartupMessages(library("optparse"))
 option_list = list(
   make_option(c("-p", "--phyloseq_path"), type="character", default=NULL, 
               help="Path of the input phyloseq object", metavar="character"),
-  make_option(c("-m", "--method"), type="character", default = "R", 
-              help="Method for phylogenetic reconstruction [default DECIPHER phangorn R packages see: <https://f1000research.com/articles/5-1492>]", metavar="character"),
-  make_option(c("-o", "--output_phyloseq"), type="character", default= "phyloseq_tree", 
+  
+  # make_option(c("-m", "--method"), type="character", default = "R", 
+  #             help="Method for phylogenetic reconstruction [default DECIPHER phangorn R packages see: <https://f1000research.com/articles/5-1492>]", metavar="character"),
+
+   make_option(c("-o", "--export"), type="character", default= "05_phylogeny", 
               help="Output path of the phyloseq object", metavar="character"),
+  
+  make_option(c("-T", "--slots"), type="numeric", default = 6, 
+              help="Number of threads to perform the analyses", metavar="numeric"),
+  
   make_option(c("-f", "--fun_dir"), type="character", default= NULL, 
               help="Directory containing the R functions", metavar="character")
   
@@ -45,8 +51,9 @@ opt = parse_args(opt_parser)
 source(opt$fun_dir)
 
 add_phylogeny_to_phyloseq(phyloseq_path = opt$phyloseq_path,
-                          method = opt$method,
-                          output_phyloseq = opt$output_phyloseq)
+                          # method = opt$method,
+                          export = opt$export,
+                          nthreads = opt$slots)
 
 ## ------------------------------------------------------------------------
 
