@@ -33,7 +33,7 @@ conda activate metabarcodingRpipeline
 
 ## Check presence of primers in Fwd and Rev reads - optional:
 
-```{bash engine.opts='-l', warnings = FALSE, results = "hide"}
+```{bash engine.opts='-l', warnings = FALSE}
 Rscript scripts/run_check_primers.Rscript \
 -i test-data \
 --n_samples 1 \
@@ -49,7 +49,7 @@ cat rscript-output/primers_check.tsv
 
 ## Check Fwd and Rev reads quality profiles:
 
-```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+```{bash engine.opts='-l', warnings = FALSE}
 Rscript scripts/run_dada2_qplot.Rscript \
 -i test-data \
 --qplot_dir rscript-output/00_dada2_quality_profiles/ \
@@ -72,9 +72,10 @@ open rscript-output/00_dada2_quality_profiles/180914_M00842_0310_000000000-C3GBT
 
 ## Remove gene specific PCR primers using atropos:
 
-```{bash engine.opts='-l', warnings = FALSE, results = "hide"}
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval= FALSE}
 
 Rscript scripts/run_atropos.Rscript \
+--atropos_bin /Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/atropos \
 -i test-data/ \
 -o rscript-output/01_atropos_primer_removed/ \
 --fwd_primer CCTAYGGGRBGCASCAG \
@@ -93,7 +94,7 @@ ls -lh rscript-output/01_atropos_primer_removed/*
 
 ## Filter Fwd and Rev reads (truncate, filter based on maximum Expected Error, ...), merge reads:
 
-```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval= FALSE}
 
 Rscript scripts/run_dada2_filter_denoise_merge_reads.Rscript \
 --input_dir rscript-output/01_atropos_primer_removed/  \
@@ -124,7 +125,7 @@ cat rscript-output/02_dada2_filtered_denoised_merged/190719_M00842_0364_00000000
 
 ## Merge ASV tables from the different run, perform chimera detection:
 
-```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 
 Rscript scripts/run_dada2_mergeRuns_removeBimeraDenovo.Rscript \
 --filt_dir rscript-output/02_dada2_filtered_denoised_merged/ \
@@ -164,7 +165,7 @@ ps
 ### using dada2 assigntaxa/ assignspecies:
 
 
-```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 Rscript scripts/run_phyloseq_dada2_tax.Rscript \
 --phyloseq_path rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds \
 --output rscript-output/04_dada2_taxonomy \
@@ -185,7 +186,9 @@ ps_tax
 
 ### using DECIPHER IDtaxa::
 
-```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+You can also add or replace taxonomical information of your phyloseq object using DECIPHER IDtaxa function.
+
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 Rscript scripts/run_phyloseq_DECIPHER_tax.Rscript \
 --phyloseq_path rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds \
 --export rscript-output/04_dada2_taxonomy \
@@ -204,7 +207,7 @@ ps_tax
 
 ## Add phylogenetic information:
 
-```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 Rscript scripts/run_add_phylogeny_to_phyloseq.Rscript \
 --phyloseq_path rscript-output/04_dada2_taxonomy/dada2_threshold60_silva_nr99_v138_train_set_physeq.RDS \
 --export rscript-output/05_phylogeny \
@@ -219,6 +222,7 @@ Rscript scripts/run_add_phylogeny_to_phyloseq.Rscript \
 ps_tax_phylo
 ```
 
+## Add metadata:
 
 ```{r , results=FALSE, warning=FALSE, include=TRUE}
 source("scripts/functions_export_simplified.R")
@@ -247,7 +251,7 @@ metatdata %>%
   head()
 ```
 
-```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 
 Rscript scripts/dada2_metabarcoding_pipeline.Rscript \
 -i test-data/ \
@@ -308,18 +312,16 @@ out$physeq %>%
 # additional features:
 
 ## vsearch + lulu for post-clustering:
-```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval = FALSE}
 
-<!-- conda activate metabarcodingRpipeline -->
-
-<!-- Rscript scripts/run_phyloseq_vsearch_lulu_cluster_ASV.Rscript \ -->
-<!-- --phyloseq_path rscript-output/05_phylogeny/phyloseq_phylo.RDS \ -->
-<!-- --output rscript-output/06_lulu/ \ -->
-<!-- -T 8 \ -->
-<!-- --minimum_ratio_type min \ -->
-<!-- --minimum_relative_cooccurence 0.95 \ -->
-<!-- --int_rm FALSE \ -->
-<!-- -f scripts/functions_export_simplified.R -->
+Rscript scripts/run_phyloseq_vsearch_lulu_cluster_ASV.Rscript \
+--phyloseq_path rscript-output/05_phylogeny/phyloseq_phylo.RDS \
+--output rscript-output/06_lulu/ \
+-T 8 \
+--minimum_ratio_type min \
+--minimum_relative_cooccurence 0.95 \
+--int_rm FALSE \
+-f scripts/functions_export_simplified.R
 ```
 
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
@@ -338,21 +340,19 @@ ps_tax_phylo_lulu
 
 tested with **picrust2_pipeline.py 2.3.0-b**
 
-```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 
-<!-- conda activate metabarcodingRpipeline -->
-
-<!-- Rscript scripts/run_phyloseq_picrust2.Rscript \ -->
-<!-- --phyloseq_path rscript-output/05_phylogeny/phyloseq_phylo.RDS \ -->
-<!-- --output rscript-output/07_picrust2/ \ -->
-<!-- --traits EC,KO,PFAM \ -->
-<!-- --min_reads 100 \ -->
-<!-- --min_samples 1 \ -->
-<!-- --add_description TRUE \ -->
-<!-- --load_picrust2_data TRUE \ -->
-<!-- --return rscript-output/07_picrust2/ \ -->
-<!-- -T 8 \ -->
-<!-- -f scripts/functions_export_simplified.R -->
+Rscript scripts/run_phyloseq_picrust2.Rscript \
+--phyloseq_path rscript-output/05_phylogeny/phyloseq_phylo.RDS \
+--output rscript-output/07_picrust2/ \
+--traits EC,KO,PFAM \
+--min_reads 100 \
+--min_samples 1 \
+--add_description TRUE \
+--load_picrust2_data TRUE \
+--return rscript-output/07_picrust2/ \
+-T 8 \
+-f scripts/functions_export_simplified.R
 
 ```
 

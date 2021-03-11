@@ -1,0 +1,1869 @@
+
+####processing: ASV007 #####
+---hits: c("ASV113", "ASV326")
+---potential parent: 
+No parent found!
+
+####processing: ASV012 #####
+---hits: c("ASV051", "ASV008", "ASV150", "ASV298", "ASV332", "ASV170", "ASV297", "ASV306", "ASV258", "ASV319")
+---potential parent: 
+No parent found!
+
+####processing: ASV019 #####
+---hits: c("ASV016", "ASV078", "ASV080", "ASV134", "ASV271", "ASV334", "ASV061", "ASV026", "ASV222", "ASV043")
+---potential parent: 
+No parent found!
+
+####processing: ASV042 #####
+---hits: c("ASV025", "ASV124", "ASV069", "ASV106", "ASV260", "ASV148", "ASV192", "ASV137", "ASV101", "ASV060")
+---potential parent: 
+No parent found!
+
+####processing: ASV062 #####
+---hits: c("ASV286", "ASV349", "ASV099", "ASV232", "ASV159", "ASV295", "ASV032", "ASV145", "ASV336", "ASV014")
+---potential parent: 
+No parent found!
+
+####processing: ASV001 #####
+---hits: c("ASV096", "ASV024", "ASV280", "ASV003", "ASV027", "ASV036", "ASV246", "ASV072", "ASV203", "ASV220")
+---potential parent: 
+No parent found!
+
+####processing: ASV002 #####
+---hits: c("ASV081", "ASV054", "ASV154", "ASV228", "ASV285", "ASV300", "ASV234", "ASV066")
+---potential parent: 
+No parent found!
+
+####processing: ASV005 #####
+---hits: c("ASV017", "ASV020", "ASV030", "ASV195", "ASV121", "ASV022", "ASV065", "ASV011", "ASV219", "ASV213")
+---potential parent: 
+No parent found!
+
+####processing: ASV013 #####
+---hits: c("ASV107", "ASV155", "ASV060", "ASV087", "ASV106", "ASV067", "ASV148", "ASV137", "ASV069", "ASV260")
+---potential parent: 
+No parent found!
+
+####processing: ASV014 #####
+---hits: c("ASV132", "ASV171", "ASV140", "ASV337", "ASV189", "ASV197", "ASV204", "ASV247", "ASV032", "ASV130")
+---potential parent: 
+No parent found!
+
+####processing: ASV018 #####
+---hits: c("ASV034", "ASV357", "ASV035", "ASV033", "ASV207", "ASV046", "ASV015", "ASV191", "ASV037", "ASV059")
+---potential parent: 
+No parent found!
+
+####processing: ASV024 #####
+---hits: c("ASV096", "ASV280", "ASV001", "ASV246", "ASV143", "ASV039", "ASV003", "ASV027", "ASV220", "ASV011")
+---potential parent: 
+No parent found!
+
+####processing: ASV025 #####
+---hits: c("ASV042", "ASV124", "ASV069", "ASV106", "ASV260", "ASV148", "ASV192", "ASV137", "ASV101", "ASV071")
+---potential parent: 
+No parent found!
+
+####processing: ASV030 #####
+---hits: c("ASV005", "ASV017", "ASV020", "ASV195", "ASV022", "ASV011", "ASV121", "ASV065", "ASV213", "ASV045")
+---potential parent: 
+No parent found!
+
+####processing: ASV031 #####
+---hits: c("ASV115", "ASV071", "ASV164", "ASV101", "ASV192", "ASV126", "ASV119", "ASV322", "ASV260", "ASV107")
+---potential parent: 
+No parent found!
+
+####processing: ASV039 #####
+---hits: c("ASV143", "ASV246", "ASV003", "ASV027", "ASV017", "ASV005", "ASV022", "ASV024", "ASV011", "ASV020")
+---potential parent: 
+No parent found!
+
+####processing: ASV043 #####
+---hits: c("ASV026", "ASV146", "ASV187", "ASV134", "ASV334", "ASV078", "ASV016", "ASV019", "ASV080", "ASV061")
+---potential parent: 
+No parent found!
+
+####processing: ASV079 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV096 #####
+---hits: c("ASV024", "ASV280", "ASV001", "ASV246", "ASV143", "ASV039", "ASV003", "ASV027", "ASV036", "ASV004")
+---potential parent: 
+No parent found!
+
+####processing: ASV141 #####
+---hits: c("ASV038", "ASV016", "ASV019", "ASV078", "ASV080", "ASV271", "ASV334", "ASV134", "ASV061", "ASV026")
+---potential parent: 
+No parent found!
+
+####processing: ASV003 #####
+---hits: c("ASV027", "ASV039", "ASV246", "ASV143", "ASV001", "ASV024", "ASV280", "ASV011", "ASV096", "ASV022")
+---potential parent: 
+No parent found!
+
+####processing: ASV004 #####
+---hits: c("ASV006", "ASV045", "ASV195", "ASV036", "ASV011", "ASV017", "ASV022", "ASV005", "ASV020", "ASV030")
+---potential parent: 
+No parent found!
+
+####processing: ASV006 #####
+---hits: c("ASV004", "ASV045", "ASV195", "ASV017", "ASV022", "ASV036", "ASV005", "ASV011", "ASV020", "ASV030")
+---potential parent: 
+No parent found!
+
+####processing: ASV008 #####
+---hits: c("ASV051", "ASV012", "ASV150", "ASV298", "ASV332", "ASV170", "ASV306", "ASV297", "ASV061", "ASV258")
+---potential parent: 
+No parent found!
+
+####processing: ASV009 #####
+---hits: c("ASV028", "ASV040", "ASV156", "ASV050", "ASV255", "ASV094", "ASV202", "ASV029", "ASV063", "ASV302")
+---potential parent: 
+No parent found!
+
+####processing: ASV011 #####
+---hits: c("ASV022", "ASV036", "ASV045", "ASV195", "ASV017", "ASV020", "ASV030", "ASV005", "ASV065", "ASV203")
+---potential parent: 
+No parent found!
+
+####processing: ASV016 #####
+---hits: c("ASV019", "ASV078", "ASV080", "ASV134", "ASV271", "ASV334", "ASV061", "ASV026", "ASV085", "ASV043")
+---potential parent: 
+No parent found!
+
+####processing: ASV020 #####
+---hits: c("ASV005", "ASV017", "ASV030", "ASV195", "ASV121", "ASV022", "ASV065", "ASV011", "ASV219", "ASV045")
+---potential parent: 
+No parent found!
+
+####processing: ASV021 #####
+---hits: c("ASV108", "ASV023", "ASV075", "ASV095", "ASV138", "ASV152", "ASV325", "ASV092", "ASV104", "ASV205")
+---potential parent: 
+No parent found!
+
+####processing: ASV022 #####
+---hits: c("ASV011", "ASV036", "ASV045", "ASV017", "ASV020", "ASV030", "ASV005", "ASV195", "ASV065", "ASV203")
+---potential parent: 
+No parent found!
+
+####processing: ASV023 #####
+---hits: c("ASV075", "ASV021", "ASV325", "ASV108", "ASV092", "ASV104", "ASV138", "ASV095", "ASV152", "ASV205")
+---potential parent: 
+No parent found!
+
+####processing: ASV026 #####
+---hits: c("ASV043", "ASV146", "ASV187", "ASV134", "ASV334", "ASV016", "ASV019", "ASV078", "ASV080", "ASV061")
+---potential parent: 
+No parent found!
+
+####processing: ASV027 #####
+---hits: c("ASV003", "ASV039", "ASV246", "ASV143", "ASV001", "ASV011", "ASV024", "ASV022", "ASV036", "ASV280")
+---potential parent: 
+No parent found!
+
+####processing: ASV028 #####
+---hits: c("ASV009", "ASV040", "ASV050", "ASV156", "ASV094", "ASV029", "ASV255", "ASV063", "ASV202", "ASV302")
+---potential parent: 
+No parent found!
+
+####processing: ASV032 #####
+---hits: c("ASV165", "ASV189", "ASV320", "ASV140", "ASV247", "ASV171", "ASV337", "ASV014", "ASV130", "ASV197")
+---potential parent: 
+No parent found!
+
+####processing: ASV037 #####
+---hits: c("ASV059", "ASV046", "ASV207", "ASV015", "ASV190", "ASV342", "ASV360", "ASV191", "ASV089", "ASV276")
+---potential parent: 
+No parent found!
+
+####processing: ASV040 #####
+---hits: c("ASV009", "ASV028", "ASV156", "ASV050", "ASV255", "ASV094", "ASV202", "ASV029", "ASV063", "ASV302")
+---potential parent: 
+No parent found!
+
+####processing: ASV048 #####
+---hits: c("ASV041", "ASV044")
+---potential parent: 
+No parent found!
+
+####processing: ASV058 #####
+---hits: c("ASV163", "ASV279", "ASV329", "ASV341", "ASV198", "ASV291", "ASV322", "ASV194", "ASV115", "ASV217")
+---potential parent: 
+No parent found!
+
+####processing: ASV059 #####
+---hits: c("ASV037", "ASV046", "ASV015", "ASV207", "ASV190", "ASV191", "ASV089", "ASV276", "ASV342", "ASV093")
+---potential parent: 
+No parent found!
+
+####processing: ASV060 #####
+---hits: c("ASV013", "ASV107", "ASV155", "ASV087", "ASV067", "ASV106", "ASV260", "ASV069", "ASV137", "ASV148")
+---potential parent: 
+No parent found!
+
+####processing: ASV061 #####
+---hits: c("ASV019", "ASV016", "ASV078", "ASV271", "ASV080", "ASV026", "ASV043", "ASV146", "ASV222", "ASV334")
+---potential parent: 
+No parent found!
+
+####processing: ASV064 #####
+---hits: c("ASV175", "ASV131", "ASV262", "ASV361", "ASV201", "ASV100", "ASV203", "ASV220", "ASV003", "ASV030")
+---potential parent: 
+No parent found!
+
+####processing: ASV065 #####
+---hits: c("ASV121", "ASV219", "ASV313", "ASV020", "ASV195", "ASV005", "ASV213", "ASV011", "ASV017", "ASV030")
+---potential parent: 
+No parent found!
+
+####processing: ASV067 #####
+---hits: c("ASV087", "ASV107", "ASV155", "ASV115", "ASV192", "ASV060", "ASV071", "ASV101", "ASV137", "ASV148")
+---potential parent: 
+No parent found!
+
+####processing: ASV069 #####
+---hits: c("ASV106", "ASV124", "ASV042", "ASV025", "ASV260", "ASV148", "ASV087", "ASV137", "ASV060", "ASV107")
+---potential parent: 
+No parent found!
+
+####processing: ASV072 #####
+---hits: c("ASV001", "ASV024", "ASV280", "ASV039", "ASV096", "ASV262", "ASV143", "ASV220", "ASV343", "ASV003")
+---potential parent: 
+No parent found!
+
+####processing: ASV073 #####
+---hits: c("ASV256", "ASV070", "ASV056", "ASV120", "ASV118", "ASV125", "ASV169", "ASV258", "ASV003", "ASV027")
+---potential parent: 
+No parent found!
+
+####processing: ASV074 #####
+---hits: c("ASV093", "ASV089", "ASV190", "ASV052", "ASV046", "ASV207", "ASV276", "ASV186", "ASV185", "ASV360")
+---potential parent: 
+No parent found!
+
+####processing: ASV077 #####
+---hits: c("ASV342", "ASV293", "ASV191", "ASV252", "ASV046", "ASV207", "ASV015", "ASV037", "ASV059", "ASV089")
+---potential parent: 
+No parent found!
+
+####processing: ASV089 #####
+---hits: c("ASV190", "ASV185", "ASV046", "ASV207", "ASV015", "ASV093", "ASV074", "ASV276", "ASV052", "ASV186")
+---potential parent: 
+No parent found!
+
+####processing: ASV091 #####
+---hits: c("ASV328", "ASV221", "ASV188", "ASV348")
+---potential parent: 
+No parent found!
+
+####processing: ASV100 #####
+---hits: c("ASV131", "ASV361", "ASV201", "ASV064", "ASV175", "ASV262", "ASV143", "ASV039", "ASV246", "ASV027")
+---potential parent: 
+No parent found!
+
+####processing: ASV114 #####
+---hits: c("ASV233", "ASV364", "ASV318")
+---potential parent: 
+No parent found!
+
+####processing: ASV117 #####
+---hits: c("ASV136", "ASV287", "ASV302", "ASV063", "ASV123", "ASV133", "ASV057", "ASV105", "ASV029", "ASV177")
+---potential parent: 
+No parent found!
+
+####processing: ASV129 #####
+---hits: c("ASV167", "ASV153", "ASV083", "ASV165", "ASV197", "ASV159", "ASV208", "ASV099", "ASV189", "ASV232")
+---potential parent: 
+No parent found!
+
+####processing: ASV145 #####
+---hits: c("ASV336", "ASV295", "ASV182", "ASV130", "ASV204", "ASV247", "ASV171", "ASV053", "ASV337", "ASV014")
+---potential parent: 
+No parent found!
+
+####processing: ASV146 #####
+---hits: c("ASV043", "ASV026", "ASV187", "ASV134", "ASV334", "ASV078", "ASV016", "ASV019", "ASV080", "ASV061")
+---potential parent: 
+No parent found!
+
+####processing: ASV149 #####
+---hits: ASV312
+---potential parent: ASV312
+------checking: ASV312
+------relative cooccurence: 1 which is sufficient!
+------min avg abundance: 0.25
+No parent found!
+
+####processing: ASV163 #####
+---hits: c("ASV329", "ASV058", "ASV279", "ASV341", "ASV101", "ASV316", "ASV031", "ASV236", "ASV260", "ASV164")
+---potential parent: 
+No parent found!
+
+####processing: ASV175 #####
+---hits: c("ASV064", "ASV262", "ASV131", "ASV361", "ASV201", "ASV100", "ASV220", "ASV030", "ASV203", "ASV005")
+---potential parent: 
+No parent found!
+
+####processing: ASV176 #####
+---hits: c("ASV345", "ASV253", "ASV257", "ASV084")
+---potential parent: 
+No parent found!
+
+####processing: ASV312 #####
+---hits: ASV149
+---potential parent: ASV149
+------checking: ASV149
+------relative cooccurence: 1 which is sufficient!
+------min avg abundance: 3 which is OK!
+SETTING ASV312 to be an ERROR of ASV149
+
+####processing: ASV010 #####
+---hits: ASV076
+---potential parent: ASV076
+------checking: ASV076
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV015 #####
+---hits: c("ASV207", "ASV046", "ASV037", "ASV190", "ASV059", "ASV089", "ASV185", "ASV276", "ASV191", "ASV342")
+---potential parent: 
+No parent found!
+
+####processing: ASV017 #####
+---hits: c("ASV005", "ASV020", "ASV030", "ASV195", "ASV022", "ASV011", "ASV121", "ASV065", "ASV213", "ASV045")
+---potential parent: 
+No parent found!
+
+####processing: ASV029 #####
+---hits: c("ASV050", "ASV156", "ASV009", "ASV028", "ASV287", "ASV094", "ASV127", "ASV302", "ASV040", "ASV105")
+---potential parent: 
+No parent found!
+
+####processing: ASV033 #####
+---hits: c("ASV034", "ASV035", "ASV357", "ASV018", "ASV207", "ASV046", "ASV191", "ASV015", "ASV037", "ASV059")
+---potential parent: 
+No parent found!
+
+####processing: ASV034 #####
+---hits: c("ASV018", "ASV033", "ASV357", "ASV035", "ASV207", "ASV046", "ASV015", "ASV191", "ASV037", "ASV059")
+---potential parent: 
+No parent found!
+
+####processing: ASV035 #####
+---hits: c("ASV357", "ASV018", "ASV033", "ASV034", "ASV207", "ASV046", "ASV191", "ASV015", "ASV037", "ASV059")
+---potential parent: 
+No parent found!
+
+####processing: ASV036 #####
+---hits: c("ASV011", "ASV045", "ASV022", "ASV195", "ASV017", "ASV020", "ASV030", "ASV065", "ASV004", "ASV005")
+---potential parent: 
+No parent found!
+
+####processing: ASV038 #####
+---hits: c("ASV141", "ASV016", "ASV019", "ASV078", "ASV080", "ASV271", "ASV334", "ASV134", "ASV061", "ASV026")
+---potential parent: 
+No parent found!
+
+####processing: ASV041 #####
+---hits: c("ASV044", "ASV048")
+---potential parent: 
+No parent found!
+
+####processing: ASV044 #####
+---hits: c("ASV041", "ASV048")
+---potential parent: 
+No parent found!
+
+####processing: ASV045 #####
+---hits: c("ASV036", "ASV011", "ASV022", "ASV195", "ASV017", "ASV020", "ASV030", "ASV004", "ASV005", "ASV065")
+---potential parent: 
+No parent found!
+
+####processing: ASV046 #####
+---hits: c("ASV207", "ASV015", "ASV037", "ASV190", "ASV059", "ASV089", "ASV185", "ASV191", "ASV342", "ASV276")
+---potential parent: 
+No parent found!
+
+####processing: ASV047 #####
+---hits: c("ASV111", "ASV248")
+---potential parent: 
+No parent found!
+
+####processing: ASV049 #####
+---hits: c("ASV078", "ASV085", "ASV016", "ASV080", "ASV019", "ASV271", "ASV134", "ASV334", "ASV043", "ASV061")
+---potential parent: 
+No parent found!
+
+####processing: ASV050 #####
+---hits: c("ASV029", "ASV156", "ASV009", "ASV028", "ASV040", "ASV127", "ASV255", "ASV302", "ASV202", "ASV063")
+---potential parent: 
+No parent found!
+
+####processing: ASV051 #####
+---hits: c("ASV008", "ASV012", "ASV150", "ASV298", "ASV332", "ASV170", "ASV297", "ASV306", "ASV061", "ASV258")
+---potential parent: 
+No parent found!
+
+####processing: ASV052 #####
+---hits: c("ASV186", "ASV074", "ASV089", "ASV093", "ASV190", "ASV288", "ASV037", "ASV360", "ASV015", "ASV046")
+---potential parent: 
+No parent found!
+
+####processing: ASV053 #####
+---hits: c("ASV295", "ASV145", "ASV182", "ASV204", "ASV247", "ASV171", "ASV336", "ASV337", "ASV130", "ASV014")
+---potential parent: 
+No parent found!
+
+####processing: ASV054 #####
+---hits: c("ASV081", "ASV002", "ASV154", "ASV228", "ASV285", "ASV300", "ASV234")
+---potential parent: 
+No parent found!
+
+####processing: ASV055 #####
+---hits: c("ASV225", "ASV303")
+---potential parent: 
+No parent found!
+
+####processing: ASV056 #####
+---hits: c("ASV118", "ASV125", "ASV169", "ASV120", "ASV070", "ASV073", "ASV256", "ASV222", "ASV334", "ASV061")
+---potential parent: 
+No parent found!
+
+####processing: ASV057 #####
+---hits: c("ASV123", "ASV133", "ASV063", "ASV177", "ASV136", "ASV117", "ASV029", "ASV302", "ASV050", "ASV287")
+---potential parent: 
+No parent found!
+
+####processing: ASV063 #####
+---hits: c("ASV123", "ASV057", "ASV133", "ASV136", "ASV302", "ASV050", "ASV287", "ASV009", "ASV028", "ASV117")
+---potential parent: 
+No parent found!
+
+####processing: ASV066 #####
+---hits: c("ASV234", "ASV285", "ASV300", "ASV179", "ASV002", "ASV154", "ASV228")
+---potential parent: 
+No parent found!
+
+####processing: ASV068 #####
+---hits: c("ASV097", "ASV017", "ASV005", "ASV020", "ASV030", "ASV294", "ASV003", "ASV022", "ASV027", "ASV001")
+---potential parent: 
+No parent found!
+
+####processing: ASV070 #####
+---hits: c("ASV120", "ASV056", "ASV118", "ASV169", "ASV125", "ASV073", "ASV256", "ASV222", "ASV061", "ASV134")
+---potential parent: 
+No parent found!
+
+####processing: ASV071 #####
+---hits: c("ASV101", "ASV192", "ASV115", "ASV031", "ASV164", "ASV067", "ASV107", "ASV322", "ASV126", "ASV087")
+---potential parent: 
+No parent found!
+
+####processing: ASV075 #####
+---hits: c("ASV023", "ASV104", "ASV021", "ASV325", "ASV095", "ASV108", "ASV138", "ASV092", "ASV205", "ASV116")
+---potential parent: 
+No parent found!
+
+####processing: ASV076 #####
+---hits: ASV010
+---potential parent: ASV010
+------checking: ASV010
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV078 #####
+---hits: c("ASV016", "ASV080", "ASV019", "ASV334", "ASV134", "ASV271", "ASV061", "ASV085", "ASV043", "ASV146")
+---potential parent: 
+No parent found!
+
+####processing: ASV080 #####
+---hits: c("ASV078", "ASV016", "ASV019", "ASV271", "ASV334", "ASV134", "ASV061", "ASV085", "ASV222", "ASV043")
+---potential parent: 
+No parent found!
+
+####processing: ASV081 #####
+---hits: c("ASV002", "ASV054", "ASV154", "ASV228", "ASV285", "ASV300", "ASV234")
+---potential parent: 
+No parent found!
+
+####processing: ASV082 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV083 #####
+---hits: c("ASV153", "ASV129", "ASV167", "ASV165", "ASV247", "ASV208", "ASV032", "ASV189", "ASV014", "ASV197")
+---potential parent: 
+No parent found!
+
+####processing: ASV084 #####
+---hits: c("ASV257", "ASV253", "ASV345", "ASV176", "ASV272")
+---potential parent: 
+No parent found!
+
+####processing: ASV085 #####
+---hits: c("ASV078", "ASV016", "ASV080", "ASV019", "ASV134", "ASV043", "ASV146", "ASV026", "ASV187", "ASV334")
+---potential parent: 
+No parent found!
+
+####processing: ASV086 #####
+---hits: c("ASV347", "ASV346")
+---potential parent: 
+No parent found!
+
+####processing: ASV087 #####
+---hits: c("ASV107", "ASV155", "ASV013", "ASV060", "ASV067", "ASV106", "ASV148", "ASV137", "ASV101", "ASV115")
+---potential parent: 
+No parent found!
+
+####processing: ASV088 #####
+---hits: c("ASV210", "ASV289", "ASV075", "ASV180", "ASV023", "ASV104", "ASV116", "ASV205", "ASV095", "ASV108")
+---potential parent: 
+No parent found!
+
+####processing: ASV090 #####
+---hits: c("ASV103", "ASV147", "ASV180", "ASV282", "ASV104", "ASV095", "ASV108", "ASV205", "ASV269", "ASV021")
+---potential parent: 
+No parent found!
+
+####processing: ASV092 #####
+---hits: c("ASV325", "ASV023", "ASV075", "ASV021", "ASV104", "ASV108", "ASV138", "ASV116", "ASV095", "ASV152")
+---potential parent: 
+No parent found!
+
+####processing: ASV093 #####
+---hits: c("ASV074", "ASV089", "ASV190", "ASV207", "ASV276", "ASV052", "ASV046", "ASV360", "ASV185", "ASV186")
+---potential parent: 
+No parent found!
+
+####processing: ASV094 #####
+---hits: c("ASV028", "ASV156", "ASV009", "ASV050", "ASV029", "ASV040", "ASV105", "ASV184", "ASV255", "ASV117")
+---potential parent: 
+No parent found!
+
+####processing: ASV095 #####
+---hits: c("ASV152", "ASV021", "ASV075", "ASV108", "ASV023", "ASV104", "ASV116", "ASV205", "ASV325", "ASV138")
+---potential parent: 
+No parent found!
+
+####processing: ASV097 #####
+---hits: c("ASV068", "ASV017", "ASV005", "ASV003", "ASV020", "ASV022", "ASV027", "ASV030", "ASV294", "ASV011")
+---potential parent: 
+No parent found!
+
+####processing: ASV098 #####
+---hits: ASV226
+---potential parent: ASV226
+------checking: ASV226
+------relative cooccurence: 1 which is sufficient!
+------min avg abundance: 0.333333333333333
+No parent found!
+
+####processing: ASV099 #####
+---hits: c("ASV232", "ASV159", "ASV251", "ASV130", "ASV140", "ASV171", "ASV239", "ASV337", "ASV189", "ASV197")
+---potential parent: 
+No parent found!
+
+####processing: ASV101 #####
+---hits: c("ASV071", "ASV192", "ASV115", "ASV031", "ASV164", "ASV067", "ASV322", "ASV087", "ASV107", "ASV126")
+---potential parent: 
+No parent found!
+
+####processing: ASV102 #####
+---hits: c("ASV049", "ASV085", "ASV271", "ASV061", "ASV078", "ASV080", "ASV016", "ASV019", "ASV134", "ASV334")
+---potential parent: 
+No parent found!
+
+####processing: ASV103 #####
+---hits: c("ASV090", "ASV142", "ASV147", "ASV282", "ASV283", "ASV115", "ASV242", "ASV260", "ASV194", "ASV031")
+---potential parent: 
+No parent found!
+
+####processing: ASV104 #####
+---hits: c("ASV075", "ASV023", "ASV205", "ASV108", "ASV138", "ASV116", "ASV263", "ASV021", "ASV092", "ASV325")
+---potential parent: 
+No parent found!
+
+####processing: ASV105 #####
+---hits: c("ASV184", "ASV050", "ASV094", "ASV029", "ASV117", "ASV156", "ASV127", "ASV009", "ASV028", "ASV302")
+---potential parent: 
+No parent found!
+
+####processing: ASV106 #####
+---hits: c("ASV069", "ASV087", "ASV107", "ASV155", "ASV124", "ASV013", "ASV060", "ASV042", "ASV025", "ASV260")
+---potential parent: 
+No parent found!
+
+####processing: ASV107 #####
+---hits: c("ASV013", "ASV155", "ASV060", "ASV087", "ASV067", "ASV106", "ASV071", "ASV164", "ASV101", "ASV192")
+---potential parent: 
+No parent found!
+
+####processing: ASV108 #####
+---hits: c("ASV021", "ASV023", "ASV138", "ASV104", "ASV075", "ASV095", "ASV152", "ASV205", "ASV325", "ASV092")
+---potential parent: 
+No parent found!
+
+####processing: ASV109 #####
+---hits: c("ASV122", "ASV112", "ASV248")
+---potential parent: 
+No parent found!
+
+####processing: ASV110 #####
+---hits: ASV200
+---potential parent: ASV200
+------checking: ASV200
+------relative cooccurence: 1 which is sufficient!
+------min avg abundance: 0.4375
+No parent found!
+
+####processing: ASV111 #####
+---hits: c("ASV047", "ASV248")
+---potential parent: 
+No parent found!
+
+####processing: ASV112 #####
+---hits: c("ASV109", "ASV122", "ASV248")
+---potential parent: 
+No parent found!
+
+####processing: ASV113 #####
+---hits: c("ASV007", "ASV326")
+---potential parent: 
+No parent found!
+
+####processing: ASV115 #####
+---hits: c("ASV031", "ASV071", "ASV101", "ASV164", "ASV192", "ASV322", "ASV142", "ASV242", "ASV067", "ASV126")
+---potential parent: 
+No parent found!
+
+####processing: ASV116 #####
+---hits: c("ASV205", "ASV104", "ASV263", "ASV075", "ASV108", "ASV138", "ASV023", "ASV088", "ASV095", "ASV021")
+---potential parent: 
+No parent found!
+
+####processing: ASV118 #####
+---hits: c("ASV125", "ASV056", "ASV169", "ASV120", "ASV070", "ASV073", "ASV256", "ASV222", "ASV271", "ASV334")
+---potential parent: 
+No parent found!
+
+####processing: ASV119 #####
+---hits: c("ASV126", "ASV031", "ASV164", "ASV316", "ASV260", "ASV115", "ASV322", "ASV071", "ASV101", "ASV137")
+---potential parent: 
+No parent found!
+
+####processing: ASV120 #####
+---hits: c("ASV070", "ASV169", "ASV056", "ASV125", "ASV118", "ASV073", "ASV256", "ASV061", "ASV222", "ASV334")
+---potential parent: 
+No parent found!
+
+####processing: ASV121 #####
+---hits: c("ASV065", "ASV219", "ASV313", "ASV020", "ASV005", "ASV195", "ASV213", "ASV017", "ASV030", "ASV011")
+---potential parent: 
+No parent found!
+
+####processing: ASV122 #####
+---hits: c("ASV109", "ASV112", "ASV248")
+---potential parent: 
+No parent found!
+
+####processing: ASV123 #####
+---hits: c("ASV057", "ASV133", "ASV063", "ASV136", "ASV177", "ASV117", "ASV029", "ASV302", "ASV050", "ASV287")
+---potential parent: 
+No parent found!
+
+####processing: ASV124 #####
+---hits: c("ASV025", "ASV042", "ASV069", "ASV106", "ASV260", "ASV148", "ASV107", "ASV137", "ASV164", "ASV060")
+---potential parent: 
+No parent found!
+
+####processing: ASV125 #####
+---hits: c("ASV118", "ASV056", "ASV169", "ASV120", "ASV070", "ASV073", "ASV222", "ASV256", "ASV334", "ASV061")
+---potential parent: 
+No parent found!
+
+####processing: ASV126 #####
+---hits: c("ASV119", "ASV031", "ASV164", "ASV322", "ASV316", "ASV115", "ASV071", "ASV101", "ASV192", "ASV260")
+---potential parent: 
+No parent found!
+
+####processing: ASV127 #####
+---hits: c("ASV050", "ASV156", "ASV255", "ASV029", "ASV009", "ASV028", "ASV063", "ASV302", "ASV105", "ASV040")
+---potential parent: 
+No parent found!
+
+####processing: ASV128 #####
+---hits: c("ASV284", "ASV245", "ASV226", "ASV314")
+---potential parent: 
+No parent found!
+
+####processing: ASV130 #####
+---hits: c("ASV320", "ASV189", "ASV140", "ASV251", "ASV171", "ASV337", "ASV239", "ASV247", "ASV032", "ASV232")
+---potential parent: 
+No parent found!
+
+####processing: ASV131 #####
+---hits: c("ASV100", "ASV361", "ASV201", "ASV064", "ASV175", "ASV262", "ASV143", "ASV039", "ASV246", "ASV027")
+---potential parent: 
+No parent found!
+
+####processing: ASV132 #####
+---hits: c("ASV014", "ASV197", "ASV140", "ASV171", "ASV189", "ASV204", "ASV247", "ASV337", "ASV032", "ASV130")
+---potential parent: 
+No parent found!
+
+####processing: ASV133 #####
+---hits: c("ASV123", "ASV057", "ASV063", "ASV136", "ASV177", "ASV117", "ASV029", "ASV302", "ASV050", "ASV287")
+---potential parent: 
+No parent found!
+
+####processing: ASV134 #####
+---hits: c("ASV334", "ASV016", "ASV019", "ASV078", "ASV080", "ASV026", "ASV043", "ASV146", "ASV187", "ASV222")
+---potential parent: 
+No parent found!
+
+####processing: ASV135 #####
+---hits: c("ASV214", "ASV309", "ASV359", "ASV215", "ASV265", "ASV338")
+---potential parent: 
+No parent found!
+
+####processing: ASV136 #####
+---hits: c("ASV287", "ASV063", "ASV302", "ASV117", "ASV133", "ASV123", "ASV177", "ASV057", "ASV009", "ASV028")
+---potential parent: 
+No parent found!
+
+####processing: ASV137 #####
+---hits: c("ASV148", "ASV087", "ASV155", "ASV067", "ASV069", "ASV060", "ASV107", "ASV013", "ASV119", "ASV126")
+---potential parent: 
+No parent found!
+
+####processing: ASV138 #####
+---hits: c("ASV205", "ASV108", "ASV021", "ASV023", "ASV104", "ASV075", "ASV263", "ASV116", "ASV325", "ASV092")
+---potential parent: 
+No parent found!
+
+####processing: ASV139 #####
+---hits: ASV327
+---potential parent: ASV327
+------checking: ASV327
+------relative cooccurence: 1 which is sufficient!
+------min avg abundance: 0.25
+No parent found!
+
+####processing: ASV140 #####
+---hits: c("ASV189", "ASV014", "ASV204", "ASV171", "ASV337", "ASV132", "ASV247", "ASV251", "ASV032", "ASV130")
+---potential parent: 
+No parent found!
+
+####processing: ASV142 #####
+---hits: c("ASV283", "ASV242", "ASV331", "ASV115", "ASV164", "ASV031", "ASV192", "ASV067", "ASV071", "ASV101")
+---potential parent: 
+No parent found!
+
+####processing: ASV143 #####
+---hits: c("ASV246", "ASV039", "ASV003", "ASV024", "ASV027", "ASV096", "ASV280", "ASV005", "ASV017", "ASV022")
+---potential parent: 
+No parent found!
+
+####processing: ASV144 #####
+---hits: c("ASV249", "ASV299", "ASV233")
+---potential parent: 
+No parent found!
+
+####processing: ASV147 #####
+---hits: c("ASV090", "ASV103", "ASV142", "ASV283", "ASV282")
+---potential parent: 
+No parent found!
+
+####processing: ASV148 #####
+---hits: c("ASV137", "ASV087", "ASV067", "ASV069", "ASV155", "ASV013", "ASV107", "ASV060", "ASV126", "ASV205")
+---potential parent: 
+No parent found!
+
+####processing: ASV150 #####
+---hits: c("ASV298", "ASV332", "ASV170", "ASV008", "ASV012", "ASV051", "ASV306", "ASV061", "ASV222", "ASV297")
+---potential parent: 
+No parent found!
+
+####processing: ASV151 #####
+---hits: c("ASV166", "ASV227")
+---potential parent: 
+No parent found!
+
+####processing: ASV152 #####
+---hits: c("ASV095", "ASV021", "ASV108", "ASV023", "ASV075", "ASV325", "ASV138", "ASV092", "ASV104", "ASV116")
+---potential parent: 
+No parent found!
+
+####processing: ASV153 #####
+---hits: c("ASV083", "ASV129", "ASV167", "ASV165", "ASV208", "ASV099", "ASV159", "ASV197", "ASV247", "ASV232")
+---potential parent: 
+No parent found!
+
+####processing: ASV154 #####
+---hits: c("ASV054", "ASV081", "ASV002", "ASV228", "ASV285", "ASV300", "ASV234", "ASV066")
+---potential parent: 
+No parent found!
+
+####processing: ASV155 #####
+---hits: c("ASV013", "ASV107", "ASV060", "ASV087", "ASV067", "ASV106", "ASV137", "ASV148", "ASV260", "ASV164")
+---potential parent: 
+No parent found!
+
+####processing: ASV156 #####
+---hits: c("ASV009", "ASV050", "ASV028", "ASV040", "ASV255", "ASV094", "ASV202", "ASV029", "ASV302", "ASV127")
+---potential parent: 
+No parent found!
+
+####processing: ASV157 #####
+---hits: c("ASV161", "ASV188", "ASV347")
+---potential parent: 
+No parent found!
+
+####processing: ASV158 #####
+---hits: c("ASV264", "ASV297", "ASV277", "ASV211", "ASV195", "ASV220", "ASV011", "ASV045", "ASV203", "ASV005")
+---potential parent: 
+No parent found!
+
+####processing: ASV159 #####
+---hits: c("ASV232", "ASV099", "ASV251", "ASV130", "ASV189", "ASV140", "ASV171", "ASV320", "ASV337", "ASV197")
+---potential parent: 
+No parent found!
+
+####processing: ASV160 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV161 #####
+---hits: c("ASV157", "ASV188", "ASV347", "ASV348")
+---potential parent: 
+No parent found!
+
+####processing: ASV162 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV164 #####
+---hits: c("ASV192", "ASV115", "ASV031", "ASV071", "ASV101", "ASV126", "ASV119", "ASV107", "ASV142", "ASV067")
+---potential parent: 
+No parent found!
+
+####processing: ASV165 #####
+---hits: c("ASV032", "ASV189", "ASV140", "ASV247", "ASV320", "ASV171", "ASV208", "ASV337", "ASV130", "ASV014")
+---potential parent: 
+No parent found!
+
+####processing: ASV166 #####
+---hits: c("ASV151", "ASV227")
+---potential parent: 
+No parent found!
+
+####processing: ASV167 #####
+---hits: c("ASV129", "ASV083", "ASV153", "ASV165", "ASV197", "ASV208", "ASV247", "ASV159", "ASV099", "ASV189")
+---potential parent: 
+No parent found!
+
+####processing: ASV168 #####
+---hits: ASV327
+---potential parent: ASV327
+------checking: ASV327
+------relative cooccurence: 1 which is sufficient!
+------min avg abundance: 0.333333333333333
+No parent found!
+
+####processing: ASV169 #####
+---hits: c("ASV056", "ASV120", "ASV118", "ASV125", "ASV070", "ASV073", "ASV256", "ASV085", "ASV187", "ASV222")
+---potential parent: 
+No parent found!
+
+####processing: ASV170 #####
+---hits: c("ASV332", "ASV150", "ASV298", "ASV008", "ASV012", "ASV051", "ASV222", "ASV306", "ASV334", "ASV271")
+---potential parent: 
+No parent found!
+
+####processing: ASV171 #####
+---hits: c("ASV337", "ASV204", "ASV014", "ASV247", "ASV140", "ASV189", "ASV197", "ASV132", "ASV032", "ASV130")
+---potential parent: 
+No parent found!
+
+####processing: ASV172 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV173 #####
+---hits: c("ASV229", "ASV250", "ASV339")
+---potential parent: 
+No parent found!
+
+####processing: ASV174 #####
+---hits: c("ASV258", "ASV298", "ASV134", "ASV334", "ASV012", "ASV016", "ASV019", "ASV078", "ASV150", "ASV061")
+---potential parent: 
+No parent found!
+
+####processing: ASV177 #####
+---hits: c("ASV133", "ASV057", "ASV063", "ASV123", "ASV136", "ASV287", "ASV009", "ASV029", "ASV117", "ASV302")
+---potential parent: 
+No parent found!
+
+####processing: ASV178 #####
+---hits: c("ASV152", "ASV238", "ASV095", "ASV021", "ASV108", "ASV138", "ASV023", "ASV180", "ASV116", "ASV205")
+---potential parent: 
+No parent found!
+
+####processing: ASV179 #####
+---hits: c("ASV285", "ASV300", "ASV066", "ASV234", "ASV228")
+---potential parent: 
+No parent found!
+
+####processing: ASV180 #####
+---hits: c("ASV088", "ASV210", "ASV075", "ASV023", "ASV104", "ASV095", "ASV263", "ASV021", "ASV205", "ASV108")
+---potential parent: 
+No parent found!
+
+####processing: ASV181 #####
+---hits: c("ASV241", "ASV323", "ASV317", "ASV362", "ASV266")
+---potential parent: 
+No parent found!
+
+####processing: ASV182 #####
+---hits: c("ASV336", "ASV130", "ASV145", "ASV159", "ASV232", "ASV099", "ASV189", "ASV295", "ASV204", "ASV320")
+---potential parent: 
+No parent found!
+
+####processing: ASV183 #####
+---hits: ASV340
+---potential parent: ASV340
+------checking: ASV340
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV184 #####
+---hits: c("ASV105", "ASV156", "ASV094", "ASV117", "ASV029", "ASV009", "ASV050", "ASV040", "ASV028", "ASV127")
+---potential parent: 
+No parent found!
+
+####processing: ASV185 #####
+---hits: c("ASV190", "ASV089", "ASV015", "ASV046", "ASV207", "ASV276", "ASV074", "ASV093", "ASV037", "ASV360")
+---potential parent: 
+No parent found!
+
+####processing: ASV186 #####
+---hits: c("ASV052", "ASV089", "ASV074", "ASV093", "ASV190", "ASV037", "ASV015", "ASV059", "ASV360", "ASV276")
+---potential parent: 
+No parent found!
+
+####processing: ASV187 #####
+---hits: c("ASV043", "ASV026", "ASV146", "ASV134", "ASV334", "ASV078", "ASV016", "ASV019", "ASV080", "ASV085")
+---potential parent: 
+No parent found!
+
+####processing: ASV188 #####
+---hits: c("ASV157", "ASV161", "ASV347", "ASV091", "ASV221")
+---potential parent: 
+No parent found!
+
+####processing: ASV189 #####
+---hits: c("ASV140", "ASV014", "ASV032", "ASV130", "ASV204", "ASV171", "ASV337", "ASV132", "ASV247", "ASV197")
+---potential parent: 
+No parent found!
+
+####processing: ASV190 #####
+---hits: c("ASV089", "ASV185", "ASV046", "ASV207", "ASV015", "ASV093", "ASV074", "ASV037", "ASV059", "ASV276")
+---potential parent: 
+No parent found!
+
+####processing: ASV191 #####
+---hits: c("ASV342", "ASV046", "ASV015", "ASV207", "ASV293", "ASV059", "ASV037", "ASV190", "ASV077", "ASV089")
+---potential parent: 
+No parent found!
+
+####processing: ASV192 #####
+---hits: c("ASV071", "ASV164", "ASV101", "ASV115", "ASV031", "ASV067", "ASV087", "ASV107", "ASV126", "ASV322")
+---potential parent: 
+No parent found!
+
+####processing: ASV193 #####
+---hits: c("ASV308", "ASV315", "ASV235", "ASV261", "ASV268", "ASV212", "ASV296", "ASV275", "ASV273", "ASV353")
+---potential parent: 
+No parent found!
+
+####processing: ASV194 #####
+---hits: c("ASV279", "ASV115", "ASV103", "ASV322", "ASV067", "ASV031", "ASV071", "ASV263", "ASV095", "ASV101")
+---potential parent: 
+No parent found!
+
+####processing: ASV195 #####
+---hits: c("ASV219", "ASV005", "ASV020", "ASV017", "ASV030", "ASV313", "ASV011", "ASV065", "ASV121", "ASV022")
+---potential parent: 
+No parent found!
+
+####processing: ASV196 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV197 #####
+---hits: c("ASV014", "ASV132", "ASV171", "ASV337", "ASV140", "ASV189", "ASV247", "ASV204", "ASV032", "ASV099")
+---potential parent: 
+No parent found!
+
+####processing: ASV198 #####
+---hits: c("ASV291", "ASV341", "ASV236", "ASV115", "ASV192", "ASV071", "ASV101", "ASV067", "ASV164", "ASV031")
+---potential parent: 
+No parent found!
+
+####processing: ASV199 #####
+---hits: ASV321
+---potential parent: ASV321
+------checking: ASV321
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV200 #####
+---hits: c("ASV110", "ASV354")
+---potential parent: 
+No parent found!
+
+####processing: ASV201 #####
+---hits: c("ASV361", "ASV100", "ASV131", "ASV064", "ASV175", "ASV262", "ASV039", "ASV143", "ASV003", "ASV027")
+---potential parent: 
+No parent found!
+
+####processing: ASV202 #####
+---hits: c("ASV156", "ASV050", "ASV255", "ASV009", "ASV028", "ASV040", "ASV029", "ASV127", "ASV302", "ASV094")
+---potential parent: 
+No parent found!
+
+####processing: ASV203 #####
+---hits: c("ASV220", "ASV011", "ASV022", "ASV195", "ASV030", "ASV045", "ASV005", "ASV017", "ASV020", "ASV036")
+---potential parent: 
+No parent found!
+
+####processing: ASV204 #####
+---hits: c("ASV247", "ASV171", "ASV337", "ASV014", "ASV140", "ASV189", "ASV132", "ASV208", "ASV197", "ASV130")
+---potential parent: 
+No parent found!
+
+####processing: ASV205 #####
+---hits: c("ASV263", "ASV138", "ASV104", "ASV116", "ASV075", "ASV108", "ASV021", "ASV023", "ASV289", "ASV088")
+---potential parent: 
+No parent found!
+
+####processing: ASV206 #####
+---hits: c("ASV012", "ASV051", "ASV008", "ASV174", "ASV258", "ASV297", "ASV332")
+---potential parent: 
+No parent found!
+
+####processing: ASV207 #####
+---hits: c("ASV046", "ASV015", "ASV037", "ASV190", "ASV089", "ASV059", "ASV185", "ASV342", "ASV276", "ASV093")
+---potential parent: 
+No parent found!
+
+####processing: ASV208 #####
+---hits: c("ASV204", "ASV171", "ASV165", "ASV337", "ASV014", "ASV189", "ASV247", "ASV140", "ASV130", "ASV132")
+---potential parent: 
+No parent found!
+
+####processing: ASV209 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV210 #####
+---hits: c("ASV088", "ASV289", "ASV180", "ASV205", "ASV075", "ASV023", "ASV104", "ASV116", "ASV263", "ASV021")
+---potential parent: 
+No parent found!
+
+####processing: ASV211 #####
+---hits: c("ASV277", "ASV297", "ASV158", "ASV264", "ASV203", "ASV220", "ASV313", "ASV195", "ASV005", "ASV011")
+---potential parent: 
+No parent found!
+
+####processing: ASV212 #####
+---hits: c("ASV261", "ASV235", "ASV308", "ASV193", "ASV268", "ASV275", "ASV315", "ASV273", "ASV296", "ASV353")
+---potential parent: 
+No parent found!
+
+####processing: ASV213 #####
+---hits: c("ASV121", "ASV219", "ASV065", "ASV017", "ASV030", "ASV313", "ASV005", "ASV020", "ASV195", "ASV011")
+---potential parent: 
+No parent found!
+
+####processing: ASV214 #####
+---hits: c("ASV309", "ASV135", "ASV359", "ASV215", "ASV265", "ASV338")
+---potential parent: 
+No parent found!
+
+####processing: ASV215 #####
+---hits: c("ASV359", "ASV135", "ASV265", "ASV338", "ASV214", "ASV309")
+---potential parent: 
+No parent found!
+
+####processing: ASV216 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV217 #####
+---hits: c("ASV316", "ASV279", "ASV069", "ASV119", "ASV058", "ASV124", "ASV126", "ASV031", "ASV205", "ASV042")
+---potential parent: 
+No parent found!
+
+####processing: ASV218 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV219 #####
+---hits: c("ASV313", "ASV065", "ASV121", "ASV195", "ASV213", "ASV005", "ASV020", "ASV017", "ASV030", "ASV011")
+---potential parent: 
+No parent found!
+
+####processing: ASV220 #####
+---hits: c("ASV203", "ASV011", "ASV022", "ASV195", "ASV030", "ASV045", "ASV005", "ASV017", "ASV020", "ASV036")
+---potential parent: 
+No parent found!
+
+####processing: ASV221 #####
+---hits: c("ASV328", "ASV091", "ASV188")
+---potential parent: 
+No parent found!
+
+####processing: ASV222 #####
+---hits: c("ASV019", "ASV078", "ASV080", "ASV016", "ASV134", "ASV334", "ASV061", "ASV187", "ASV271", "ASV085")
+---potential parent: 
+No parent found!
+
+####processing: ASV223 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV224 #####
+---hits: c("ASV226", "ASV245")
+---potential parent: 
+No parent found!
+
+####processing: ASV225 #####
+---hits: c("ASV303", "ASV055")
+---potential parent: 
+No parent found!
+
+####processing: ASV226 #####
+---hits: c("ASV245", "ASV224", "ASV128", "ASV284", "ASV098", "ASV229", "ASV103", "ASV339")
+---potential parent: 
+No parent found!
+
+####processing: ASV227 #####
+---hits: c("ASV166", "ASV151")
+---potential parent: 
+No parent found!
+
+####processing: ASV228 #####
+---hits: c("ASV154", "ASV081", "ASV002", "ASV054", "ASV285", "ASV179", "ASV300", "ASV066")
+---potential parent: 
+No parent found!
+
+####processing: ASV229 #####
+---hits: c("ASV250", "ASV339", "ASV173", "ASV226")
+---potential parent: 
+No parent found!
+
+####processing: ASV230 #####
+---hits: ASV243
+---potential parent: ASV243
+------checking: ASV243
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV231 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV232 #####
+---hits: c("ASV159", "ASV099", "ASV251", "ASV130", "ASV189", "ASV140", "ASV171", "ASV320", "ASV337", "ASV239")
+---potential parent: 
+No parent found!
+
+####processing: ASV233 #####
+---hits: c("ASV318", "ASV114", "ASV364", "ASV144")
+---potential parent: 
+No parent found!
+
+####processing: ASV234 #####
+---hits: c("ASV066", "ASV285", "ASV300", "ASV179", "ASV002", "ASV081", "ASV054", "ASV154")
+---potential parent: 
+No parent found!
+
+####processing: ASV235 #####
+---hits: c("ASV212", "ASV315", "ASV193", "ASV268", "ASV261", "ASV308", "ASV275", "ASV273", "ASV296", "ASV353")
+---potential parent: 
+No parent found!
+
+####processing: ASV236 #####
+---hits: c("ASV341", "ASV291", "ASV198", "ASV115", "ASV031", "ASV067", "ASV192", "ASV119", "ASV164", "ASV101")
+---potential parent: 
+No parent found!
+
+####processing: ASV237 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV238 #####
+---hits: c("ASV269", "ASV138", "ASV021", "ASV108", "ASV178", "ASV023", "ASV205", "ASV095", "ASV152", "ASV104")
+---potential parent: 
+No parent found!
+
+####processing: ASV239 #####
+---hits: c("ASV251", "ASV130", "ASV099", "ASV189", "ASV232", "ASV140", "ASV159", "ASV171", "ASV014", "ASV204")
+---potential parent: 
+No parent found!
+
+####processing: ASV240 #####
+---hits: c("ASV259", "ASV344", "ASV251", "ASV197", "ASV239", "ASV014", "ASV132", "ASV099", "ASV140", "ASV159")
+---potential parent: 
+No parent found!
+
+####processing: ASV241 #####
+---hits: c("ASV181", "ASV323", "ASV266", "ASV317", "ASV362")
+---potential parent: 
+No parent found!
+
+####processing: ASV242 #####
+---hits: c("ASV283", "ASV142", "ASV115", "ASV331", "ASV164", "ASV031", "ASV067", "ASV192", "ASV071", "ASV095")
+---potential parent: 
+No parent found!
+
+####processing: ASV243 #####
+---hits: ASV230
+---potential parent: ASV230
+------checking: ASV230
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV244 #####
+---hits: ASV270
+---potential parent: ASV270
+------checking: ASV270
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV245 #####
+---hits: c("ASV226", "ASV224", "ASV128", "ASV284")
+---potential parent: 
+No parent found!
+
+####processing: ASV246 #####
+---hits: c("ASV143", "ASV039", "ASV003", "ASV027", "ASV024", "ASV096", "ASV280", "ASV001", "ASV005", "ASV017")
+---potential parent: 
+No parent found!
+
+####processing: ASV247 #####
+---hits: c("ASV204", "ASV171", "ASV337", "ASV140", "ASV014", "ASV032", "ASV132", "ASV189", "ASV197", "ASV130")
+---potential parent: 
+No parent found!
+
+####processing: ASV248 #####
+---hits: c("ASV122", "ASV109", "ASV112", "ASV047", "ASV111")
+---potential parent: 
+No parent found!
+
+####processing: ASV249 #####
+---hits: c("ASV299", "ASV144")
+---potential parent: 
+No parent found!
+
+####processing: ASV250 #####
+---hits: c("ASV229", "ASV173", "ASV339")
+---potential parent: 
+No parent found!
+
+####processing: ASV251 #####
+---hits: c("ASV140", "ASV189", "ASV320", "ASV239", "ASV130", "ASV099", "ASV159", "ASV232", "ASV171", "ASV197")
+---potential parent: 
+No parent found!
+
+####processing: ASV252 #####
+---hits: c("ASV293", "ASV077", "ASV342", "ASV037", "ASV191", "ASV207", "ASV360", "ASV046", "ASV015", "ASV059")
+---potential parent: 
+No parent found!
+
+####processing: ASV253 #####
+---hits: c("ASV084", "ASV345", "ASV257", "ASV176", "ASV272")
+---potential parent: 
+No parent found!
+
+####processing: ASV254 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV255 #####
+---hits: c("ASV156", "ASV050", "ASV009", "ASV202", "ASV028", "ASV040", "ASV127", "ASV029", "ASV063", "ASV302")
+---potential parent: 
+No parent found!
+
+####processing: ASV256 #####
+---hits: c("ASV073", "ASV070", "ASV056", "ASV120", "ASV118", "ASV125", "ASV169", "ASV258", "ASV003", "ASV027")
+---potential parent: 
+No parent found!
+
+####processing: ASV257 #####
+---hits: c("ASV084", "ASV253", "ASV345", "ASV176", "ASV272")
+---potential parent: 
+No parent found!
+
+####processing: ASV258 #####
+---hits: c("ASV174", "ASV003", "ASV027", "ASV012", "ASV019", "ASV051", "ASV073", "ASV008", "ASV016", "ASV085")
+---potential parent: 
+No parent found!
+
+####processing: ASV259 #####
+---hits: c("ASV240", "ASV344", "ASV251", "ASV239", "ASV099", "ASV159", "ASV232", "ASV197", "ASV132", "ASV140")
+---potential parent: 
+No parent found!
+
+####processing: ASV260 #####
+---hits: c("ASV119", "ASV069", "ASV031", "ASV060", "ASV124", "ASV155", "ASV126", "ASV106", "ASV101", "ASV164")
+---potential parent: 
+No parent found!
+
+####processing: ASV261 #####
+---hits: c("ASV212", "ASV315", "ASV193", "ASV268", "ASV308", "ASV275", "ASV235", "ASV273", "ASV296", "ASV353")
+---potential parent: 
+No parent found!
+
+####processing: ASV262 #####
+---hits: c("ASV175", "ASV064", "ASV201", "ASV100", "ASV131", "ASV361", "ASV220", "ASV203", "ASV011", "ASV022")
+---potential parent: 
+No parent found!
+
+####processing: ASV263 #####
+---hits: c("ASV205", "ASV138", "ASV104", "ASV116", "ASV075", "ASV108", "ASV021", "ASV023", "ASV289", "ASV088")
+---potential parent: 
+No parent found!
+
+####processing: ASV264 #####
+---hits: c("ASV158", "ASV277", "ASV297", "ASV211", "ASV143", "ASV220", "ASV039", "ASV203", "ASV005", "ASV017")
+---potential parent: 
+No parent found!
+
+####processing: ASV265 #####
+---hits: c("ASV359", "ASV338", "ASV215", "ASV135", "ASV309", "ASV214")
+---potential parent: 
+No parent found!
+
+####processing: ASV266 #####
+---hits: c("ASV317", "ASV323", "ASV133", "ASV057", "ASV123", "ASV305", "ASV028", "ASV063", "ASV241", "ASV009")
+---potential parent: 
+No parent found!
+
+####processing: ASV267 #####
+---hits: c("ASV307", "ASV281", "ASV310")
+---potential parent: 
+No parent found!
+
+####processing: ASV268 #####
+---hits: c("ASV308", "ASV315", "ASV193", "ASV261", "ASV273", "ASV212", "ASV235", "ASV275", "ASV296", "ASV353")
+---potential parent: 
+No parent found!
+
+####processing: ASV269 #####
+---hits: c("ASV238", "ASV095", "ASV104", "ASV205", "ASV021", "ASV116", "ASV138", "ASV108", "ASV152", "ASV075")
+---potential parent: 
+No parent found!
+
+####processing: ASV270 #####
+---hits: ASV244
+---potential parent: ASV244
+------checking: ASV244
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV271 #####
+---hits: c("ASV016", "ASV078", "ASV080", "ASV019", "ASV061", "ASV334", "ASV134", "ASV222", "ASV026", "ASV043")
+---potential parent: 
+No parent found!
+
+####processing: ASV272 #####
+---hits: c("ASV253", "ASV084", "ASV257", "ASV345")
+---potential parent: 
+No parent found!
+
+####processing: ASV273 #####
+---hits: c("ASV268", "ASV308", "ASV193", "ASV212", "ASV261", "ASV275", "ASV353", "ASV315", "ASV235", "ASV296")
+---potential parent: 
+No parent found!
+
+####processing: ASV274 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV275 #####
+---hits: c("ASV193", "ASV261", "ASV212", "ASV315", "ASV268", "ASV235", "ASV296", "ASV273", "ASV308", "ASV353")
+---potential parent: 
+No parent found!
+
+####processing: ASV276 #####
+---hits: c("ASV360", "ASV185", "ASV015", "ASV089", "ASV046", "ASV190", "ASV207", "ASV093", "ASV074", "ASV059")
+---potential parent: 
+No parent found!
+
+####processing: ASV277 #####
+---hits: c("ASV211", "ASV297", "ASV158", "ASV264", "ASV203", "ASV220", "ASV213", "ASV003", "ASV011", "ASV001")
+---potential parent: 
+No parent found!
+
+####processing: ASV278 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV279 #####
+---hits: c("ASV058", "ASV163", "ASV329", "ASV194", "ASV260", "ASV067", "ASV025", "ASV124", "ASV126", "ASV217")
+---potential parent: 
+No parent found!
+
+####processing: ASV280 #####
+---hits: c("ASV024", "ASV096", "ASV001", "ASV246", "ASV143", "ASV039", "ASV003", "ASV027", "ASV072", "ASV195")
+---potential parent: 
+No parent found!
+
+####processing: ASV281 #####
+---hits: c("ASV307", "ASV267", "ASV310")
+---potential parent: 
+No parent found!
+
+####processing: ASV282 #####
+---hits: c("ASV103", "ASV242", "ASV090", "ASV115", "ASV142", "ASV283", "ASV316", "ASV031", "ASV126", "ASV164")
+---potential parent: 
+No parent found!
+
+####processing: ASV283 #####
+---hits: c("ASV142", "ASV242", "ASV331", "ASV115", "ASV031", "ASV164", "ASV119", "ASV103", "ASV104", "ASV192")
+---potential parent: 
+No parent found!
+
+####processing: ASV284 #####
+---hits: c("ASV128", "ASV245", "ASV226", "ASV198", "ASV339", "ASV341")
+---potential parent: 
+No parent found!
+
+####processing: ASV285 #####
+---hits: c("ASV300", "ASV234", "ASV066", "ASV179", "ASV002", "ASV081", "ASV154", "ASV228", "ASV054")
+---potential parent: 
+No parent found!
+
+####processing: ASV286 #####
+---hits: c("ASV349", "ASV130", "ASV336", "ASV333", "ASV032", "ASV182", "ASV140", "ASV099", "ASV159", "ASV189")
+---potential parent: 
+No parent found!
+
+####processing: ASV287 #####
+---hits: c("ASV302", "ASV136", "ASV117", "ASV063", "ASV029", "ASV050", "ASV177", "ASV009", "ASV028", "ASV156")
+---potential parent: 
+No parent found!
+
+####processing: ASV288 #####
+---hits: c("ASV093", "ASV074", "ASV052", "ASV089", "ASV190", "ASV185", "ASV015", "ASV037", "ASV059", "ASV186")
+---potential parent: 
+No parent found!
+
+####processing: ASV289 #####
+---hits: c("ASV210", "ASV088", "ASV205", "ASV075", "ASV023", "ASV104", "ASV116", "ASV263", "ASV021", "ASV095")
+---potential parent: 
+No parent found!
+
+####processing: ASV290 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV291 #####
+---hits: c("ASV198", "ASV341", "ASV236", "ASV115", "ASV192", "ASV101", "ASV071", "ASV164", "ASV031", "ASV067")
+---potential parent: 
+No parent found!
+
+####processing: ASV292 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV293 #####
+---hits: c("ASV252", "ASV342", "ASV191", "ASV077", "ASV059", "ASV046", "ASV207", "ASV037", "ASV015", "ASV190")
+---potential parent: 
+No parent found!
+
+####processing: ASV294 #####
+---hits: c("ASV097", "ASV068", "ASV003", "ASV027", "ASV096", "ASV343", "ASV280", "ASV001", "ASV024", "ASV004")
+---potential parent: 
+No parent found!
+
+####processing: ASV295 #####
+---hits: c("ASV053", "ASV336", "ASV145", "ASV032", "ASV130", "ASV182", "ASV320", "ASV189", "ASV247", "ASV140")
+---potential parent: 
+No parent found!
+
+####processing: ASV296 #####
+---hits: c("ASV193", "ASV315", "ASV353", "ASV268", "ASV275", "ASV308", "ASV261", "ASV212", "ASV235", "ASV273")
+---potential parent: 
+No parent found!
+
+####processing: ASV297 #####
+---hits: c("ASV277", "ASV211", "ASV158", "ASV264", "ASV012", "ASV051", "ASV008", "ASV150", "ASV298", "ASV003")
+---potential parent: 
+No parent found!
+
+####processing: ASV298 #####
+---hits: c("ASV150", "ASV332", "ASV170", "ASV008", "ASV012", "ASV051", "ASV306", "ASV222", "ASV297", "ASV061")
+---potential parent: 
+No parent found!
+
+####processing: ASV299 #####
+---hits: c("ASV249", "ASV144")
+---potential parent: 
+No parent found!
+
+####processing: ASV300 #####
+---hits: c("ASV285", "ASV234", "ASV179", "ASV066", "ASV002", "ASV154", "ASV081", "ASV054", "ASV228")
+---potential parent: 
+No parent found!
+
+####processing: ASV301 #####
+---hits: c("ASV333", "ASV286", "ASV165", "ASV349", "ASV336", "ASV130", "ASV320", "ASV083", "ASV153", "ASV182")
+---potential parent: 
+No parent found!
+
+####processing: ASV302 #####
+---hits: c("ASV287", "ASV063", "ASV050", "ASV136", "ASV117", "ASV156", "ASV009", "ASV028", "ASV029", "ASV040")
+---potential parent: 
+No parent found!
+
+####processing: ASV303 #####
+---hits: c("ASV225", "ASV055")
+---potential parent: 
+No parent found!
+
+####processing: ASV304 #####
+---hits: c("ASV335", "ASV190", "ASV089", "ASV185", "ASV015", "ASV037", "ASV046", "ASV059", "ASV207", "ASV093")
+---potential parent: 
+No parent found!
+
+####processing: ASV305 #####
+---hits: c("ASV057", "ASV063", "ASV123", "ASV133", "ASV028", "ASV127", "ASV302", "ASV009", "ASV050", "ASV156")
+---potential parent: 
+No parent found!
+
+####processing: ASV306 #####
+---hits: c("ASV150", "ASV222", "ASV298", "ASV008", "ASV061", "ASV051", "ASV332", "ASV012", "ASV085", "ASV134")
+---potential parent: 
+No parent found!
+
+####processing: ASV307 #####
+---hits: c("ASV281", "ASV267")
+---potential parent: 
+No parent found!
+
+####processing: ASV308 #####
+---hits: c("ASV193", "ASV268", "ASV212", "ASV315", "ASV261", "ASV273", "ASV235", "ASV275", "ASV296", "ASV353")
+---potential parent: 
+No parent found!
+
+####processing: ASV309 #####
+---hits: c("ASV214", "ASV135", "ASV359", "ASV265", "ASV338", "ASV215")
+---potential parent: 
+No parent found!
+
+####processing: ASV310 #####
+---hits: c("ASV267", "ASV281")
+---potential parent: 
+No parent found!
+
+####processing: ASV311 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV313 #####
+---hits: c("ASV219", "ASV065", "ASV121", "ASV195", "ASV213", "ASV005", "ASV020", "ASV017", "ASV030", "ASV011")
+---potential parent: 
+No parent found!
+
+####processing: ASV314 #####
+---hits: ASV128
+---potential parent: ASV128
+------checking: ASV128
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV315 #####
+---hits: c("ASV261", "ASV193", "ASV235", "ASV268", "ASV308", "ASV296", "ASV212", "ASV275", "ASV353", "ASV273")
+---potential parent: 
+No parent found!
+
+####processing: ASV316 #####
+---hits: c("ASV119", "ASV126", "ASV031", "ASV101", "ASV164", "ASV322", "ASV071", "ASV205", "ASV263", "ASV115")
+---potential parent: 
+No parent found!
+
+####processing: ASV317 #####
+---hits: c("ASV323", "ASV305", "ASV133", "ASV057", "ASV123", "ASV177", "ASV266", "ASV063", "ASV136", "ASV202")
+---potential parent: 
+No parent found!
+
+####processing: ASV318 #####
+---hits: c("ASV233", "ASV114", "ASV364")
+---potential parent: 
+No parent found!
+
+####processing: ASV319 #####
+---hits: c("ASV332", "ASV170", "ASV012", "ASV150", "ASV298", "ASV051", "ASV008", "ASV306", "ASV297")
+---potential parent: 
+No parent found!
+
+####processing: ASV320 #####
+---hits: c("ASV130", "ASV032", "ASV251", "ASV189", "ASV140", "ASV336", "ASV159", "ASV171", "ASV232", "ASV337")
+---potential parent: 
+No parent found!
+
+####processing: ASV321 #####
+---hits: ASV199
+---potential parent: ASV199
+------checking: ASV199
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV322 #####
+---hits: c("ASV115", "ASV031", "ASV126", "ASV071", "ASV101", "ASV087", "ASV119", "ASV192", "ASV155", "ASV164")
+---potential parent: 
+No parent found!
+
+####processing: ASV323 #####
+---hits: c("ASV317", "ASV305", "ASV136", "ASV063", "ASV133", "ASV057", "ASV123", "ASV241", "ASV266", "ASV177")
+---potential parent: 
+No parent found!
+
+####processing: ASV324 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV325 #####
+---hits: c("ASV023", "ASV092", "ASV075", "ASV021", "ASV108", "ASV104", "ASV138", "ASV095", "ASV152", "ASV205")
+---potential parent: 
+No parent found!
+
+####processing: ASV326 #####
+---hits: c("ASV007", "ASV113")
+---potential parent: 
+No parent found!
+
+####processing: ASV327 #####
+---hits: c("ASV139", "ASV168")
+---potential parent: 
+No parent found!
+
+####processing: ASV328 #####
+---hits: c("ASV091", "ASV221")
+---potential parent: 
+No parent found!
+
+####processing: ASV329 #####
+---hits: c("ASV163", "ASV279", "ASV058", "ASV316", "ASV060", "ASV101", "ASV031", "ASV042", "ASV069", "ASV155")
+---potential parent: 
+No parent found!
+
+####processing: ASV330 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV331 #####
+---hits: c("ASV142", "ASV283", "ASV242", "ASV115", "ASV164", "ASV192", "ASV322", "ASV031", "ASV071", "ASV101")
+---potential parent: 
+No parent found!
+
+####processing: ASV332 #####
+---hits: c("ASV170", "ASV150", "ASV298", "ASV008", "ASV012", "ASV051", "ASV306", "ASV222", "ASV319", "ASV297")
+---potential parent: 
+No parent found!
+
+####processing: ASV333 #####
+---hits: c("ASV301", "ASV286", "ASV165", "ASV349", "ASV336", "ASV032", "ASV320", "ASV130", "ASV182", "ASV208")
+---potential parent: 
+No parent found!
+
+####processing: ASV334 #####
+---hits: c("ASV134", "ASV078", "ASV016", "ASV080", "ASV019", "ASV043", "ASV146", "ASV271", "ASV026", "ASV187")
+---potential parent: 
+No parent found!
+
+####processing: ASV335 #####
+---hits: c("ASV304", "ASV190", "ASV037", "ASV059", "ASV089", "ASV207", "ASV046", "ASV276", "ASV093", "ASV015")
+---potential parent: 
+No parent found!
+
+####processing: ASV336 #####
+---hits: c("ASV182", "ASV295", "ASV130", "ASV145", "ASV320", "ASV032", "ASV159", "ASV232", "ASV189", "ASV099")
+---potential parent: 
+No parent found!
+
+####processing: ASV337 #####
+---hits: c("ASV171", "ASV204", "ASV014", "ASV140", "ASV247", "ASV189", "ASV197", "ASV132", "ASV032", "ASV130")
+---potential parent: 
+No parent found!
+
+####processing: ASV338 #####
+---hits: c("ASV359", "ASV265", "ASV135", "ASV215", "ASV309", "ASV214")
+---potential parent: 
+No parent found!
+
+####processing: ASV339 #####
+---hits: c("ASV229", "ASV250", "ASV173", "ASV284", "ASV226")
+---potential parent: 
+No parent found!
+
+####processing: ASV340 #####
+---hits: ASV183
+---potential parent: ASV183
+------checking: ASV183
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV341 #####
+---hits: c("ASV198", "ASV291", "ASV236", "ASV115", "ASV101", "ASV192", "ASV242", "ASV071", "ASV031", "ASV067")
+---potential parent: 
+No parent found!
+
+####processing: ASV342 #####
+---hits: c("ASV191", "ASV077", "ASV046", "ASV207", "ASV293", "ASV037", "ASV015", "ASV059", "ASV089", "ASV190")
+---potential parent: 
+No parent found!
+
+####processing: ASV343 #####
+---hits: c("ASV280", "ASV017", "ASV195", "ASV001", "ASV003", "ASV004", "ASV005", "ASV027", "ASV006", "ASV011")
+---potential parent: 
+No parent found!
+
+####processing: ASV344 #####
+---hits: c("ASV259", "ASV240", "ASV251", "ASV239", "ASV099", "ASV140", "ASV159", "ASV189", "ASV197", "ASV232")
+---potential parent: 
+No parent found!
+
+####processing: ASV345 #####
+---hits: c("ASV253", "ASV084", "ASV176", "ASV257", "ASV272")
+---potential parent: 
+No parent found!
+
+####processing: ASV346 #####
+---hits: ASV086
+---potential parent: ASV086
+------checking: ASV086
+------relative cooccurence: 1 which is sufficient!
+------min avg abundance: 11 which is OK!
+SETTING ASV346 to be an ERROR of ASV086
+
+####processing: ASV347 #####
+---hits: c("ASV157", "ASV188", "ASV161", "ASV086")
+---potential parent: 
+No parent found!
+
+####processing: ASV348 #####
+---hits: c("ASV091", "ASV161")
+---potential parent: 
+No parent found!
+
+####processing: ASV349 #####
+---hits: c("ASV286", "ASV130", "ASV189", "ASV140", "ASV251", "ASV099", "ASV320", "ASV159", "ASV232", "ASV239")
+---potential parent: 
+No parent found!
+
+####processing: ASV350 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV351 #####
+---hits: ASV358
+---potential parent: ASV358
+------checking: ASV358
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV352 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV353 #####
+---hits: c("ASV296", "ASV273", "ASV315", "ASV275", "ASV268", "ASV193", "ASV235", "ASV261", "ASV212", "ASV308")
+---potential parent: 
+No parent found!
+
+####processing: ASV354 #####
+---hits: ASV200
+---potential parent: ASV200
+------checking: ASV200
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV355 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV356 #####
+---hits: character(0)
+---potential parent: 
+No parent found!
+
+####processing: ASV357 #####
+---hits: c("ASV035", "ASV018", "ASV033", "ASV034", "ASV207", "ASV046", "ASV015", "ASV191", "ASV037", "ASV059")
+---potential parent: 
+No parent found!
+
+####processing: ASV358 #####
+---hits: ASV351
+---potential parent: ASV351
+------checking: ASV351
+------relative cooccurence: 0
+No parent found!
+
+####processing: ASV359 #####
+---hits: c("ASV265", "ASV338", "ASV135", "ASV215", "ASV309", "ASV214")
+---potential parent: 
+No parent found!
+
+####processing: ASV360 #####
+---hits: c("ASV276", "ASV037", "ASV074", "ASV093", "ASV046", "ASV207", "ASV015", "ASV190", "ASV089", "ASV185")
+---potential parent: 
+No parent found!
+
+####processing: ASV361 #####
+---hits: c("ASV131", "ASV100", "ASV201", "ASV064", "ASV175", "ASV262", "ASV143", "ASV246", "ASV039", "ASV003")
+---potential parent: 
+No parent found!
+
+####processing: ASV362 #####
+---hits: c("ASV317", "ASV181", "ASV323", "ASV241")
+---potential parent: 
+No parent found!
+
+####processing: ASV363 #####
+---hits: c("ASV099", "ASV159", "ASV232", "ASV165", "ASV239", "ASV189")
+---potential parent: 
+No parent found!
+
+####processing: ASV364 #####
+---hits: c("ASV114", "ASV233", "ASV318")
+---potential parent: 
+No parent found!
