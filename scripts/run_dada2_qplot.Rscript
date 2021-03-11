@@ -15,7 +15,7 @@ suppressPackageStartupMessages(library("optparse"))
 
 option_list = list(
   
-  make_option(c("--cut_dir"), type="character", default = "dada2/00_atropos_primer_removed", 
+  make_option(c("-i","--input"), type="character", default = "dada2/00_atropos_primer_removed", 
               help="Directory including reads to perform quality plot against - not necessary cut_dir", metavar="character"),
   
   make_option(c("--cut_pattern"), type="character", default = c("*_R1_*.fastq.gz","*_R2_*.fastq.gz"), 
@@ -79,7 +79,7 @@ cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))
 
 run_dada2_qplot(prop.sample = opt$prop.sample, #20,
                 aggregate =  opt$aggregate, #TRUE,
-                cut_dir = opt$cut_dir,
+                cut_dir = opt$input,
                 qplot_dir = opt$qplot_dir, #"dada2/01_dada2_quality_profiles",
                 cut_file_pattern = opt$cut_pattern, #c("_primersout_R1_.fastq.gz","_primersout_R2_.fastq.gz"),
                 seed_value = opt$set_seed,

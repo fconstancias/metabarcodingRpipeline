@@ -27,7 +27,6 @@ option_list = list(
   make_option(c("--output"), type="character", default= "~/picrust2/", 
               help="Name of the output directory - should not exist before running the analysis", metavar="character"),
   
-  
   make_option(c("--traits"), type="character", default= c("EC,KO"), 
               help="Traits c(COG,EC,KO,PFAM,TIGRFAM)", metavar="character"),
   

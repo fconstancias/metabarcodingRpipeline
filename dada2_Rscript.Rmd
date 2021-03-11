@@ -3,9 +3,10 @@ title: "dada2 auto `r Sys.Date()`"
 author: "Florentin CONSTANCIAS"
 date: "`r Sys.Date()`"
 output: 
-  html_document:
-    toc: true
+  html_document: 
+    toc: yes
     toc_depth: 4
+    keep_md: yes
 ---
 
 
@@ -16,58 +17,256 @@ knitr::opts_chunk$set(echo = TRUE)
 DT::datatable(matrix())
 ```
 
-```{r install, include=TRUE}
-# install.packages("devtools")
-# 
-# install.packages("optparse")
-#
-# devtools::install_github("tidyverse/tidyverse")
-#
-# if (!requireNamespace("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-# 
-# BiocManager::install("ShortRead")
-# 
-# BiocManager::install("DECIPHER")
-#
-# BiocManager::install("phyloseq")
-#
-# devtools::install_github("KlausVigo/phangorn")
-# 
-# devtools::install_github("benjjneb/dada2", ref="v1.18") # change the ref argument to get other versions
-# 
+
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+ls -lh  test-data/* 
 ```
 
+# Activate the dedicated conda environment:
 ```{bash engine.opts='-l'}
 conda activate metabarcodingRpipeline
 ```
 
 
-```{bash engine.opts='-l'}
-Rscript scripts/dada2_metabarcoding_pipeline.R --help
+# Run the pipeline step by step:
+
+## Check presence of primers in Fwd and Rev reads - optional:
+
+```{bash engine.opts='-l', warnings = FALSE, results = "hide"}
+Rscript scripts/run_check_primers.Rscript \
+-i test-data \
+--n_samples 1 \
+--fwd_primer CCTAYGGGRBGCASCAG \
+--rev_primer GGACTACNNGGGTATCTAAT \
+-f scripts/functions_export_simplified.R \
+--export rscript-output/
 ```
 
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+cat rscript-output/primers_check.tsv
+```
 
-```{bash engine.opts='-l', results = "hide"}
-Rscript scripts/dada2_metabarcoding_pipeline.R \
--i /Users/fconstan/Documents/GitHub/metabarcodingRpipeline/test-data/ \
---atropos_binary /Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/atropos \
---preset V3V4 \
---nbases 10 \
+## Check Fwd and Rev reads quality profiles:
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+Rscript scripts/run_dada2_qplot.Rscript \
+-i test-data \
+--qplot_dir rscript-output/00_dada2_quality_profiles/ \
+--prop.sample 20 \
+--export TRUE \
+--fun_dir scripts/functions_export_simplified.R 
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+ls rscript-output/00_dada2_quality_profiles/* 
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+open rscript-output/00_dada2_quality_profiles/180914_M00842_0310_000000000-C3GBT/180914_M00842_0310_000000000-C3GBT_forward.pdf
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+open rscript-output/00_dada2_quality_profiles/180914_M00842_0310_000000000-C3GBT/180914_M00842_0310_000000000-C3GBT_reverse.pdf
+```
+
+## Remove gene specific PCR primers using atropos:
+
+```{bash engine.opts='-l', warnings = FALSE, results = "hide"}
+
+Rscript scripts/run_atropos.Rscript \
+-i test-data/ \
+-o rscript-output/01_atropos_primer_removed/ \
+--fwd_primer CCTAYGGGRBGCASCAG \
+--rev_primer GGACTACNNGGGTATCTAAT \
 -T 8 \
---collapseNoMis FALSE \
---export FALSE \
---save_out test_pipe_Rscript \
+-f scripts/functions_export_simplified.R
+
+```
+--atropos_bin /Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/atropos \
+
+```{bash engine.opts='-l', results = TRUE}
+
+ls -lh rscript-output/01_atropos_primer_removed/*
+
+```
+
+## Filter Fwd and Rev reads (truncate, filter based on maximum Expected Error, ...), merge reads:
+
+```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+
+Rscript scripts/run_dada2_filter_denoise_merge_reads.Rscript \
+--input_dir rscript-output/01_atropos_primer_removed/  \
+--output rscript-output/02_dada2_filtered_denoised_merged \
+--nbases 10 -T 8 --maxee 3,4 --trunclen 240,230 --minover 15 --minLen 180 --remove_input_fastq TRUE \
 -f scripts/functions_export_simplified.R
 
 ```
 
-```{r, results=FALSE, warning=FALSE, include=FALSE}
-require(tidyverse); packageVersion("tidyverse")
+
+```{bash engine.opts='-l', results = TRUE}
+
+ls -lh rscript-output/02_dada2_filtered_denoised_merged/*
+
 ```
 
-```{r packages, results=FALSE, warning=FALSE, include=FALSE}
-"dada2/dada2_pipe_out.RDS" %>%
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+open rscript-output/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/errors_190719_M00842_0364_000000000-CKGHM_fwd.pdf
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+open rscript-output/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/seq_distrib_190719_M00842_0364_000000000-CKGHM.pdf
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+cat rscript-output/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/190719_M00842_0364_000000000-CKGHM_track_analysis.tsv
+```
+
+## Merge ASV tables from the different run, perform chimera detection:
+
+```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+
+Rscript scripts/run_dada2_mergeRuns_removeBimeraDenovo.Rscript \
+--filt_dir rscript-output/02_dada2_filtered_denoised_merged/ \
+--merged_run_dir rscript-output/03_dada2_merged_runs_chimera_removed \
+--trim_length 300,450 \
+--collapseNoMis FALSE \
+-T 6 \
+-f scripts/functions_export_simplified.R
+
+```
+
+```{bash engine.opts='-l', results = TRUE}
+
+ls -lh rscript-output/03_dada2_merged_runs_chimera_removed/*
+
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+open rscript-output/03_dada2_merged_runs_chimera_removed/seqtab_distrib.pdf
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+cat rscript-output/03_dada2_merged_runs_chimera_removed/track_analysis.tsv
+```
+
+```{r, results=FALSE, warning=FALSE, include=TRUE}
+require(tidyverse)
+
+"rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds" %>%
+  readRDS() -> ps
+
+ps
+```
+
+## Add the taxonomical assignements to ASV sequences:
+
+### using dada2 assigntaxa/ assignspecies:
+
+
+```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+Rscript scripts/run_phyloseq_dada2_tax.Rscript \
+--phyloseq_path rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds \
+--output rscript-output/04_dada2_taxonomy \
+--db ~/db/DADA2/silva_nr99_v138_train_set.fa.gz \
+--db_species ~/db/DADA2/silva_species_assignment_v138.fa.gz \
+--reverse_comp TRUE \
+-T 4 \
+-f scripts/functions_export_simplified.R
+```
+
+
+```{r, results=FALSE, warning=FALSE, include=TRUE}
+"rscript-output/04_dada2_taxonomy/dada2_threshold60_silva_nr99_v138_train_set_physeq.RDS" %>%
+  readRDS() -> ps_tax
+
+ps_tax
+```
+
+### using DECIPHER IDtaxa::
+
+```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+Rscript scripts/run_phyloseq_DECIPHER_tax.Rscript \
+--phyloseq_path rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds \
+--export rscript-output/04_dada2_taxonomy \
+--reverse_comp TRUE \
+--db ~/db/DADA2/SILVA_SSU_r132_March2018.RData \
+-T 8 \
+-f scripts/functions_export_simplified.R
+```
+
+```{r, results=FALSE, warning=FALSE, include=TRUE}
+"rscript-output/04_dada2_taxonomy/DECIPHER_threshold_50_SILVA_SSU_r132_March2018_physeq.RDS" %>%
+  readRDS() -> ps_tax
+
+ps_tax
+```
+
+## Add phylogenetic information:
+
+```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+Rscript scripts/run_add_phylogeny_to_phyloseq.Rscript \
+--phyloseq_path rscript-output/04_dada2_taxonomy/dada2_threshold60_silva_nr99_v138_train_set_physeq.RDS \
+--export rscript-output/05_phylogeny \
+-T 4 \
+-f scripts/functions_export_simplified.R
+```
+
+```{r , results=FALSE, warning=FALSE, include=TRUE}
+"rscript-output/05_phylogeny/phyloseq_phylo.RDS" %>%
+  readRDS() -> ps_tax_phylo
+
+ps_tax_phylo
+```
+
+
+```{r , results=FALSE, warning=FALSE, include=TRUE}
+source("scripts/functions_export_simplified.R")
+
+ps_tax_phylo %>%
+  physeq_add_metadata(physeq = .,
+                      metadata = "test-data/metadata.xlsx" %>%
+  readxl::read_xlsx(),
+                      sample_column = "sample_name") -> ps_tax_phylo_meta
+
+ps_tax_phylo_meta
+```
+
+
+# Run the entire pipeline in on command:
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+ls -lh  test-data/* 
+```
+
+```{r , results=FALSE, warning=FALSE, include=TRUE}
+"test-data/metadata.xlsx" %>%
+  readxl::read_xlsx() -> metatdata
+
+metatdata %>%
+  head()
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+
+Rscript scripts/dada2_metabarcoding_pipeline.Rscript \
+-i test-data/ \
+--preset V3V4 \
+--nbases 10 \
+-T 8 \
+--db ~/db/DADA2/silva_nr99_v138_train_set.fa.gz \
+--db_species ~/db/DADA2/silva_species_assignment_v138.fa.gz \
+--metadata test-data/metadata.xlsx \
+--collapseNoMis FALSE \
+--export FALSE \
+--run_phylo FALSE \
+--save_out test_pipe_Rscript.RDS \
+-f scripts/functions_export_simplified.R
+
+```
+
+```{r , results=FALSE, warning=FALSE, include=TRUE}
+"test_pipe_Rscript.RDS" %>%
   readRDS() -> out
 ```
 
@@ -105,20 +304,68 @@ out$physeq %>%
                           nreads_display = 100,
                           first_n = 5)
 ```
-```{bash engine.opts='-l'}
-Rscript scripts/run_dada2_mergeRuns_removeBimeraDenovo.R --help
+
+# additional features:
+
+## vsearch + lulu for post-clustering:
+```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+
+<!-- conda activate metabarcodingRpipeline -->
+
+<!-- Rscript scripts/run_phyloseq_vsearch_lulu_cluster_ASV.Rscript \ -->
+<!-- --phyloseq_path rscript-output/05_phylogeny/phyloseq_phylo.RDS \ -->
+<!-- --output rscript-output/06_lulu/ \ -->
+<!-- -T 8 \ -->
+<!-- --minimum_ratio_type min \ -->
+<!-- --minimum_relative_cooccurence 0.95 \ -->
+<!-- --int_rm FALSE \ -->
+<!-- -f scripts/functions_export_simplified.R -->
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+ls -lh rscript-output/06_lulu/
+```
+
+```{r , results=FALSE, warning=FALSE, include=TRUE}
+"rscript-output/06_lulu/lulu_curated_physeq.RDS" %>%
+  readRDS() -> ps_tax_phylo_lulu
+
+ps_tax_phylo_lulu
+```
+
+
+## pictust2 functional potential esitmation:
+
+tested with **picrust2_pipeline.py 2.3.0-b**
+
+```{bash engine.opts='-l', warnings = FALSE, results = FALSE}
+
+<!-- conda activate metabarcodingRpipeline -->
+
+<!-- Rscript scripts/run_phyloseq_picrust2.Rscript \ -->
+<!-- --phyloseq_path rscript-output/05_phylogeny/phyloseq_phylo.RDS \ -->
+<!-- --output rscript-output/07_picrust2/ \ -->
+<!-- --traits EC,KO,PFAM \ -->
+<!-- --min_reads 100 \ -->
+<!-- --min_samples 1 \ -->
+<!-- --add_description TRUE \ -->
+<!-- --load_picrust2_data TRUE \ -->
+<!-- --return rscript-output/07_picrust2/ \ -->
+<!-- -T 8 \ -->
+<!-- -f scripts/functions_export_simplified.R -->
 
 ```
 
-```{bash engine.opts='-l', results = "hide"}
-Rscript scripts/run_dada2_mergeRuns_removeBimeraDenovo.R \
---filt_dir dada2/02_dada2_filtered_denoised_merged/ \
--T 8 \
---trim_length 350,475 \
---collapseNoMis FALSE \
---export TRUE \
--f scripts/functions_export_simplified.R
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+ls -lh rscript-output/07_picrust2/
+```
 
+```{r , results=FALSE, warning=FALSE, include=TRUE}
+"rscript-output/07_picrust2/picrust2_R.rds" %>%
+  readRDS() -> picrust2_data
+
+picrust2_data %>%
+  str()
 ```
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}

@@ -68,7 +68,7 @@ unlist(lapply(strsplit(opt$raw_file_pattern, ","), as.character)) -> opt$raw_fil
 
 
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
-cat(paste0('\n# Directory for primer removed files: ',opt$primer_removed_directory,'.\n'))
+cat(paste0('\n# Directory for primer removed files: ',opt$output_directory,'.\n'))
 cat(paste0('\n# Output directory: ',opt$output_directory,'.\n'))
 cat(paste0('\n# Fwd Primer sequence: ',opt$fwd_primer,'.\n'))
 cat(paste0('\n# Rev Primer sequence: ',opt$rev_primer,'.\n'))
@@ -96,7 +96,7 @@ print(sessionInfo())
 cat("Parameters Used:\n\n")
 
 cat(paste0('\n# Input directory: ',opt$input_directory,'.\n'))
-cat(paste0('\n# Directory for primer removed files: ',opt$primer_removed_directory,'.\n'))
+cat(paste0('\n# Directory for primer removed files: ',opt$output_directory,'.\n'))
 cat(paste0('\n# Output directory: ',opt$output_directory,'.\n'))
 cat(paste0('\n# Fwd Primer sequence: ',opt$fwd_primer,'.\n'))
 cat(paste0('\n# Rev Primer sequence: ',opt$rev_primer,'.\n'))

@@ -117,11 +117,14 @@ check_primers <- function(path_dir,
   }
   
   if(export != FALSE){
+    
+    dir.create(export, recursive = TRUE)
+    
     out %>%
       do.call(rbind.data.frame, .)  %>%
       data.frame() %>%
       rownames_to_column("id") %>%
-      write_tsv(file = export)
+      write_tsv(file = paste0(export, "primers_check.tsv"))
   }
   return(out)
 }
@@ -2440,7 +2443,7 @@ phyloseq_picrust2 <- function(physeq = NULL, # readRDS("data/processed/physeq_up
     return(files_list)
   }
   
-  if (is.charater(return)){
+  if (is.character(return)){
     
     dir.create(return, recursive = TRUE)
     
@@ -2708,4 +2711,43 @@ run_dada2_pipe <- function(raw_files_path,
     return(out)
   }
 }
+
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#' 
+#' here::here("data/processed/humann/DNA/genefamilies_joined_tables_uniref90_ko_renamed_kegg-orthology.tsv") %>% humann_2df() %>% clean_humann_df() %>% humann_2phyloseq() %>% phyloseq_get_humann_strat_un_output(output = "unstratified" ,transform = "clr",  export_long_df = FALSE, remove_unmapped_unintegrated = TRUE) -> physeq
+#' 
+#' sample_names(physeq) <- str_replace(sample_names(physeq), "_DNA_cat_Abundance-RPKs", "")
+#' 
+#' physeq_add_metadata(physeq, here::here("data/metadata_all_DNA_RNA.xlsx") %>%  readxl::read_xlsx() %>% filter(Type == "DNA"), sample_column = "Sample") -> test
+#'
+
+physeq_add_metadata <- function(physeq,
+                                metadata,
+                                sample_column = "Sample"){
+  
+  ## ------------------------------------------------------------------------
+  require(tidyverse); require(phyloseq)
+  
+  ## ------------------------------------------------------------------------  
+  
+  phyloseq::merge_phyloseq(physeq,
+                           metadata %>%
+                             dplyr::mutate(tmp = get(sample_column)) %>% 
+                             column_to_rownames('tmp') %>% 
+                             phyloseq::sample_data()) -> physeq
+  
+  ## ------------------------------------------------------------------------  
+  return(physeq)
+}
+
 

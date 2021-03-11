@@ -35,7 +35,7 @@ option_list = list(
   make_option(c("--filt_dir"), type="character", default = "dada2/02_dada2_filtered_denoised_merged", 
               help="Directory for filtered reads", metavar="character"),
   
-  make_option(c("--merged_run_dir"), type="character", default = "dada2/02_dada2_filtered_denoised_merged", 
+  make_option(c("--merged_run_dir"), type="character", default = "dada2/03_dada2_merged_runs_chimera_removed", 
               help="Directory for run merging, chimera removal", metavar="character"),
   
   make_option(c("--taxa_dir"), type="character", default = "dada2/04_dada2_taxonomy", 
@@ -89,10 +89,10 @@ option_list = list(
   make_option(c("--metadata"), type="character", default="none", 
               help="Path to excel document containing metadata [Sample identifier column should be sample_name]", metavar="character"),
   
-  make_option(c("--database"), type="character", default = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", 
+  make_option(c("--db"), type="character", default = "~/db/DADA2/silva_nr_v138_train_set.fa.gz", 
               help="Path to the taxonomic database", metavar="character"),
   
-  make_option(c("--database_for_species_assignments"), type="character", default = "~/db/DADA2/silva_species_assignment_v138.fa.gz", 
+  make_option(c("--db_species"), type="character", default = "~/db/DADA2/silva_species_assignment_v138.fa.gz", 
               help="Path to the speies-level taxonomic database [only for --tax_metod  dada]", metavar="character"),
   
   make_option(c("--run_phylo"), type="logical", default = FALSE, 
@@ -163,8 +163,8 @@ cat(paste0('\n# chimera_method',opt$chimera_method,'.\n'))
 cat(paste0('\n# Perform 100% similarity ASV clustering?',opt$collapseNoMis,'.\n'))
 cat(paste0('\n# Perform taxonomic assignments also on reversed complemented ASV sequence?',opt$tryRC,'.\n'))
 cat(paste0('\n# Path to excel document containing metadata [Sample identifier column should be sample_name]: ',opt$metadata,'.\n'))
-cat(paste0('\n# database: ',opt$database,'.\n'))
-cat(paste0('\n# database_for_species_assignments: ',opt$database_for_species_assignments,'.\n'))
+cat(paste0('\n# db: ',opt$db,'.\n'))
+cat(paste0('\n# db_species: ',opt$db_species,'.\n'))
 cat(paste0('\n# Compute phylogenetic tree from the ASV sequence ? ',opt$run_phylo,'.\n'))
 cat(paste0('\n# Path fof the R object containing all output from the pipeline: ',opt$save_out,'.\n'))
 cat(paste0('\n# Export pdf, table and intermediate RDS files? ',opt$export,'.\n'))
@@ -199,8 +199,8 @@ run_dada2_pipe(raw_files_path = opt$input_directory,
                collapseNoMis = opt$collapseNoMis,
                tryRC = opt$tryRC,
                metadata = opt$metadata,
-               db = opt$database,
-               db_species = opt$database_for_species_assignments,
+               db = opt$db,
+               db_species = opt$db_species,
                merge_phyloseq_export = opt$merge_phyloseq_export,
                run_phylo =  opt$run_phylo,
                output_phyloseq_phylo = opt$output_phyloseq_phylo,
@@ -230,8 +230,8 @@ cat(paste0('\n# chimera_method',opt$chimera_method,'.\n'))
 cat(paste0('\n# Perform 100% similarity ASV clustering?',opt$collapseNoMis,'.\n'))
 cat(paste0('\n# Perform taxonomic assignments also on reversed complemented ASV sequence?',opt$tryRC,'.\n'))
 cat(paste0('\n# Path to excel document containing metadata [Sample identifier column should be sample_name]: ',opt$metadata,'.\n'))
-cat(paste0('\n# database: ',opt$database,'.\n'))
-cat(paste0('\n# database_for_species_assignments: ',opt$database_for_species_assignments,'.\n'))
+cat(paste0('\n# db: ',opt$db,'.\n'))
+cat(paste0('\n# db_species: ',opt$db_species,'.\n'))
 cat(paste0('\n# Compute phylogenetic tree from the ASV sequence ? ',opt$run_phylo,'.\n'))
 cat(paste0('\n# Path fof the R object containing all output from the pipeline: ',opt$save_out,'.\n'))
 cat(paste0('\n# Export pdf, table and intermediate RDS files? ',opt$export,'.\n'))

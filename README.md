@@ -47,8 +47,6 @@ Use ``git clone`` to clone on your computer the repository including the functio
 
 
 
-	
-
 ## Run the pipeline:
 
 activate the dedicated conda environment:
@@ -58,7 +56,6 @@ activate the dedicated conda environment:
 
 Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: *databases* 
 
-- ``DECIPHER`` method: <http://www2.decipher.codes/Downloads.html>
 - ``dada`` method: <https://benjjneb.github.io/dada2/training.html>
 
 
