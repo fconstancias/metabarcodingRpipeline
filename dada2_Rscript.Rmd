@@ -18,50 +18,50 @@ DT::datatable(matrix())
 ```
 
 
+Let's have a look at some test data. Those data are 16S metabarcoding targeting V3V4 region and amplified using fwd CCTAYGGGRBGCASCAG - Rev GGACTACNNGGGTATCTAAT.
+As you can see, the test-data/ directory contains an excel file 'metadata.xlsx' as well as two directories. Each of those sub-directories contains Fwd (_R1_) and Rev (_R2_) reads.
 
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 ls -lh  test-data/* 
 ```
 
 # Activate the dedicated conda environment:
+
+Let's start by activating the dedicated conda environment metabarcodingRpipeline we created.
 ```{bash engine.opts='-l'}
 conda activate metabarcodingRpipeline
 ```
 
+There are different ways to process the data, the wiser way is to performed the different steps in a step by step approach and wisely validate the results.
 
 # Run the pipeline step by step:
 
-## Check presence of primers in Fwd and Rev reads - optional:
-
-```{bash engine.opts='-l', warnings = FALSE}
-Rscript scripts/run_check_primers.Rscript \
--i test-data \
---n_samples 1 \
---fwd_primer CCTAYGGGRBGCASCAG \
---rev_primer GGACTACNNGGGTATCTAAT \
--f scripts/functions_export_simplified.R \
---export rscript-output/
-```
-
-```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
-cat rscript-output/primers_check.tsv
-```
-
 ## Check Fwd and Rev reads quality profiles:
 
+The first step is to assess the quality of the reads. This can be done using the run_dada2_qplot.Rscript script.
+In order to run that script type Rscript and the path of the script from a terminal. You can access the help of the script by specifying the --help command.
+The --fun_dir flag should point to the R file containing the R functions which are going to be used by the Rscript. It comes with the github repo when you clone it or could also point to the online github repo.
+
 ```{bash engine.opts='-l', warnings = FALSE}
+Rscript scripts/run_dada2_qplot.Rscript --help
+```
+
+We would like to perform the quality plots on the raw files which are in the two run specific subdirectories in the test-data directory.
+The output will be directed to the following directory: rscript-output/00_dada2_quality_profiles/ By default 20% of the samples for each run will be combined to assess the quality but you could change it by specifying the --prop.sample flag.
+
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval= FALSE}
 Rscript scripts/run_dada2_qplot.Rscript \
 -i test-data \
 --qplot_dir rscript-output/00_dada2_quality_profiles/ \
---prop.sample 20 \
---export TRUE \
 --fun_dir scripts/functions_export_simplified.R 
 ```
 
+Once the script is terminated, we can inspect the output directory. It contains two pdf files per run.
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 ls rscript-output/00_dada2_quality_profiles/* 
 ```
 
+We can have a look.
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 open rscript-output/00_dada2_quality_profiles/180914_M00842_0310_000000000-C3GBT/180914_M00842_0310_000000000-C3GBT_forward.pdf
 ```
@@ -72,10 +72,10 @@ open rscript-output/00_dada2_quality_profiles/180914_M00842_0310_000000000-C3GBT
 
 ## Remove gene specific PCR primers using atropos:
 
+The next step recommanded by dada2 developpers is to remove any non biological sequences. This can be done using atropos (formerly named cutadapt). the input directory is the test-data directory containing run specific sub-directories with Fwd and Rev reads per sample. The primer sequences can be specified using the --fwd_primer and --rev_primer flags. the -T or --threads flag will be specify the number of threads to use by atropos for performing the adapter removal. 
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval= FALSE}
 
 Rscript scripts/run_atropos.Rscript \
---atropos_bin /Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/atropos \
 -i test-data/ \
 -o rscript-output/01_atropos_primer_removed/ \
 --fwd_primer CCTAYGGGRBGCASCAG \
@@ -84,8 +84,8 @@ Rscript scripts/run_atropos.Rscript \
 -f scripts/functions_export_simplified.R
 
 ```
---atropos_bin /Users/fconstan/miniconda3/envs/metabarcodingRpipeline/bin/atropos \
 
+The output directory contains primersout_R1_ and primersout_R2_ fastq.gz files corresponding the the raw fastq files.
 ```{bash engine.opts='-l', results = TRUE}
 
 ls -lh rscript-output/01_atropos_primer_removed/*
@@ -94,16 +94,18 @@ ls -lh rscript-output/01_atropos_primer_removed/*
 
 ## Filter Fwd and Rev reads (truncate, filter based on maximum Expected Error, ...), merge reads:
 
+The next step is to perform quality filtering of the Fwd and Rev reads using the a priori knowledge (amplicon length and raw paired end read length) as well as the quality profile plots generated earlier. The Fwd and Rev reads will be truncated after the 240 and 230 nucleotides position, respectively. Reads with a maximum expected error >3 and >4 will be discared for Fwd and Rev reads, respectively. Error learning will be performed and read pairs with a minimum of 15 nucleotides overlap will merged. Those steps will be performed on all the sub-directories in the input directory (i.e., all the different runs you want to include in the analysis). 
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval= FALSE}
 
 Rscript scripts/run_dada2_filter_denoise_merge_reads.Rscript \
 --input_dir rscript-output/01_atropos_primer_removed/  \
 --output rscript-output/02_dada2_filtered_denoised_merged \
---nbases 10 -T 8 --maxee 3,4 --trunclen 240,230 --minover 15 --minLen 180 --remove_input_fastq TRUE \
+-T 8 --maxee 3,4 --trunclen 240,230 --minover 15 --minLen 180 --remove_input_fastq TRUE \
 -f scripts/functions_export_simplified.R
 
 ```
 
+Let's have a look at the outputs.
 
 ```{bash engine.opts='-l', results = TRUE}
 
@@ -111,49 +113,60 @@ ls -lh rscript-output/02_dada2_filtered_denoised_merged/*
 
 ```
 
+We can visualize the error rate distribution.
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 open rscript-output/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/errors_190719_M00842_0364_000000000-CKGHM_fwd.pdf
 ```
 
+The length distribution of the reads and ASV.
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 open rscript-output/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/seq_distrib_190719_M00842_0364_000000000-CKGHM.pdf
 ```
 
+We can also track the number of reads trough the different steps.
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 cat rscript-output/02_dada2_filtered_denoised_merged/190719_M00842_0364_000000000-CKGHM/190719_M00842_0364_000000000-CKGHM_track_analysis.tsv
 ```
 
 ## Merge ASV tables from the different run, perform chimera detection:
 
+Since the previous step were run on a run basis, the next step is to combine the results from the different runs. It is also fine to only analyse one run and in this case it should be also placed in on subdirectory of the initial one. The ASV tables will be merged based on the ASV sequences, the chimera will be detected and removed. You might want to perform an additional 100% similarity clustering with the flag --collapseNoMis TRUE. The --trim_length flag indicate the range length of the ASV sequence to be kept.
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 
 Rscript scripts/run_dada2_mergeRuns_removeBimeraDenovo.Rscript \
 --filt_dir rscript-output/02_dada2_filtered_denoised_merged/ \
 --merged_run_dir rscript-output/03_dada2_merged_runs_chimera_removed \
 --trim_length 300,450 \
---collapseNoMis FALSE \
 -T 6 \
 -f scripts/functions_export_simplified.R
 
 ```
 
+Once again, let's inspect the outputs. Interestingly, one of the output is a phyloseq object: physeq.rds
 ```{bash engine.opts='-l', results = TRUE}
 
 ls -lh rscript-output/03_dada2_merged_runs_chimera_removed/*
 
 ```
 
+We can check the sequence and ASV distribution before length filtering.
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 open rscript-output/03_dada2_merged_runs_chimera_removed/seqtab_distrib.pdf
 ```
 
+Once again, a tsv table summarises the number of reads per samples among the different steps.
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 cat rscript-output/03_dada2_merged_runs_chimera_removed/track_analysis.tsv
 ```
 
-```{r, results=FALSE, warning=FALSE, include=TRUE}
-require(tidyverse)
+The phyloseq object can be imported into R. It is a phyloseq-class experiment-level object containing two objectsL an otu_table() and a refseq() containing the ASV count table and the ASV sequences, respectively.
 
+```{r, results=FALSE, warning=FALSE, include=FALSE}
+require(tidyverse)
+```
+
+
+```{r, results=FALSE, warning=FALSE, include=TRUE}
 "rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds" %>%
   readRDS() -> ps
 
@@ -162,12 +175,15 @@ ps
 
 ## Add the taxonomical assignements to ASV sequences:
 
-### using dada2 assigntaxa/ assignspecies:
+Using the information contained in the phyloseq object, we can performed additional steps.
 
+
+### using dada2 assigntaxa/ assignspecies:
 
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 Rscript scripts/run_phyloseq_dada2_tax.Rscript \
 --phyloseq_path rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds \
+--ax_threshold 60 \
 --output rscript-output/04_dada2_taxonomy \
 --db ~/db/DADA2/silva_nr99_v138_train_set.fa.gz \
 --db_species ~/db/DADA2/silva_species_assignment_v138.fa.gz \
@@ -176,6 +192,7 @@ Rscript scripts/run_phyloseq_dada2_tax.Rscript \
 -f scripts/functions_export_simplified.R
 ```
 
+The script generate several files including a phyloseq object, which we can load to confirm it now includes a tax_table() information.
 
 ```{r, results=FALSE, warning=FALSE, include=TRUE}
 "rscript-output/04_dada2_taxonomy/dada2_threshold60_silva_nr99_v138_train_set_physeq.RDS" %>%
@@ -194,6 +211,7 @@ Rscript scripts/run_phyloseq_DECIPHER_tax.Rscript \
 --export rscript-output/04_dada2_taxonomy \
 --reverse_comp TRUE \
 --db ~/db/DADA2/SILVA_SSU_r132_March2018.RData \
+--tax_threshold 50 \
 -T 8 \
 -f scripts/functions_export_simplified.R
 ```
@@ -207,6 +225,8 @@ ps_tax
 
 ## Add phylogenetic information:
 
+Since the phyloseq object includes the ASV nucleotide sequences, we can use the script run_add_phylogeny_to_phyloseq.Rscript inorder to perform sequence alignment and phylogenetic tree construction.
+
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 Rscript scripts/run_add_phylogeny_to_phyloseq.Rscript \
 --phyloseq_path rscript-output/04_dada2_taxonomy/dada2_threshold60_silva_nr99_v138_train_set_physeq.RDS \
@@ -215,6 +235,7 @@ Rscript scripts/run_add_phylogeny_to_phyloseq.Rscript \
 -f scripts/functions_export_simplified.R
 ```
 
+This generates a phyloseq object which now also contain a phylogenetic tree phy_tree().
 ```{r , results=FALSE, warning=FALSE, include=TRUE}
 "rscript-output/05_phylogeny/phyloseq_phylo.RDS" %>%
   readRDS() -> ps_tax_phylo
@@ -223,6 +244,17 @@ ps_tax_phylo
 ```
 
 ## Add metadata:
+
+So far we have been using the scripts whithin the scripts/functions_export_simplified.R file to run Rscripts directly from the terminal. This is of course very usefeull when running jobs on a computational cluster. Alternatively the functions could be directly run from R. For instance, we can use the function physeq_add_metadata in rder to add metadata to a phyloseq object.
+
+```{r , results=TRUE, warning=FALSE, include=TRUE}
+"test-data/metadata.xlsx" %>%
+  readxl::read_xlsx() -> metatdata
+
+metatdata %>%
+  head()
+```
+
 
 ```{r , results=FALSE, warning=FALSE, include=TRUE}
 source("scripts/functions_export_simplified.R")
@@ -239,30 +271,24 @@ ps_tax_phylo_meta
 
 # Run the entire pipeline in on command:
 
+One script offers the possibility to run all the commands in on go. 
+We are still starting from the same dataset.
+
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 ls -lh  test-data/* 
 ```
 
-```{r , results=FALSE, warning=FALSE, include=TRUE}
-"test-data/metadata.xlsx" %>%
-  readxl::read_xlsx() -> metatdata
-
-metatdata %>%
-  head()
-```
+The --input (-i) flag specifies the input directory including run specific sub-directories. If you are analyzing one Miseq run, you should then include only one sub-directory. The --preset flag offers the possibility to use predefined parameters for PCR primer removal, filtering parameters .... Since the pylogenetical reconstruction of ASV sequence can take quite some time it is wise to use the default --run_phylo FALSE.By default --export FALSE will not create pdf but the --save_out test_pipe_Rscript.RDS will save all the output into an R object.
 
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval=FALSE}
 
 Rscript scripts/dada2_metabarcoding_pipeline.Rscript \
 -i test-data/ \
 --preset V3V4 \
---nbases 10 \
 -T 8 \
 --db ~/db/DADA2/silva_nr99_v138_train_set.fa.gz \
 --db_species ~/db/DADA2/silva_species_assignment_v138.fa.gz \
 --metadata test-data/metadata.xlsx \
---collapseNoMis FALSE \
---export FALSE \
 --run_phylo FALSE \
 --save_out test_pipe_Rscript.RDS \
 -f scripts/functions_export_simplified.R
@@ -274,44 +300,65 @@ Rscript scripts/dada2_metabarcoding_pipeline.Rscript \
   readRDS() -> out
 ```
 
+We can inspect the quality plots of the raw fastq files.
 
 ```{r, message = FALSE, warning = FALSE, results = FALSE, results= TRUE}
 out$qplot
 ```
 
+We can inspect the error profiles for the Fwd reads
+
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
 out$filtering_denoising$out_fwd
 ```
+
+Similarly, the error profiles for the Rev reads
+
+
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
 out$filtering_denoising$out_rev
 ```
+The (merged) sequence distribution and ASV sequence length distribution can be assessed.
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
 out$merging$plot
 ```
-
+The number of reads at the different steps of the pipeline can be also assessed:
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
 out$merging$track %>%
   DT::datatable()
 ```
+Finally the phyloseq object is stored in the generated R object.
+
 
 ```{r, message = TRUE, warning = FALSE, results = TRUE}
 out$physeq
 ```
 
-```{r, message = TRUE, warning = FALSE, results = TRUE}
-source("https://raw.githubusercontent.com/fconstancias/DivComAnalyses/master/R/phyloseq_normalisation.R")
-
-out$physeq %>%
-  phyloseq_check_lib_size(data_color = "varA",
-                          data_facet = "varB",
-                          nreads_display = 100,
-                          first_n = 5)
-```
-
 # additional features:
 
+Additional features are available.
+
+## Check presence of primers in Fwd and Rev reads / orientation of the reads:
+
+```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval= FALSE}
+Rscript scripts/run_check_primers.Rscript \
+-i test-data \
+--n_samples 1 \
+--fwd_primer CCTAYGGGRBGCASCAG \
+--rev_primer GGACTACNNGGGTATCTAAT \
+-f scripts/functions_export_simplified.R \
+--export rscript-output/
+```
+
+```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
+cat rscript-output/primers_check.tsv
+```
+
+
+
 ## vsearch + lulu for post-clustering:
+
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval = FALSE}
 
 Rscript scripts/run_phyloseq_vsearch_lulu_cluster_ASV.Rscript \
@@ -360,7 +407,7 @@ Rscript scripts/run_phyloseq_picrust2.Rscript \
 ls -lh rscript-output/07_picrust2/
 ```
 
-```{r , results=FALSE, warning=FALSE, include=TRUE}
+```{r , results=TRUE, warning=FALSE, include=TRUE}
 "rscript-output/07_picrust2/picrust2_R.rds" %>%
   readRDS() -> picrust2_data
 
