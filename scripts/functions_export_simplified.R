@@ -1238,8 +1238,8 @@ run_DECIPHER_phangorn_phylogeny <- function(raw_files_path,
   names(sequences) <- sequences  # this propagates to the tip labels of the tree
   
   alignment <- AlignSeqs( Biostrings::DNAStringSet(sequences),
-                         anchor = NA,
-                         processors = nthreads)
+                          anchor = NA,
+                          processors = nthreads)
   
   phang_align <- phyDat(as(alignment, 'matrix'), type='DNA')
   
@@ -2010,7 +2010,7 @@ phyloseq_DECIPHER_cluster_ASV <- function(physeq, # readRDS("data/processed/phys
   ## ------------------------------------------------------------------------
   
   if(export != FALSE){
-   
+    
     dir.create(export, recursive = TRUE) 
     
     write_tsv(x = full_table,
@@ -2749,5 +2749,150 @@ physeq_add_metadata <- function(physeq,
   ## ------------------------------------------------------------------------  
   return(physeq)
 }
+
+
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#' 
+
+
+physeq_export_qiime <- function(physeq,
+                                output_dir = "~/."){
+  
+  ## ------------------------------------------------------------------------
+  require(tidyverse); require(phyloseq); require(biomformat)
+  
+  ## ------------------------------------------------------------------------  
+  
+  if (class(physeq) != "phyloseq"){
+    physeq %>% readRDS() -> physeq
+  }
+  
+  ## ------------------------------------------------------------------------
+  dir.create(output_dir, recursive = TRUE)
+  
+  if(!is.null(physeq@sam_data)){
+    
+    physeq %>%
+      sample_data() %>%
+      data.frame() -> metadata
+    
+    ## export qiime1 qiime2 compatible metadata
+    metadata %>% 
+      rownames_to_column("sample_name") %>%
+      rename( "#SampleID" = sample_name) %>%
+      select('#SampleID', everything()) %>%
+      write_tsv(paste0(output_dir,"/","qiime1_mapping_file.txt"))
+    
+    metadata %>% 
+      rownames_to_column("sample_name") %>%
+      rename( sampleid = sample_name) %>%
+      select( sampleid, everything()) %>%
+      write_tsv(paste0(output_dir,"/","qiime2_mapping_file.txt"))
+    
+  }
+  ## ------------------------------------------------------------------------  
+  
+  physeq_2biom <- physeq
+  # taxa_names(physeq_2biom)  <- paste0("ASV", str_pad(seq(ntaxa(physeq_2biom)), 
+  # nchar(ntaxa(physeq_2biom)), 
+  # pad = "0"))
+  physeq_2biom %>%
+    tax_table() %>%
+    as.matrix -> tax
+  
+  # tax <- as(tax_table(physeq),"matrix")
+  tax_cols <- c("Kingdom", "Phylum", "Class","Order","Family","Genus", "Species")
+  tax <- as.data.frame(tax)
+  tax$taxonomy<-do.call(paste, c(tax[tax_cols], sep=";"))
+  for(co in tax_cols) tax[co] <- NULL
+  write.table(tax, paste0(output_dir,"/","tax.txt"), quote=FALSE, col.names=FALSE, sep="\t")
+  
+  physeq_2biom %>%
+    otu_table() %>%
+    as.matrix() %>%
+    make_biom() %>% 
+    write_biom(paste0(output_dir,"/","asv_biom.biom"))
+  
+  if(!is.null(physeq@phy_tree)){
+    physeq_2biom %>%
+      phy_tree() %>%
+      ape::write.tree(paste0(output_dir,"/","asv_neweek.tre"))
+  }
+  
+  if(!is.null(physeq@refseq)){
+    
+    physeq_2biom %>%
+      refseq() %>%
+      Biostrings::writeXStringSet(paste0(output_dir,"/","asv.fna"), append=FALSE,
+                                  compress=FALSE, compression_level=NA, format="fasta")
+    
+  }
+  # system2(picrust2, 
+  #         args = c("
+  # conda actiavte qiime2-2019.10
+  # 
+  # qiime tools import   \
+  # --input-path asv_biom.biom \
+  # --type 'FeatureTable[Frequency]' \
+  # --input-format BIOMV100Format \
+  # --output-path ${OUTPUT_DIR}/qiime2_otu.qza
+  # 
+  # biom convert -i asv_biom.biom \
+  # -o ${OUTPUT_DIR}/asv_biom_HDF5.biom --to-hdf5
+  # 
+  # biom add-metadata -i ${OUTPUT_DIR}/asv_biom_HDF5.biom \
+  # -o ${OUTPUT_DIR}/asv_tax_biom_HDF5.biom --observation-metadata-fp tax.txt \
+  # --observation-header OTUID,taxonomy --sc-separated taxonomy
+  # 
+  # biom convert -i ${OUTPUT_DIR}/asv_tax_biom_HDF5.biom  \
+  # -o ${OUTPUT_DIR}/asv_tax_biom_HDF5.biom.tsv \
+  # --to-tsv --header-key taxonomy
+  # 
+  # biom convert -i ${OUTPUT_DIR}/asv_tax_biom_HDF5.biom \
+  # -o ${OUTPUT_DIR}/asv_tax_qiime1_json.biom \
+  # --to-json
+  # 
+  # biom convert -i ${OUTPUT_DIR}/asv_tax_qiime1_json.biom  \
+  # -o ${OUTPUT_DIR}/asv_tax_qiime1_json.biom.tsv \
+  # --to-tsv --header-key taxonomy
+  # 
+  # qiime tools import \
+  # --type 'FeatureData[Taxonomy]' \
+  # --input-format HeaderlessTSVTaxonomyFormat \
+  # --input-path tax.txt \
+  # --output-path ${OUTPUT_DIR}/qiime2_taxonomy.qza
+  # 
+  # qiime tools import \
+  # --input-path asv_neweek.tre \
+  # --output-path ${OUTPUT_DIR}/asv_neweek.qza \
+  # --type 'Phylogeny[Rooted]'
+  # 
+  # qiime tools import \
+  # --input-path asv.fna \
+  # --output-path ${OUTPUT_DIR}/asv_rep_set.qza \
+  # --type 'FeatureData[Sequence]'
+  # 
+  # qiime metadata tabulate \
+  # --m-input-file qiime2_mapping_file.txt \
+  # --o-visualization ${OUTPUT_DIR}/qiime2_metadata.qzv
+  # 
+  # 
+  # 
+}
+
+
+
+
+
 
 
