@@ -2839,7 +2839,7 @@ physeq_export_qiime <- function(physeq,
   }
   # system2(picrust2, 
   #         args = c("
-  # conda actiavte qiime2-2019.10
+  # conda actiavte 
   # 
   # qiime tools import   \
   # --input-path asv_biom.biom \
