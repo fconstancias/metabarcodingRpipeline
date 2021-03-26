@@ -332,7 +332,7 @@ Using the information contained in the phyloseq object, we can performed additio
 ```bash
 Rscript scripts/run_phyloseq_dada2_tax.Rscript \
 --phyloseq_path rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds \
---ax_threshold 60 \
+--tax_threshold 60 \
 --output rscript-output/04_dada2_taxonomy \
 --db ~/db/DADA2/silva_nr99_v138_train_set.fa.gz \
 --db_species ~/db/DADA2/silva_species_assignment_v138.fa.gz \

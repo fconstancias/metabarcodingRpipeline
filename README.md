@@ -12,6 +12,9 @@ Use ``git clone`` to clone on your computer the repository including the functio
 
 
 ## Configure a dedicated conda envirionment:
+
+### Install conda
+<https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html>
 ### Create conda environment:
 	$ conda create -n metabarcodingRpipeline -y
 ### Activate conda environment:
@@ -59,13 +62,20 @@ Use ``Rscript`` to run the pipeline and specify some necessary parameters e.g.: 
 - ``dada`` method: <https://benjjneb.github.io/dada2/training.html>
 
 
-		(metabarcodingRpipeline)$ Rscript scripts/dada2_metabarcoding_pipeline.R \
-		-i test-data \
-		-o dada2 \
-		-V V3V4 \
-		--metadata test-data/metadata.xlsx \
-		--database ~/db/silva_nr99_v138_train_set.fa.gz \
-		--database_for_species_assignments ~/db/silva_species_assignment_v138.fa.gz > mylogs.txt 2>&1
+```bash
+
+(metabarcodingRpipeline)$ Rscript scripts/dada2_metabarcoding_pipeline.Rscript \
+-i test-data/ \
+--preset V3V4 \
+-T 8 \
+--db ~/db/DADA2/silva_nr99_v138_train_set.fa.gz \
+--db_species ~/db/DADA2/silva_species_assignment_v138.fa.gz \
+--metadata test-data/metadata.xlsx \
+--run_phylo FALSE \
+--save_out test_pipe_Rscript.RDS \
+-f scripts/functions_export_simplified.R > mylogs.txt 2>&1
+
+```
 		
 The ``> mylogs.txt 2>&1`` trick will redirect what is printed on the screen to a file including potential errors and also parameters that you used.
 
@@ -80,6 +90,68 @@ By default, based on <https://f1000research.com/articles/5-1492>. It might take 
 	(metabarcodingRpipeline)$ Rscript scripts/add_phylogeny_to_phyloseq.R \
 		-p dada2/physeq.RDS \
 		-o dada2/physeq_phylo 
+
+
+## Add/replace taxonomical information fron a phyloseq object:
+### using dada2 assigntaxa/ assignspecies:
+
+#### using Rscript
+```bash
+(metabarcodingRpipeline)$ Rscript scripts/run_phyloseq_dada2_tax.Rscript \
+--phyloseq_path rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds \
+--tax_threshold 60 \
+--output rscript-output/04_dada2_taxonomy \
+--db ~/db/DADA2/silva_nr99_v138_train_set.fa.gz \
+--db_species ~/db/DADA2/silva_species_assignment_v138.fa.gz \
+--reverse_comp TRUE \
+-T 4 \
+-f scripts/functions_export_simplified.R
+```
+#### within R
+```R
+source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/dev/scripts/functions_export_simplified.R")
+
+readRDS("/Users/physeq.RDS") %>%
+  phyloseq_dada2_tax(physeq = ., 
+                     threshold = 60, # 60 (very high),  50 (high), PB = 10
+                     db ="~/db/DADA2/silva_nr99_v138_train_set.fa.gz"
+                     db_species ="~/db/DADA2/silva_species_assignment_v138.fa.gz"
+                     nthreads = 2,
+                     tryRC = TRUE,
+                     return = TRUE,
+                     full_return = FALSE) -> physeq_new_tax
+
+```
+                     
+### using DECIPHER IDtaxa::
+
+You can also add or replace taxonomical information of your phyloseq object using DECIPHER IDtaxa function.
+
+
+```bash
+Rscript scripts/run_phyloseq_DECIPHER_tax.Rscript \
+--phyloseq_path rscript-output/03_dada2_merged_runs_chimera_removed/physeq.rds \
+--export rscript-output/04_dada2_taxonomy \
+--reverse_comp TRUE \
+--db ~/db/DADA2/SILVA_SSU_r132_March2018.RData \
+--tax_threshold 50 \
+-T 8 \
+-f scripts/functions_export_simplified.R
+```
+#### within R
+
+```R
+source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/dev/scripts/functions_export_simplified.R")
+
+readRDS("/Users/physeq.RDS") %>%
+  phyloseq_DECIPHER_tax(physeq = ., 
+                        threshold = 60, # 60 (very high),  50 (high), PB = 10
+                        db="~/db/DADA2/SILVA_SSU_r132_March2018.RData" 
+                        nthreads = 6,
+                        tryRC = TRUE,
+                        return = TRUE) -> physeq_new_tax
+```
+
 
 
 ## TODO:
