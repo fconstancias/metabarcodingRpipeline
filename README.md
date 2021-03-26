@@ -108,7 +108,7 @@ By default, based on <https://f1000research.com/articles/5-1492>. It might take 
 -f scripts/functions_export_simplified.R
 ```
 #### within R
-```R
+```r
 source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/dev/scripts/functions_export_simplified.R")
 
 readRDS("/Users/physeq.RDS") %>%
@@ -140,7 +140,7 @@ Rscript scripts/run_phyloseq_DECIPHER_tax.Rscript \
 ```
 #### within R
 
-```R
+```r
 source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/dev/scripts/functions_export_simplified.R")
 
 readRDS("/Users/physeq.RDS") %>%
@@ -152,6 +152,20 @@ readRDS("/Users/physeq.RDS") %>%
                         return = TRUE) -> physeq_new_tax
 ```
 
+## Add/update metadata a phyloseq object:
+
+
+```r
+source("https://raw.githubusercontent.com/fconstancias/metabarcodingRpipeline/dev/scripts/functions_export_simplified.R")
+
+ps_tax_phylo %>%
+  physeq_add_metadata(physeq = .,
+                      metadata = "test-data/metadata.xlsx" %>%
+  readxl::read_xlsx(),
+                      sample_column = "sample_name") -> ps_tax_phylo_meta
+
+ps_tax_phylo_meta
+```
 
 
 ## TODO:
