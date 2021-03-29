@@ -51,7 +51,7 @@ Rscript scripts/run_dada2_qplot.Rscript --help
 
 We would like to perform the quality plots on the raw files which are in the two run specific subdirectories in the `test-data` directory.
 
-The output will be directed to the following directory: `rscript-output/00_dada2_quality_profiles/` By default 20% of the samples for each run will be combined to assess the quality but you could change it by specifying the `--prop.sample` flag.
+The output will be directed to the following directory: `rscript-output/00_dada2_quality_profiles/` By default 20% of the samples of each run will be combined to assess the quality but you could change it by specifying the `--prop.sample` flag.
 
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval= FALSE}
 Rscript scripts/run_dada2_qplot.Rscript \
