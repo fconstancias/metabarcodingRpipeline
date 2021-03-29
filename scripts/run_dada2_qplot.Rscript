@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 rm(list = ls())
-
+ptm <- proc.time()
 cat("\n############################################################\n")
 cat("Starting \n")
 cat("############################################################\n\n")
@@ -103,6 +103,8 @@ cat(paste0('\n# qplot_dir: ',opt$qplot_dir,'.\n'))
 cat(paste0('\n# Seed value for random number generator: ',opt$seed_value,'.\n'))
 cat(paste0('\n# Directory for R script: ',opt$fun_dir,'.\n'))
 
+cat(paste0('\n# Run time:\n'))
+proc.time() - ptm
 cat("\n############################################################\n")
 cat("All done \n")
 cat("############################################################\n\n")
