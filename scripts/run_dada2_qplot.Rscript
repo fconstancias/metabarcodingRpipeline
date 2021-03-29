@@ -16,31 +16,31 @@ suppressPackageStartupMessages(library("optparse"))
 option_list = list(
   
   make_option(c("-i","--input"), type="character", default = "dada2/00_atropos_primer_removed", 
-              help="Directory including reads to perform quality plot against - not necessary cut_dir", metavar="character"),
+              help="Directory including reads to perform quality plot against - not necessarily cut_dir [default \"%default\"]", metavar="character"),
   
   make_option(c("--file_pattern "), type="character", default = c("*_R1_*.fastq.gz","*_R2_*.fastq.gz"), 
-              help="Patterns for R1 and R2", metavar="character"),
+              help="Patterns for R1 and R2 [default \"%default\"]", metavar="character"),
   
   make_option(c("--qplot_dir"), type="character", default = "dada2/01_dada2_quality_profiles", 
-              help="Directory for output", metavar="character"),
+              help="Directory for output [default \"%default\"]", metavar="character"),
   
   make_option(c("--prop.sample"), type="numeric", default = 20, 
-              help=" % of samples to run qplot against", metavar="character"),
+              help="% of samples to run qplot against [default %default]", metavar="character"),
   
   make_option(c("--aggregate"), type="logical", default = TRUE, 
-              help=" aggregate quality plots", metavar="character"),
+              help="aggregate quality plots [default %default]", metavar="character"),
   
   make_option(c("--sep"), type="character", default = "[^_]+", 
-              help="regex pattern to identify sample names  [default: after first _]", metavar="character"),
+              help="regex pattern to identify sample names  [default \"%default\"]", metavar="character"),
   
   make_option(c("--export"), type="logical", default = TRUE, 
-              help= "Export pdf, table and intermediate RDS files?", metavar="character"),
+              help= "Export pdf, table and intermediate RDS files? [default %default]", metavar="character"),
   
   make_option(c("--seed_value"), type="numeric", default = 123, 
-              help="Seed value for random number generator", metavar="numeric"),
+              help="Seed value for random number generator [default %default]", metavar="numeric"),
   
   make_option(c("-f", "--fun_dir"), type="character", default= NULL, 
-              help="Directory containing the R functions", metavar="character")
+              help="Directory containing the R functions [default %default]", metavar="character")
   
   
 ); 

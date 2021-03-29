@@ -18,36 +18,40 @@ DT::datatable(matrix())
 ```
 
 
-Let's have a look at some test data. Those data are 16S metabarcoding targeting V3V4 region and amplified using fwd CCTAYGGGRBGCASCAG - Rev GGACTACNNGGGTATCTAAT.
-As you can see, the test-data/ directory contains an excel file 'metadata.xlsx' as well as two directories. Each of those sub-directories contains Fwd (_R1_) and Rev (_R2_) reads.
+Let's have a look at some test data. The data are 16S metabarcoding data targeting V3-V4 region and amplified using forward (Fwd) primer `CCTAYGGGRBGCASCAG` and reverse primer (Rev) `GGACTACNNGGGTATCTAAT`.
 
 ```{bash engine.opts='-l', warnings = FALSE, results = TRUE}
 ls -lh  test-data/* 
 ```
 
+As you can see, the `test-data/` directory contains an excel file `metadata.xlsx` as well as two directories. Each of those sub-directories contains Fwd (_R1_) and Rev (_R2_) reads.
+
+
 # Activate the dedicated conda environment:
 
-Let's start by activating the dedicated conda environment metabarcodingRpipeline we created.
+Let's start by activating the dedicated conda environment for metabarcodingRpipeline. 
 ```{bash engine.opts='-l'}
 conda activate metabarcodingRpipeline
 ```
 
-There are different ways to process the data, the wiser way is to performed the different steps in a step by step approach and wisely validate the results.
+There are different ways to process the data. The systematic way is to perform each individual step and carefully validate the intermediate results before we move on to the next step. 
 
-# Run the pipeline step by step:
+# Run the pipeline step by step
 
-## Check Fwd and Rev reads quality profiles:
+## Check quality profiles of Fwd and Rev reads:
 
-The first step is to assess the quality of the reads. This can be done using the run_dada2_qplot.Rscript script.
-In order to run that script type Rscript and the path of the script from a terminal. You can access the help of the script by specifying the --help command.
+The first step is to assess the quality of the reads. This can be done using the `run_dada2_qplot.Rscript script`.
+In order to run that script type `Rscript` and the path of the script from a terminal. You can access the help of the script by specifying the --help command.
+
 The --fun_dir flag should point to the R file containing the R functions which are going to be used by the Rscript. It comes with the github repo when you clone it or could also point to the online github repo.
 
 ```{bash engine.opts='-l', warnings = FALSE}
 Rscript scripts/run_dada2_qplot.Rscript --help
 ```
 
-We would like to perform the quality plots on the raw files which are in the two run specific subdirectories in the test-data directory.
-The output will be directed to the following directory: rscript-output/00_dada2_quality_profiles/ By default 20% of the samples for each run will be combined to assess the quality but you could change it by specifying the --prop.sample flag.
+We would like to perform the quality plots on the raw files which are in the two run specific subdirectories in the `test-data` directory.
+
+The output will be directed to the following directory: `rscript-output/00_dada2_quality_profiles/` By default 20% of the samples for each run will be combined to assess the quality but you could change it by specifying the `--prop.sample` flag.
 
 ```{bash engine.opts='-l', warnings = FALSE, results = "hide", eval= FALSE}
 Rscript scripts/run_dada2_qplot.Rscript \
