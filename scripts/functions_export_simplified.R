@@ -1992,24 +1992,23 @@ phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_1
 #'
 #'
 
-compare_phyloseq_taxonomy <- function(physeq_new_tax,
-                                      physeq){
-  physeq_new_tax %>% 
+compare_phyloseq_taxonomy <- function(physeq_A,
+                                      physeq_B){
+  physeq_A %>% 
     phloseq_export_otu_tax() %>% 
     select(-ASV_sequence) %>%
-    dplyr::select(-sample_names(physeq_new_tax)) %>%
+    dplyr::select(-sample_names(physeq_A)) %>%
     left_join(
-      physeq %>%
+      physeq_B %>%
         phloseq_export_otu_tax(),
       by = "ASV" ,
-      suffix = c("_new", "_old")) %>% 
+      suffix = c("_A", "_B")) %>% 
     select(-contains(c("Kingdom", "Phylum", "Class", "Order","length"))) %>%
     select(-ASV_sequence) %>%
-    select(contains(c("_new", "_old")), everything()) -> new_old_tax_df
+    select(contains(c("_A", "_B")), everything()) -> new_old_tax_df
   
   return(new_old_tax_df)
 }
-
 
 
 #' @title ...
