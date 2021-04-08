@@ -2481,7 +2481,7 @@ phloseq_export_otu_tax <- function(physeq = NULL){
   
   # colnames(otu_table) <- c('ASV', sample_names(physeq))
   
-  dss2df <- function(dss) data.frame(width=BiocGenerics:width(dss), seq=as.character(dss), names=names(dss))
+  dss2df <- function(dss) data.frame(width=BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
   
   dss2df(physeq@refseq) %>%
     rownames_to_column('ASV') %>%
