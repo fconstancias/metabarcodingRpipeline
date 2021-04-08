@@ -1510,7 +1510,8 @@ phyloseq_DECIPHER_hitDB <- function(physeq,
                                     db,
                                     threads = 4,
                                     strand="both",
-                                    threshold = 10)
+                                    threshold = 10,
+                                    verbose = FALSE)
   
 {
   require(DECIPHER); require(tidyverse)
@@ -1526,7 +1527,7 @@ phyloseq_DECIPHER_hitDB <- function(physeq,
                 strand = strand, # or "top" if same as trainingSet
                 threshold = threshold, # 60 (very high) or 50 (high) we set it to very low because we at least want some name...
                 processors= threads, # use all available processors
-                verbose=TRUE)
+                verbose=verbose)
   
   #  code below from Dr. Marco Meola:
   
