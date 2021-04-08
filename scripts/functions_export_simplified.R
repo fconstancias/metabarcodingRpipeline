@@ -1991,6 +1991,39 @@ phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_1
 #' @examples
 #'
 #'
+
+compare_phyloseq_taxonomy <- function(physeq_new_tax,
+                                      physeq){
+  physeq_new_tax %>% 
+    phloseq_export_otu_tax() %>% 
+    select(-ASV_sequence) %>%
+    dplyr::select(-sample_names(physeq_new_tax)) %>%
+    left_join(
+      physeq %>%
+        phloseq_export_otu_tax(),
+      by = "ASV" ,
+      suffix = c("_new", "_old")) %>% 
+    select(-contains(c("Kingdom", "Phylum", "Class", "Order","length"))) %>%
+    select(-ASV_sequence) %>%
+    select(contains(c("_new", "_old")), everything()) -> new_old_tax_df
+  
+  return(new_old_tax_df)
+}
+
+
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#'
+#'
 # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% 
 #   phyloseq_DECIPHER_cluster_ASV(threshold = 99) -> test_99
 #'
