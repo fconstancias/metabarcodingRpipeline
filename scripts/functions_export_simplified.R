@@ -1511,6 +1511,81 @@ add_phylogeny_to_phyloseq <- function(phyloseq_path,
 #'
 #'
 
+phyloseq_DECIPHER_hitDB <- function(physeq,
+                                    db,
+                                    threads = 4,
+                                    strand="both",
+                                    threshold = 10,
+                                    verbose = FALSE)
+  
+{
+  require(DECIPHER); require(tidyverse)
+  load(db)
+  
+  sequences <-  Biostrings::DNAStringSet(physeq@refseq)
+  # names(sequences) <- sequences  # this propagates to the tip labels of the tree
+  names(sequences) <- taxa_names(physeq)  # this propagates to the tip labels of the tree
+  
+  
+  ids <- IdTaxa(sequences, 
+                trainingSet,
+                strand = strand, # or "top" if same as trainingSet
+                threshold = threshold, # 60 (very high) or 50 (high) we set it to very low because we at least want some name...
+                processors= threads, # use all available processors
+                verbose=verbose)
+  
+  #  code below from Dr. Marco Meola:
+  
+  for(i in c(1:length(ids))) { # go through each row and take out the taxonomy information
+    if(i == 1) {
+      new_matrix <- data.frame(matrix(nrow=0, ncol=0)) # First, initially an empty dataframe
+    }
+    # print(i)
+    new_line <- as.data.frame(t(as.data.frame(ids[[i]]$taxon))) # create dataframe from the taxon information & transpose
+    new_matrix <- plyr::rbind.fill(new_matrix,new_line) # Append it to the bottom of the current dataframe
+    # new_list is now an object with the taxonomy information in a simple table.
+    if(i == length(ids)) {
+      taxid <- as.matrix(new_matrix)
+      taxid <- taxid[,-1]
+    }
+  }
+  
+  ranks <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species") # ranks of interest
+  colnames(taxid) <- ranks
+  rownames(taxid) <- taxa_names(physeq)
+  
+  taxid %>%
+    as.data.frame() %>%
+    rownames_to_column('ASV') %>%
+    replace(is.na(.), "unknown") -> new_tax
+  
+  physeq@tax_table = NULL # remove old tax_table
+  
+  
+  merge_phyloseq(physeq,
+                 new_tax %>%
+                   column_to_rownames('ASV') %>%
+                   as.matrix() %>%
+                   tax_table()) -> physeq_new
+  
+  return(physeq_new)
+}
+
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note Would be worth checking again confidence score vs taxonomy.
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#'
+#'
+#'
+
 phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_update_11_1_21.RDS") %>% subset_taxa(taxa_sums(physeq) > 100000) -> physeq
                                   threshold = 60, # 60 (very high),  50 (high), PB = 10
                                   db, # db ="~/db/DADA2/SILVA_SSU_r132_March2018.RData" db ="~/db/DADA2/Databases_pbHITdb_pbHITdb_v1.0.0_20180919_IDTAXA.RData" db ="~/db/DADA2/GTDB_r95-mod_August2020.RData" db ="~/db/DADA2/SILVA_SSU_r138_2019.RData" db ="~/db/DADA2/Fungal_LSU_v11_March2018.RData"
@@ -1907,6 +1982,38 @@ phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_1
     }
     return(out)
   }
+}
+
+
+#' @title ...
+#' @param .
+#' @param ..
+#' @author Florentin Constancias
+#' @note .
+#' @note .
+#' @note .
+#' @return .
+#' @export
+#' @examples
+#'
+#'
+
+compare_phyloseq_taxonomy <- function(physeq_A,
+                                      physeq_B){
+  physeq_A %>% 
+    phloseq_export_otu_tax() %>% 
+    select(-ASV_sequence) %>%
+    dplyr::select(-sample_names(physeq_A)) %>%
+    left_join(
+      physeq_B %>%
+        phloseq_export_otu_tax(),
+      by = "ASV" ,
+      suffix = c("_A", "_B")) %>% 
+    select(-contains(c("Kingdom", "Phylum", "Class", "Order","length"))) %>%
+    select(-ASV_sequence) %>%
+    select(contains(c("_A", "_B")), everything()) -> new_old_tax_df
+  
+  return(new_old_tax_df)
 }
 
 
@@ -2486,7 +2593,7 @@ phloseq_export_otu_tax <- function(physeq = NULL){
   
   # colnames(otu_table) <- c('ASV', sample_names(physeq))
   
-  dss2df <- function(dss) data.frame(width=BiocGenerics:width(dss), seq=as.character(dss), names=names(dss))
+  dss2df <- function(dss) data.frame(width=BiocGenerics::width(dss), seq=as.character(dss), names=names(dss))
   
   dss2df(physeq@refseq) %>%
     rownames_to_column('ASV') %>%
