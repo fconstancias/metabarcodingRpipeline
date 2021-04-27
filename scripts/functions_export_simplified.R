@@ -650,13 +650,18 @@ run_dada2_filter_denoise_merge_reads <- function(trunclen,
     
     getN <- function(x) sum(getUniques(x))
     
-    data.frame(sample=sample.names,
+    data.frame(sample=as.data.frame(out2) %>% row.names(),
                input=as.data.frame(out2)$reads.in,
-               filtered=as.data.frame(out2)$reads.out,
-               denoisedF=sapply(dadaFs, getN),
+               filtered=as.data.frame(out2)$reads.out) -> tmp_track
+    
+    data.frame(denoisedF=sapply(dadaFs, getN),
                denoisedR=sapply(dadaRs, getN),
                merged=sapply(mergers, getN),
                tabled=rowSums(seqtab[[i]])) %>%
+      rownames_to_column('sample') -> tmp_track_2
+    
+    tmp_track %>%
+      left_join(tmp_track_2) %>%
       mutate(filtered_pc = round(filtered/input, 3)) %>%
       mutate(denoisedF_pc = round(denoisedF/filtered, 3)) %>% 
       mutate(denoisedR_pc = round(denoisedR/filtered, 3)) %>%     
