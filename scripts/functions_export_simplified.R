@@ -1595,7 +1595,7 @@ phyloseq_DECIPHER_tax <- function(physeq, # readRDS("data/processed/physeq_updat
                                   seed_value = 123,
                                   bootlabel = "_Confidence",
                                   tax_ranks = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species"),
-                                  return = FALSE)
+                                  return = TRUE)
 {
   
   ## ------------------------------------------------------------------------
