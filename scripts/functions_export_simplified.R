@@ -1945,7 +1945,7 @@ phyloseq_dada2_tax <- function(physeq, # readRDS("data/processed/physeq_update_1
   }
   
   tax_table %>%
-    # rownames_to_column("ASV_sequence") %>%
+    rownames_to_column("ASV_sequence") %>%
     # as.data.frame() %>%
     left_join(refseq_df) %>%
     column_to_rownames('ASV') %>%
