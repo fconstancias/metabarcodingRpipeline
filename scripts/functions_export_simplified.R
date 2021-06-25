@@ -802,7 +802,7 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
       cat('\n# mergeSequenceTables done\n')
       
     }else{
-      st.all = seqtab
+      st.all = seqtab[[1]]
       
       cat('\n# only one SequenceTable, no merging to do\n')
       
