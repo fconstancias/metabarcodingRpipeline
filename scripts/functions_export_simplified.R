@@ -2851,6 +2851,8 @@ physeq_add_metadata <- function(physeq,
   require(tidyverse); require(phyloseq)
   
   ## ------------------------------------------------------------------------  
+  physeq@sam_data = NULL
+  ## ------------------------------------------------------------------------  
   
   phyloseq::merge_phyloseq(physeq,
                            metadata %>%
