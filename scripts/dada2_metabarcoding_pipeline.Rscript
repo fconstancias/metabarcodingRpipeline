@@ -44,7 +44,7 @@ option_list = list(
   make_option(c("--sep"), type="character", default = "[^_]+", 
               help="regex pattern to identify sample names  [default: after first _]", metavar="character"),
   
-  make_option(c("--preset"), type="character", default = "none", 
+  make_option(c("--preset"), type="character", default = "V4", 
               help="Will use default primers and parameters as defined in the run_dada2_pipeline() [primers, trunc, maxee, overlap, expected length, ...]", metavar="character"),
   
   make_option(c("--PRIMER_F"), type="character", default = NULL, 
@@ -104,10 +104,10 @@ option_list = list(
   make_option(c("--output_phyloseq_phylo"), type="character", default = "dada2/phyloseq_phylo.RDS", 
               help= "Path fof the phyloseq object", metavar="character"),
   
-  make_option(c("--save_out"), type="character", default = "dada2/dada2_pipe_out.RDS", 
+  make_option(c("--save_out"), type="character", default = FALSE, 
               help= "Path fof the R object containing all output from the pipeline", metavar="character"),
   
-  make_option(c("--export"), type="logical", default = FALSE, 
+  make_option(c("--export"), type="logical", default = TRUE, 
               help= "Export pdf, table and intermediate RDS files?", metavar="character"),
   
   make_option(c("--remove_input_fastq"), type="logical", default = FALSE, 

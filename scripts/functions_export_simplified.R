@@ -791,6 +791,13 @@ run_dada2_mergeRuns_removeBimeraDenovo <- function(seqtab = NULL,
   
   if(!is.null(seqtab) == TRUE & !is.null(track) == TRUE){
     
+    if(export ==TRUE){
+      merged_run_path <- file.path(merged_run_dir)
+      
+      dir.create(merged_run_path, showWarnings = TRUE, recursive = TRUE)
+      
+    }
+    
     summary <- track %>% bind_rows()
     
     if(seqtab %>% length > 1){
@@ -1074,6 +1081,12 @@ run_dada_taxonomy <- function(seqtab = NULL,
     seqtab.nochim <- readRDS(seqtab.nochim)
   }
   if(!is.null(seqtab)){
+    
+    if(export==TRUE){
+      taxa_path <- file.path(taxa_dir)
+      
+      dir.create(taxa_path, showWarnings = TRUE, recursive = TRUE)
+    }
     seqtab.nochim <- seqtab
   }
   ## ------------------------------------------------------------------------
@@ -2658,7 +2671,7 @@ run_dada2_pipe <- function(raw_files_path,
                            run_phylo = FALSE,
                            output_phyloseq_phylo = "dada2/phyloseq_phylo.RDS",
                            save_out = "dada2/dada2_pipe_out.RDS",
-                           export = FALSE,
+                           export = TRUE,
                            remove_input_fastq = TRUE,
                            SLOTS = 6,
                            seed_value = 123,
